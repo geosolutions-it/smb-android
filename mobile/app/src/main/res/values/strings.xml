@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SaveMyBike</string>
+    <string name="title_record">Record</string>
+    <string name="title_stats">Stats</string>
+    <string name="title_bikes">Bikes</string>
+
+    <string name="state_started">Recording session</string>
+
+    <string name="permission_location_required">The permission to acquire your location is required.</string>
+
+    <!-- Notification actions -->
+    <string name="mode">Change Mode</string>
+    <string name="stop">Stop</string>
+    <string name="menu_simulate">Simulate</string>
+    <string name="menu_wifi">Upload only with Wifi</string>
+    <string name="login_button_text">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="create_account_link">No account yet? Create one</string>
+
+
+</resources>
