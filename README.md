@@ -1,2 +1,2 @@
 # smb-app
-SaveMyByke mobile app
+SaveMyBike mobile app

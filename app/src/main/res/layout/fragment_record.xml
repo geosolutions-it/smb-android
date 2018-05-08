@@ -75,13 +75,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/mode_bus"
+                android:id="@+id/mode_moped"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".5"
                 android:background="@drawable/mode_bordered"
                 android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_bus"/>
+                app:srcCompat="@drawable/ic_directions_motorcycle"/>
 
             <ImageView
                 android:id="@+id/mode_car"
@@ -91,6 +91,34 @@
                 android:background="@drawable/mode_bordered"
                 android:padding="10dp"
                 app:srcCompat="@drawable/ic_directions_car"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mode_row_icons2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight=".3"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/mode_bus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="@drawable/mode_bordered"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_directions_bus"/>
+
+            <ImageView
+                android:id="@+id/mode_train"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="@drawable/mode_bordered"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_directions_train"/>
         </LinearLayout>
 
         <LinearLayout

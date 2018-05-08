@@ -16,7 +16,9 @@ public class Vehicle implements Serializable {
         FOOT,
         BIKE,
         BUS,
-        CAR
+        CAR,
+        MOPED,
+        TRAIN
     }
 
     @SerializedName("id")

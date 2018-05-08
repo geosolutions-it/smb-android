@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,7 +42,10 @@ public class RecordFragment extends Fragment {
             R.id.mode_foot,
             R.id.mode_bike,
             R.id.mode_bus,
-            R.id.mode_car })
+            R.id.mode_car,
+            R.id.mode_moped,
+            R.id.mode_train
+            })
     List<View> modeViews;
 
     @BindView(R.id.record_button) ImageView recordButton;
@@ -181,6 +183,8 @@ public class RecordFragment extends Fragment {
             R.id.mode_bike,
             R.id.mode_bus,
             R.id.mode_car,
+            R.id.mode_moped,
+            R.id.mode_train,
             R.id.record_button})
     public void onClick(View view) {
 
@@ -196,6 +200,12 @@ public class RecordFragment extends Fragment {
                 break;
             case R.id.mode_car:
                 ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.CAR, true);
+                break;
+            case R.id.mode_moped:
+                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.MOPED, true);
+                break;
+            case R.id.mode_train:
+                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.TRAIN, true);
                 break;
             case R.id.record_button:
 

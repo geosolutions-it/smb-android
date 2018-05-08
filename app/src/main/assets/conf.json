@@ -25,6 +25,18 @@
       "selected" : "false",
       "gpsDist" : 50,
       "gpsTime" : 10000
+    },
+    {
+      "id" : 4,
+      "selected" : "false",
+      "gpsDist" : 50,
+      "gpsTime" : 10000
+    },
+    {
+      "id" : 5,
+      "selected" : "false",
+      "gpsDist" : 50,
+      "gpsTime" : 10000
     }
   ],
   "bikes":[
