@@ -1,17 +1,14 @@
 package it.geosolutions.savemybike.data.server;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -132,7 +129,7 @@ public class S3Manager implements TransferListener{
                 continue;
             }
 
-            final String s3ObjectKey = getS3ObjectKey(context, zipFile);
+            final String s3ObjectKey = getS3ObjectKey(zipFile);
 
             //upload zip using S3 transfer utility
             //final TransferObserver observer = getTransferUtility().upload(Constants.AWS_BUCKET_NAME, s3ObjectKey, zipFile);
@@ -169,12 +166,10 @@ public class S3Manager implements TransferListener{
     }
 
     @NonNull
-    private static String getS3ObjectKey(@NonNull Context context, @NonNull File zipFile) {
+    private static String getS3ObjectKey(@NonNull File zipFile) {
 
-        // TODO: Build the key using the Cognito Identity ID instead of the Username
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return zipFile.getName();
 
-        return  "cognito/smb/"+ preferences.getString(Constants.PREF_USERID, "BAD_USER_PREFERENCE" ) + "/" + zipFile.getName();
     }
 
     @Override

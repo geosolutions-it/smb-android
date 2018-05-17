@@ -20,7 +20,7 @@ public interface SMBRemoteServices {
     @GET("config")
     Call<Configuration> getConfig();
 
-    @PUT("upload/"+ Constants.AWS_BUCKET_NAME+"/{s3ObjectKey}")
+    @PUT("upload/{s3ObjectKey}")
     Call<ResponseBody> upload(
             @Path("s3ObjectKey") String s3ObjectKey,
             @Body RequestBody file

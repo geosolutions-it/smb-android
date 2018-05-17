@@ -11,7 +11,6 @@ public class Constants {
     public final static int DEFAULT_PERSISTENCE_INTERVAL = 15000;
     public final static boolean DEFAULT_WIFI_ONLY = true;
 
-    public final static String AWS_BUCKET_NAME = "smb-test-lamb";
     public final static String AWS_POOL      = "us-west-2_E1i57PuDf";
     public final static String AWS_CLIENT_ID_WO_SECRET = "69pkdd67bnvko38n9fgftrdt15";
 
