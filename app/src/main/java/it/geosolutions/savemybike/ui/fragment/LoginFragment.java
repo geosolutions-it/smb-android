@@ -95,14 +95,18 @@ public class LoginFragment extends Fragment {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        progressDialog.dismiss();
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
         // finish();
         ((SaveMyBikeActivity) getActivity()).changeFragment(0);
     }
 
     public void onLoginFailed() {
         Toast.makeText(getActivity(), "Login failed", Toast.LENGTH_LONG).show();
-        progressDialog.dismiss();
+        if(progressDialog != null) {
+            progressDialog.dismiss();
+        }
         _loginButton.setEnabled(true);
     }
 
