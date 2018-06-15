@@ -6,7 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.util.Log;
 
 import it.geosolutions.savemybike.BuildConfig;
@@ -27,6 +28,8 @@ import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 public class NotificationManager extends BroadcastReceiver {
 
     private final static String TAG = "NotificationManager";
+
+    private final static String CHANNEL_ID = "it.geosolutions.android.SaveMyBike";
 
     public static final int NOTIFICATION_ID = 111;
     private static final int REQUEST_CODE = 100;
@@ -91,7 +94,7 @@ public class NotificationManager extends BroadcastReceiver {
         this.mCurrentMessage = message;
         this.mVehicle = vehicle;
 
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService);
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService, CHANNEL_ID);
         int modeSrc = R.drawable.ic_directions_bike;
 
 
@@ -119,7 +122,7 @@ public class NotificationManager extends BroadcastReceiver {
                 .addAction(stopAction)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setWhen(0)
-                .setStyle(new NotificationCompat.MediaStyle()
+                .setStyle(new MediaStyle()
                         .setShowActionsInCompactView(0,1))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -205,7 +208,7 @@ public class NotificationManager extends BroadcastReceiver {
      */
     private Notification createNotification(){
 
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService);
+        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService, CHANNEL_ID);
         int modeSrc = R.drawable.ic_directions_bike;
         switch (mVehicle.getType()) {
 
@@ -231,7 +234,7 @@ public class NotificationManager extends BroadcastReceiver {
                 .addAction(stopAction)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setWhen(0)
-                .setStyle(new NotificationCompat.MediaStyle()
+                .setStyle(new MediaStyle()
                         .setShowActionsInCompactView(0,1))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

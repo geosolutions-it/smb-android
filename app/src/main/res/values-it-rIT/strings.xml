@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_record">Registra</string>
+    <string name="title_stats">Stats</string>
+    <string name="title_bikes">Bici</string>
+    <string name="state_started">Sessione iniziata</string>
+    <string name="permission_location_required">Attiva la geolocalizzazione per continuare</string>
+    <string name="mode">Cambia modalità</string>
+    <string name="stop">Stop</string>
+    <string name="menu_simulate">Simula</string>
+    <string name="menu_wifi">Carica dati solo con Wifi</string>
+    <string name="login_button_text">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Nome Utente</string>
+    <string name="create_account_link">Non hai ancora un account? Creane uno!</string>
+</resources>
