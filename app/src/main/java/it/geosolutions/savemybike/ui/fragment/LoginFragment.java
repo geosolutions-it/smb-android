@@ -123,8 +123,8 @@ public class LoginFragment extends Fragment {
             _usernameText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 30) {
+            _passwordText.setError("between 4 and 30 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);

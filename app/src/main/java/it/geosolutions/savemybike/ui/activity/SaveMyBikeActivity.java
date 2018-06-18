@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -83,6 +84,8 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
     @BindView(R.id.navigation) BottomNavigationView navigation;
 
+    @BindView(R.id.my_toolbar) Toolbar smbToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +94,11 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         //inflate
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(smbToolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
