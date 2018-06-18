@@ -1,6 +1,7 @@
 package it.geosolutions.savemybike.data.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +31,7 @@ public class NotificationManager extends BroadcastReceiver {
     private final static String TAG = "NotificationManager";
 
     private final static String CHANNEL_ID = "it.geosolutions.android.SaveMyBike";
+    private final static String CHANNEL_NAME = "SaveMyBike";
 
     public static final int NOTIFICATION_ID = 111;
     private static final int REQUEST_CODE = 100;
@@ -49,6 +51,14 @@ public class NotificationManager extends BroadcastReceiver {
 
         mService = service;
         mNotificationManager = (android.app.NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, android.app.NotificationManager.IMPORTANCE_LOW);
+            mChannel.setShowBadge(false);
+            mNotificationManager.createNotificationChannel(mChannel);
+        }
+
         String pkg = mService.getPackageName();
         mModeIntent = PendingIntent.getBroadcast(mService, REQUEST_CODE, new Intent(Constants.NOTIFICATION_UPDATE_MODE).setPackage(pkg),PendingIntent.FLAG_CANCEL_CURRENT);
         mStopIntent = PendingIntent.getBroadcast(mService, REQUEST_CODE, new Intent(Constants.NOTIFICATION_UPDATE_STOP).setPackage(pkg),PendingIntent.FLAG_CANCEL_CURRENT);
