@@ -13,4 +13,6 @@
     <string name="password_hint">Password</string>
     <string name="username_hint">Nome Utente</string>
     <string name="create_account_link">Non hai ancora un account? Creane uno!</string>
+    <string name="select_a_vehicle">Select a vehicle</string>
+    <string name="simulation">simulation</string>
 </resources>

@@ -21,6 +21,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -30,8 +32,8 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.1.0'
 
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.7'
-    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.6.3'
-    implementation 'com.amazonaws:aws-android-sdk-cognitoauth:2.6.+@aar'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.6.22'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoauth:2.6.22@aar'
 
     // Mobile Client for initializing the SDK
     implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }

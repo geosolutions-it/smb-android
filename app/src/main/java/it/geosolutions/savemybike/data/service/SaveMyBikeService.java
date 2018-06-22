@@ -3,8 +3,10 @@ package it.geosolutions.savemybike.data.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -106,7 +108,7 @@ public class SaveMyBikeService extends Service {
         if(simulate){
 
             //in a simulation use the simulator to create GPS locations
-            final GPSSimulator gpsSimulator = new GPSSimulator(this, sessionLogic);
+            final GPSSimulator gpsSimulator = new GPSSimulator( sessionLogic);
             getDataProviders().add(gpsSimulator);
         }else{
 
@@ -276,6 +278,10 @@ public class SaveMyBikeService extends Service {
         return mBinder;
     }
 
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
 
     public class SaveMyBikeBinder extends Binder {
 
@@ -286,13 +292,6 @@ public class SaveMyBikeService extends Service {
 
     public SessionLogic getSessionLogic() {
         return sessionLogic;
-    }
-
-    public Handler getHandler() {
-        if(handler == null){
-            handler = new Handler();
-        }
-        return handler;
     }
 
     public Vehicle getCurrentVehicle(){
@@ -316,5 +315,15 @@ public class SaveMyBikeService extends Service {
         }
 
         return notificationManager;
+    }
+
+    private void publishProgress() {
+        Log.v(TAG, "reporting back from the Service Thread");
+        String text = "PROVA";
+        Bundle msgBundle = new Bundle();
+        msgBundle.putString("result", text);
+        Message msg = Message.obtain();
+        msg.setData(msgBundle);
+        handler.sendMessage(msg);
     }
 }

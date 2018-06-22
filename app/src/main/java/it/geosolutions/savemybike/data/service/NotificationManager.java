@@ -122,6 +122,12 @@ public class NotificationManager extends BroadcastReceiver {
             case CAR:
                 modeSrc = R.drawable.ic_directions_car;
                 break;
+            case MOPED:
+                modeSrc = R.drawable.ic_directions_motorcycle;
+                break;
+            case TRAIN:
+                modeSrc = R.drawable.ic_directions_train;
+                break;
         }
 
         NotificationCompat.Action modeAction = new NotificationCompat.Action.Builder(modeSrc, mService.getString(R.string.mode), mModeIntent).build();

@@ -5,13 +5,14 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class RecordFragment extends Fragment {
     @BindView(R.id.simulate_tv) TextView simulateTV;
     @BindView(R.id.stats_dist) TextView distTV;
     @BindView(R.id.stats_time) TextView timeTV;
-    @BindView(R.id.stats_row) LinearLayout statsRow;
+    @BindView(R.id.stats_group) Group statsRow;
 
     private boolean statsHidden = true;
 
@@ -123,7 +124,7 @@ public class RecordFragment extends Fragment {
 
                 //select
                 Drawable mWrappedDrawable = DrawableCompat.wrap(((ImageView)modeViews.get(i)).getDrawable().mutate());
-                DrawableCompat.setTint(mWrappedDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
+                //DrawableCompat.setTint(mWrappedDrawable, ContextCompat.getColor(getActivity(), android.R.color.white));
                 DrawableCompat.setTintMode(mWrappedDrawable, PorterDuff.Mode.SRC_IN);
                 ((ImageView)modeViews.get(i)).setImageDrawable(mWrappedDrawable);
 
@@ -132,7 +133,7 @@ public class RecordFragment extends Fragment {
 
                 //unselect
                 Drawable mWrappedDrawable = DrawableCompat.wrap(((ImageView)modeViews.get(i)).getDrawable().mutate());
-                DrawableCompat.setTint(mWrappedDrawable, ContextCompat.getColor(getActivity(), android.R.color.black));
+                //DrawableCompat.setTint(mWrappedDrawable, ContextCompat.getColor(getActivity(), android.R.color.black));
                 DrawableCompat.setTintMode(mWrappedDrawable, PorterDuff.Mode.SRC_IN);
                 ((ImageView)modeViews.get(i)).setImageDrawable(mWrappedDrawable);
 
@@ -156,6 +157,7 @@ public class RecordFragment extends Fragment {
 
             final double dist = session.getDistance();
             final long time = session.getOverallTime();
+            Log.i(TAG, "DIST: "+ dist+ " TIME: "+time);
 
             if(((SaveMyBikeActivity)getActivity()).getConfiguration().metric){
 
@@ -165,12 +167,14 @@ public class RecordFragment extends Fragment {
             }
             timeTV.setText(Util.longToTimeString(time));
 
-        }else{
+        }
+        /*
+        else{
             if(!statsHidden){
                 statsRow.setVisibility(View.INVISIBLE);
                 statsHidden = true;
             }
-        }
+        }*/
     }
 
     /**
@@ -190,45 +194,57 @@ public class RecordFragment extends Fragment {
 
         switch (view.getId()){
             case R.id.mode_foot:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.FOOT, true);
+                recordButtonHandler(Vehicle.VehicleType.FOOT);
                 break;
             case R.id.mode_bike:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.BIKE, true);
+                recordButtonHandler(Vehicle.VehicleType.BIKE);
                 break;
             case R.id.mode_bus:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.BUS, true);
+                recordButtonHandler(Vehicle.VehicleType.BUS);
                 break;
             case R.id.mode_car:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.CAR, true);
+                recordButtonHandler(Vehicle.VehicleType.CAR);
                 break;
             case R.id.mode_moped:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.MOPED, true);
+                recordButtonHandler(Vehicle.VehicleType.MOPED);
                 break;
             case R.id.mode_train:
-                ((SaveMyBikeActivity)getActivity()).changeVehicle(Vehicle.VehicleType.TRAIN, true);
+                recordButtonHandler(Vehicle.VehicleType.TRAIN);
                 break;
             case R.id.record_button:
+                recordButtonHandler();
+                break;
+        }
+    }
 
-                //detect if we are currently recording or not
-                Session currentSession = null;
+    private void recordButtonHandler(){
+        recordButtonHandler(null);
+    }
 
-                if(((SaveMyBikeActivity)getActivity()).getCurrentSession() != null){
-                    currentSession = ((SaveMyBikeActivity)getActivity()).getCurrentSession();
-                }
+    private void recordButtonHandler(Vehicle.VehicleType vtype) {
 
-                if(currentSession != null && currentSession.getState() == Session.SessionState.ACTIVE){
+        if(vtype != null){
+            ((SaveMyBikeActivity)getActivity()).changeVehicle(vtype, true);
+        }
 
-                    //stop service
-                    ((SaveMyBikeActivity)getActivity()).stopRecording();
+        //detect if we are currently recording or not
+        Session currentSession = null;
 
-                    applySessionState(Session.SessionState.STOPPED);
-                } else {
+        if(((SaveMyBikeActivity)getActivity()).getCurrentSession() != null){
+            currentSession = ((SaveMyBikeActivity)getActivity()).getCurrentSession();
+        }
 
-                    ((SaveMyBikeActivity)getActivity()).startRecording();
+        if(currentSession != null && currentSession.getState() == Session.SessionState.ACTIVE){
 
-                    applySessionState(Session.SessionState.ACTIVE);
-                }
-            break;
+            //stop service
+            ((SaveMyBikeActivity)getActivity()).stopRecording();
+
+            applySessionState(Session.SessionState.STOPPED);
+        } else {
+
+            ((SaveMyBikeActivity)getActivity()).startRecording();
+
+            applySessionState(Session.SessionState.ACTIVE);
         }
     }
 

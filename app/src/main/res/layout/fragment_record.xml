@@ -1,199 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/record_background">
 
     <TextView
         android:id="@+id/mode_selection"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-light"
         android:gravity="center_horizontal"
-        android:text="Select a vehicle"
-        android:textColor="@android:color/black"
-        android:textSize="24dp">
-    </TextView>
+        android:text="@string/select_a_vehicle"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/mode_bike"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/simulate_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:fontFamily="sans-serif-light"
         android:padding="2dp"
-        android:text="simulation"
+        android:text="@string/simulation"
         android:textColor="@android:color/black"
-        android:textSize="12dp"
-        android:visibility="gone"/>
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/mode_parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/mode_selection"
-        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/mode_row_0"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight=".3"
-            android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/mode_foot"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/mode_foot"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mode_moped"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/mode_bike"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline4"
+        app:srcCompat="@drawable/ic_directions_walk" />
 
-            <ImageView
-                android:id="@+id/mode_foot"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_walk"/>
+    <ImageView
+        android:id="@+id/mode_bike"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/mode_bordered"
+        android:contentDescription="@string/mode_bike"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mode_car"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mode_foot"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:srcCompat="@drawable/ic_directions_bike" />
 
-            <ImageView
-                android:id="@+id/mode_bike"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:background="@drawable/mode_bordered"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_bike"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/mode_row_1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight=".3"
-            android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/mode_moped"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/mode_bordered"
+        android:contentDescription="@string/mode_moped"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mode_bus"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/mode_car"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mode_foot"
+        app:srcCompat="@drawable/ic_directions_motorcycle" />
 
-            <ImageView
-                android:id="@+id/mode_moped"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:background="@drawable/mode_bordered"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_motorcycle"/>
+    <ImageView
+        android:id="@+id/mode_car"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/mode_bordered"
+        android:contentDescription="@string/mode_car"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mode_train"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mode_moped"
+        app:layout_constraintTop_toBottomOf="@+id/mode_bike"
+        app:srcCompat="@drawable/ic_directions_car" />
 
-            <ImageView
-                android:id="@+id/mode_car"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:background="@drawable/mode_bordered"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_car"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/mode_row_icons2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight=".3"
-            android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/mode_bus"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/mode_bordered"
+        android:contentDescription="@string/mode_bus"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/record_button"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/mode_train"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mode_moped"
+        app:srcCompat="@drawable/ic_directions_bus" />
 
-            <ImageView
-                android:id="@+id/mode_bus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:background="@drawable/mode_bordered"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_bus"/>
+    <ImageView
+        android:id="@+id/mode_train"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/mode_bordered"
+        android:contentDescription="@string/mode_train"
+        android:padding="20dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/record_button"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mode_bus"
+        app:layout_constraintTop_toBottomOf="@+id/mode_car"
+        app:srcCompat="@drawable/ic_directions_train" />
 
-            <ImageView
-                android:id="@+id/mode_train"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:background="@drawable/mode_bordered"
-                android:padding="10dp"
-                app:srcCompat="@drawable/ic_directions_train"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/mode_row_2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight=".4"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/stats_time"
+        android:layout_width="0dp"
+        android:layout_height="83dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center_vertical|center_horizontal|start"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/record_button"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/record_button" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    <TextView
+        android:id="@+id/stats_dist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center_vertical|center_horizontal|end"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/record_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/record_button"
+        app:layout_constraintTop_toTopOf="@+id/record_button" />
 
-                <LinearLayout
-                    android:id="@+id/stats_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    android:visibility="invisible"
-                    android:layout_weight=".3">
 
-                    <TextView
-                        android:id="@+id/stats_time"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif"
-                        android:layout_gravity="start|center_vertical"
-                        android:gravity="start|center_horizontal"
-                        android:text="0:01"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"/>
+    <ImageView
+        android:id="@+id/record_button"
+        android:layout_width="0dp"
+        android:layout_height="88dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/record"
+        android:tint="@android:color/white"
+        app:layout_constrainedHeight="false"
+        app:layout_constrainedWidth="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_record" />
 
-                    <TextView
-                        android:id="@+id/stats_dist"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif"
-                        android:layout_gravity="end|center_vertical"
-                        android:gravity="end|center_horizontal"
-                        android:text="0.12km"
-                        android:textColor="@android:color/black"
-                        android:textSize="24sp"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="28dp" />
 
-                </LinearLayout>
+    <android.support.constraint.Group
+        android:id="@+id/stats_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
 
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:id="@+id/record_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/ic_record" />
-
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

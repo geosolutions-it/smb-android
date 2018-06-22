@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -299,6 +300,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                     Log.d(TAG, "onServiceConnected");
                 }
                 mService = ((SaveMyBikeService.SaveMyBikeBinder) binder).getService();
+                mService.setHandler(getHandler());
                 if (applyServiceVehicle) {
 
                     Fragment currentFragment = getCurrentFragment();
@@ -544,9 +546,17 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             if (currentFragment != null && currentFragment instanceof RecordFragment) {
                 Session session = getCurrentSession();
                 ((RecordFragment) currentFragment).invalidateSessionStats(session);
+/*
+                String text = "PROVA";
+                Bundle msgBundle = new Bundle();
+                msgBundle.putString("result", text);
+                Message msg = Message.obtain();
+                msg.setData(msgBundle);
+                getHandler().sendMessage(msg);*/
             }
 
             getHandler().postDelayed(this, UI_UPDATE_INTERVAL);
+
         }
     };
 
@@ -575,7 +585,9 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                     ((RecordFragment) currentFragment).applySessionState(Session.SessionState.STOPPED);
                 }
             } else if (intent.getAction().equals(Constants.INTENT_VEHICLE_UPDATE)) {
-
+                // Here we are reacting to the notification vehicle change
+                // the service has just been updated so we query it to get the new vehicle
+                // then we tell the ui to update, without telling the service again it was updated
                 if (mService != null) {
                     Vehicle newVehicle = mService.getCurrentVehicle();
                     if (newVehicle != null) {
@@ -681,9 +693,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         return currentVehicle;
     }
 
-    private Handler getHandler() {
+    /**
+     * Manage both recurring tasks and messages from the background service
+     * @return
+     */
+    Handler getHandler() {
         if (handler == null) {
-            handler = new Handler();
+            handler = new HandlerExtension(this);
         }
         return handler;
     }
@@ -695,5 +711,33 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         }
 
         return mReceiver;
+    }
+
+    // TODO: investigate possible memory leaks after confirming it works
+    private static class HandlerExtension extends Handler {
+
+        private final WeakReference<SaveMyBikeActivity> currentActivity;
+
+        public HandlerExtension(SaveMyBikeActivity activity){
+            currentActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message message){
+            SaveMyBikeActivity activity = currentActivity.get();
+            if (activity!= null){
+                activity.updateResults(message.getData().getString("result"));
+            }
+        }
+    }
+
+    public void updateResults(String results) {
+
+        Fragment currentFragment = getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof RecordFragment) {
+            Session session = getCurrentSession();
+            ((RecordFragment) currentFragment).invalidateSessionStats(session);
+        }
+        Toast.makeText(this, results, Toast.LENGTH_SHORT).show();
     }
 }

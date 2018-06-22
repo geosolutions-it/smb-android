@@ -1,6 +1,7 @@
 package it.geosolutions.savemybike.data.dataProviders;
 
 import android.location.Location;
+import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +18,9 @@ import it.geosolutions.savemybike.model.DataPoint;
 
 public class GPSSimulator implements IDataProvider {
 
-   public enum SimulationMode{
+    private Handler handler;
+
+    public enum SimulationMode{
 
        TEST_RIDE,
        LIMITLESS
@@ -34,16 +37,14 @@ public class GPSSimulator implements IDataProvider {
     private static final float SIM_MOVE_SPEED_IN_MS = 6f;
     private static final float SIM_ACCURACY = 15f;
 
-    private final SaveMyBikeService mService;
     private SessionLogic sessionLogic;
     private int currentSimulationIndex;
     private boolean cancelled = false;
 
     private ArrayList<DataPoint> locations;
 
-    public GPSSimulator(final SaveMyBikeService service, final SessionLogic pSessionLogic){
+    public GPSSimulator(final SessionLogic pSessionLogic){
 
-        this.mService = service;
         this.sessionLogic = pSessionLogic;
         this.sessionLogic.setSimulating(true);
         
@@ -74,7 +75,7 @@ public class GPSSimulator implements IDataProvider {
                 currentSimulationIndex++;
 
                 if(!cancelled) {
-                    mService.getHandler().postDelayed(this, SIMULATION_INTERVAL);
+                    getHandler().postDelayed(this, SIMULATION_INTERVAL);
                 }
             }
         }
@@ -114,7 +115,7 @@ public class GPSSimulator implements IDataProvider {
                 break;
         }
 
-        mService.getHandler().postDelayed(locSimulator, GPSSimulator.START_THRESHOLD);
+        getHandler().postDelayed(locSimulator, GPSSimulator.START_THRESHOLD);
         
     }
 
@@ -166,5 +167,16 @@ public class GPSSimulator implements IDataProvider {
     @Override
     public String getName() {
         return "GPSSimulator";
+    }
+
+    /**
+     * This handler is used for repeating tasks
+     * @return
+     */
+    Handler getHandler() {
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
     }
 }
