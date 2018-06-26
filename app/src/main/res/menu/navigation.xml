@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/navigation_record"
-        android:icon="@drawable/ic_record"
-        android:title="@string/title_record"/>
+        android:icon="@drawable/footer_record_off"
+        android:title="@string/title_record" />
 
     <item
         android:id="@+id/navigation_stats"
-        android:icon="@drawable/ic_dashboard"
+        android:icon="@drawable/ic_footer_stats_off"
         android:title="@string/title_stats"/>
 
     <item
         android:id="@+id/navigation_bikes"
-        android:icon="@drawable/ic_directions_bike"
-        android:title="@string/title_bikes"/>
+        android:icon="@drawable/ic_footer_bikes_off"
+        android:title="@string/title_bikes" />
 
 
 </menu>

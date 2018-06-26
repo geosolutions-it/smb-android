@@ -102,11 +102,11 @@ public class RecordFragment extends Fragment {
 
             case ACTIVE:
                 //switch to "Pause" UI
-                recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_pause));
+                recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_record_stop));
                 break;
             case STOPPED:
                 //switch to "Record" UI
-                recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_record));
+                recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_record_play_pause));
                 break;
         }
     }
@@ -194,22 +194,22 @@ public class RecordFragment extends Fragment {
 
         switch (view.getId()){
             case R.id.mode_foot:
-                recordButtonHandler(Vehicle.VehicleType.FOOT);
+                vehicleChange(Vehicle.VehicleType.FOOT);
                 break;
             case R.id.mode_bike:
-                recordButtonHandler(Vehicle.VehicleType.BIKE);
+                vehicleChange(Vehicle.VehicleType.BIKE);
                 break;
             case R.id.mode_bus:
-                recordButtonHandler(Vehicle.VehicleType.BUS);
+                vehicleChange(Vehicle.VehicleType.BUS);
                 break;
             case R.id.mode_car:
-                recordButtonHandler(Vehicle.VehicleType.CAR);
+                vehicleChange(Vehicle.VehicleType.CAR);
                 break;
             case R.id.mode_moped:
-                recordButtonHandler(Vehicle.VehicleType.MOPED);
+                vehicleChange(Vehicle.VehicleType.MOPED);
                 break;
             case R.id.mode_train:
-                recordButtonHandler(Vehicle.VehicleType.TRAIN);
+                vehicleChange(Vehicle.VehicleType.TRAIN);
                 break;
             case R.id.record_button:
                 recordButtonHandler();
@@ -223,9 +223,7 @@ public class RecordFragment extends Fragment {
 
     private void recordButtonHandler(Vehicle.VehicleType vtype) {
 
-        if(vtype != null){
-            ((SaveMyBikeActivity)getActivity()).changeVehicle(vtype, true);
-        }
+        vehicleChange(vtype);
 
         //detect if we are currently recording or not
         Session currentSession = null;
@@ -245,6 +243,12 @@ public class RecordFragment extends Fragment {
             ((SaveMyBikeActivity)getActivity()).startRecording();
 
             applySessionState(Session.SessionState.ACTIVE);
+        }
+    }
+
+    private void vehicleChange(Vehicle.VehicleType vtype) {
+        if(vtype != null){
+            ((SaveMyBikeActivity)getActivity()).changeVehicle(vtype, true);
         }
     }
 
