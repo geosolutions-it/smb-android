@@ -253,8 +253,12 @@ public class RetrofitClient {
             // TODO: inject authentication token
 
             Request request = chain.request();
-            Request authenticatedRequest = request.newBuilder().header("Authorization", token).build();
-            return chain.proceed(authenticatedRequest);
+            if (token != null){
+                Request authenticatedRequest = request.newBuilder().header("Authorization", token).build();
+                return chain.proceed(authenticatedRequest);
+            }
+            return chain.proceed(request);
+
         }
     }
 

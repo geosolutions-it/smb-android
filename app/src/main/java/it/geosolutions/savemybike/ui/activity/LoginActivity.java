@@ -17,6 +17,8 @@ package it.geosolutions.savemybike.ui.activity;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,31 +37,59 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.AuthorizationServiceDiscovery;
+import net.openid.appauth.ClientAuthentication;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.RegistrationRequest;
 import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
+import net.openid.appauth.TokenRequest;
+import net.openid.appauth.TokenResponse;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
+import org.joda.time.format.DateTimeFormat;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.Configuration;
+import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Constants;
+import okio.Okio;
 
 /**
  * Demonstrates the usage of the AppAuth to authorize a user with an OAuth2 / OpenID Connect
@@ -81,6 +111,7 @@ public final class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final String EXTRA_FAILED = "failed";
     private static final int RC_AUTH = 100;
+    public static final String KEY_USER_INFO = "userInfo";
 
     private AuthorizationService mAuthService;
     private AuthStateManager mAuthStateManager;
@@ -89,6 +120,8 @@ public final class LoginActivity extends AppCompatActivity {
     private final AtomicReference<String> mClientId = new AtomicReference<>();
     private final AtomicReference<AuthorizationRequest> mAuthRequest = new AtomicReference<>();
     private final AtomicReference<CustomTabsIntent> mAuthIntent = new AtomicReference<>();
+    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
+
     private CountDownLatch mAuthIntentLatch = new CountDownLatch(1);
     private ExecutorService mExecutor;
 
@@ -97,27 +130,73 @@ public final class LoginActivity extends AppCompatActivity {
     @NonNull
     private BrowserMatcher mBrowserMatcher = AnyBrowserMatcher.INSTANCE;
 
+    @BindView(R.id.explanation) TextView failure_explanation;
+    @BindView(R.id.authorized) View authorized;
+    @BindView(R.id.not_authorized) View not_authorized;
+    @BindView(R.id.loading_container) View loading_container;
+    @BindView(R.id.refresh_token_info) TextView refreshTokenInfoView;
+    @BindView(R.id.access_token_info) TextView accessTokenInfoView;
+    @BindView(R.id.id_token_info) TextView idTokenInfoView;
+    @BindView(R.id.refresh_token) Button refreshTokenButton;
+    @BindView(R.id.retry) View retry;
+    @BindView(R.id.view_profile) Button viewProfileButton;
+    @BindView(R.id.userinfo_card) View userInfoCard;
+    @BindView(R.id.error_container) View error_container;
+    @BindView(R.id.auth_container) View auth_container;
+    @BindView(R.id.auth_endpoint) TextView auth_endpoint;
+    @BindView(R.id.client_id) TextView client_id;
+    @BindView(R.id.error_description) TextView error_description;
+    @BindView(R.id.userinfo_name) TextView userinfo_name;
+    @BindView(R.id.userinfo_json) TextView userinfo_json;
+    @BindView(R.id.userinfo_profile) ImageView userinfo_profile;
+    @BindView(R.id.loading_description) TextView loading_description;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.fragment_login);
+        ButterKnife.bind(this);
 
         mExecutor = Executors.newSingleThreadExecutor();
         mAuthStateManager = AuthStateManager.getInstance(this);
         mConfiguration = Configuration.getInstance(this);
 
-        if (mAuthStateManager.getCurrent().isAuthorized()
-                && !mConfiguration.hasConfigurationChanged()) {
-            Log.i(TAG, "User is already authenticated, proceeding to token activity");
-            startActivity(new Intent(this, SaveMyBikeActivity.class));
-            finish();
+        if (mConfiguration.hasConfigurationChanged()) {
+            Toast.makeText(
+                    this,
+                    "Configuration change detected",
+                    Toast.LENGTH_SHORT)
+                    .show();
+            signOut();
             return;
         }
 
-        setContentView(R.layout.fragment_login);
+        mAuthService = new AuthorizationService(
+                this,
+                new AppAuthConfiguration.Builder()
+                        .setConnectionBuilder(mConfiguration.getConnectionBuilder())
+                        .build());
 
-        findViewById(R.id.retry).setOnClickListener((View view) ->
+        if (savedInstanceState != null) {
+            Log.i(TAG, "I have instanceState");
+            Log.i(TAG, savedInstanceState.getString(KEY_USER_INFO, "But I don't have the KEY_USER_INFO!!"));
+/*            try {
+                mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
+            } catch (JSONException ex) {
+                Log.e(TAG, "Failed to parse saved user info JSON, discarding", ex);
+            }*/
+        }
+
+        if (mAuthStateManager.getCurrent().isAuthorized()
+                && !mConfiguration.hasConfigurationChanged()) {
+            Log.i(TAG, "User is already authenticated, proceeding to main activity");
+            launchMainActivity();
+            return;
+        }
+
+        retry.setOnClickListener((View view) ->
                 mExecutor.submit(this::initializeAppAuth));
-        findViewById(R.id.start_auth).setOnClickListener((View view) -> startAuth());
 
         if (!mConfiguration.isValid()) {
             displayError(mConfiguration.getConfigurationError(), false);
@@ -145,6 +224,168 @@ public final class LoginActivity extends AppCompatActivity {
         if (mExecutor.isShutdown()) {
             mExecutor = Executors.newSingleThreadExecutor();
         }
+
+        if (mAuthStateManager.getCurrent().isAuthorized()) {
+            displayAuthorized();
+            return;
+        }else {
+
+            // the stored AuthState is incomplete, so check if we are currently receiving the result of
+            // the authorization flow from the browser.
+            AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+            AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+
+            if (response != null || ex != null) {
+                mAuthStateManager.updateAfterAuthorization(response, ex);
+            }
+
+            if (response != null && response.authorizationCode != null) {
+                // authorization code exchange is required
+                mAuthStateManager.updateAfterAuthorization(response, ex);
+                exchangeAuthorizationCode(response);
+            } else if (ex != null) {
+                displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
+            } else {
+                displayNotAuthorized("No authorization state retained - reauthorization required");
+            }
+        }
+    }
+
+    @MainThread
+    private void displayAuthorized() {
+
+        authorized.setVisibility(View.VISIBLE);
+        not_authorized.setVisibility(View.GONE);
+        loading_container.setVisibility(View.GONE);
+
+        AuthState state = mAuthStateManager.getCurrent();
+
+        refreshTokenInfoView.setText((state.getRefreshToken() == null)
+                ? R.string.no_refresh_token_returned
+                : R.string.refresh_token_returned);
+
+        idTokenInfoView.setText((state.getIdToken()) == null
+                ? R.string.no_id_token_returned
+                : R.string.id_token_returned);
+
+        if (state.getAccessToken() == null) {
+            accessTokenInfoView.setText(R.string.no_access_token_returned);
+        } else {
+            Long expiresAt = state.getAccessTokenExpirationTime();
+            if (expiresAt == null) {
+                accessTokenInfoView.setText(R.string.no_access_token_expiry);
+            } else if (expiresAt < System.currentTimeMillis()) {
+                accessTokenInfoView.setText(R.string.access_token_expired);
+            } else {
+                String template = getResources().getString(R.string.access_token_expires_at);
+                accessTokenInfoView.setText(String.format(template,
+                        DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss ZZ").print(expiresAt)));
+            }
+        }
+
+        refreshTokenButton.setVisibility(state.getRefreshToken() != null
+                ? View.VISIBLE
+                : View.GONE);
+        refreshTokenButton.setOnClickListener((View view) -> refreshAccessToken());
+
+        AuthorizationServiceDiscovery discoveryDoc =
+                state.getAuthorizationServiceConfiguration().discoveryDoc;
+        if ((discoveryDoc == null || discoveryDoc.getUserinfoEndpoint() == null)
+                && mConfiguration.getUserInfoEndpointUri() == null) {
+            viewProfileButton.setVisibility(View.GONE);
+        } else {
+            viewProfileButton.setVisibility(View.VISIBLE);
+            viewProfileButton.setOnClickListener((View view) -> fetchUserInfo());
+        }
+
+
+        JSONObject userInfo = mUserInfoJson.get();
+        if (userInfo == null) {
+            userInfoCard.setVisibility(View.INVISIBLE);
+        } else {
+            try {
+                String name = "???";
+                if (userInfo.has("name")) {
+                    name = userInfo.getString("name");
+                }
+                userinfo_name.setText(name);
+
+                if (userInfo.has("picture")) {
+                    GlideApp.with(LoginActivity.this)
+                            .load(Uri.parse(userInfo.getString("picture")))
+                            .fitCenter()
+                            .into(userinfo_profile);
+                }
+
+                userinfo_json.setText(mUserInfoJson.toString());
+                userInfoCard.setVisibility(View.VISIBLE);
+            } catch (JSONException ex) {
+                Log.e(TAG, "Failed to read userinfo JSON", ex);
+            }
+        }
+
+
+        getCognitoToken();
+        /*
+        Log.i(TAG, "Launching Main Activity");
+        launchMainActivity();
+        */
+    }
+
+    private void launchMainActivity() {
+        Log.w(TAG, "*****************************************************************");
+        Log.w(TAG, "******************   SKIPPING ACTIVITY LAUNCH ******************");
+        Log.w(TAG, "*****************************************************************");
+        if(true) return; // TODO REMOVE
+        startActivity(new Intent(this, SaveMyBikeActivity.class));
+        finish();
+    }
+
+
+    private void getCognitoToken() {
+
+        AuthState state = mAuthStateManager.getCurrent();
+        String idToken = state.getIdToken();
+        Log.i("LogTag", "my IDToken is " + idToken);
+        Log.i("LogTag", "my AccessToken is " + state.getAccessToken());
+        Log.i("LogTag", "my AccessToken expiration time is: " + state.getAccessTokenExpirationTime());
+        Log.i("LogTag", "my RefreshToken is " + state.getRefreshToken());
+        Log.i("LogTag", "RefreshToken needs refresh? " + state.getNeedsTokenRefresh());
+
+        // Create a credentials provider, or use the existing provider.
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(this, Constants.AWS_IDENTITY_POOL_ID, Constants.AWS_REGION);
+
+        // Set up as a credentials provider.
+        Map<String, String> logins = new HashMap<>();
+        logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
+        credentialsProvider.setLogins(logins);
+
+        new getCognitoTokenTask().execute(credentialsProvider);
+
+    }
+
+    private static class getCognitoTokenTask extends AsyncTask<CognitoCachingCredentialsProvider , Integer, Long>
+    {
+        @Override
+        protected Long doInBackground(CognitoCachingCredentialsProvider ...credentialsProviders)
+        {
+            int count = credentialsProviders.length;
+            CognitoCachingCredentialsProvider credentialsProvider;
+            for (int i = 0; i < count; i++)
+            {
+                credentialsProvider = credentialsProviders[i];
+
+                AWSCredentials awsc = credentialsProvider.getCredentials();
+                Log.d("LogTag", "my cred are " + awsc.getAWSAccessKeyId());
+
+                String identityId = credentialsProvider.getIdentityId();
+                Log.d("LogTag", "my ID is " + identityId);
+
+
+            }
+            return 42L;
+        }
+
     }
 
     @Override
@@ -164,18 +405,50 @@ public final class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "Returned. Code: "+ resultCode);
         displayAuthOptions();
         if (resultCode == RESULT_CANCELED) {
             displayAuthCancelled();
-        } else {
+        }  else {
+            Log.i(TAG, "LOGIN SUCCESS");
+            /*
             Intent intent = new Intent(this, SaveMyBikeActivity.class);
             intent.putExtras(data.getExtras());
             startActivity(intent);
+            */
+            Bundle bundle = data.getExtras();
+            if (bundle != null) {
+                for (String key : bundle.keySet()) {
+                    Object value = bundle.get(key);
+                    Log.d(TAG, key + " " + (value == null ? "NULL" : value.toString() + " (" + value.getClass().getName()));
+                }
+            }
+
+            // the stored AuthState is incomplete, so check if we are currently receiving the result of
+            // the authorization flow from the browser.
+            AuthorizationResponse response = AuthorizationResponse.fromIntent(data);
+            AuthorizationException ex = AuthorizationException.fromIntent(data);
+
+            if (response != null || ex != null) {
+                mAuthStateManager.updateAfterAuthorization(response, ex);
+            }
+
+            if (response != null && response.authorizationCode != null) {
+                // authorization code exchange is required
+                mAuthStateManager.updateAfterAuthorization(response, ex);
+                exchangeAuthorizationCode(response);
+            } else if (ex != null) {
+                displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
+            } else {
+                displayNotAuthorized("No authorization state retained - reauthorization required");
+            }
+
         }
     }
 
     @MainThread
-    void startAuth() {
+    @OnClick({R.id.start_auth})
+    public void startAuth() {
         displayLoading("Making authorization request");
 
         mUsePendingIntents = false;
@@ -347,22 +620,76 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     @MainThread
-    private void displayLoading(String loadingMessage) {
-        findViewById(R.id.loading_container).setVisibility(View.VISIBLE);
-        findViewById(R.id.auth_container).setVisibility(View.GONE);
-        findViewById(R.id.error_container).setVisibility(View.GONE);
+    private void fetchUserInfo() {
+        displayLoading("Fetching user info");
+        mAuthStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+    }
 
-        ((TextView)findViewById(R.id.loading_description)).setText(loadingMessage);
+    @MainThread
+    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
+        if (ex != null) {
+            Log.e(TAG, "Token refresh failed when fetching user info");
+            mUserInfoJson.set(null);
+            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+
+        AuthorizationServiceDiscovery discovery =
+                mAuthStateManager.getCurrent()
+                        .getAuthorizationServiceConfiguration()
+                        .discoveryDoc;
+
+        URL userInfoEndpoint;
+        try {
+            userInfoEndpoint =
+                    mConfiguration.getUserInfoEndpointUri() != null
+                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
+                            : new URL(discovery.getUserinfoEndpoint().toString());
+        } catch (MalformedURLException urlEx) {
+            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+            mUserInfoJson.set(null);
+            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+
+        mExecutor.submit(() -> {
+            try {
+                HttpURLConnection conn =
+                        (HttpURLConnection) userInfoEndpoint.openConnection();
+                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                conn.setInstanceFollowRedirects(false);
+                String response = Okio.buffer(Okio.source(conn.getInputStream()))
+                        .readString(Charset.forName("UTF-8"));
+                mUserInfoJson.set(new JSONObject(response));
+            } catch (IOException ioEx) {
+                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+                Toast.makeText(getBaseContext(),"Fetching user info failed", Toast.LENGTH_SHORT).show();
+            } catch (JSONException jsonEx) {
+                Log.e(TAG, "Failed to parse userinfo response");
+                Toast.makeText(getBaseContext(), "Failed to parse user info", Toast.LENGTH_SHORT).show();
+            }
+
+            runOnUiThread(this::displayAuthorized);
+        });
+    }
+
+    @MainThread
+    private void displayLoading(String loadingMessage) {
+        loading_container.setVisibility(View.VISIBLE);
+        auth_container.setVisibility(View.GONE);
+        error_container.setVisibility(View.GONE);
+
+        loading_description.setText(loadingMessage);
     }
 
     @MainThread
     private void displayError(String error, boolean recoverable) {
-        findViewById(R.id.error_container).setVisibility(View.VISIBLE);
-        findViewById(R.id.loading_container).setVisibility(View.GONE);
-        findViewById(R.id.auth_container).setVisibility(View.GONE);
+        error_container.setVisibility(View.VISIBLE);
+        loading_container.setVisibility(View.GONE);
+        auth_container.setVisibility(View.GONE);
 
-        ((TextView)findViewById(R.id.error_description)).setText(error);
-        findViewById(R.id.retry).setVisibility(recoverable ? View.VISIBLE : View.GONE);
+        error_description.setText(error);
+        retry.setVisibility(recoverable ? View.VISIBLE : View.GONE);
     }
 
     // WrongThread inference is incorrect in this case
@@ -381,9 +708,9 @@ public final class LoginActivity extends AppCompatActivity {
 
     @MainThread
     private void displayAuthOptions() {
-        findViewById(R.id.auth_container).setVisibility(View.VISIBLE);
-        findViewById(R.id.loading_container).setVisibility(View.GONE);
-        findViewById(R.id.error_container).setVisibility(View.GONE);
+        auth_container.setVisibility(View.VISIBLE);
+        loading_container.setVisibility(View.GONE);
+        error_container.setVisibility(View.GONE);
 
         AuthState state = mAuthStateManager.getCurrent();
         AuthorizationServiceConfiguration config = state.getAuthorizationServiceConfiguration();
@@ -395,7 +722,7 @@ public final class LoginActivity extends AppCompatActivity {
             authEndpointStr = "Static auth endpoint: \n";
         }
         authEndpointStr += config.authorizationEndpoint;
-        ((TextView)findViewById(R.id.auth_endpoint)).setText(authEndpointStr);
+        auth_endpoint.setText(authEndpointStr);
 
         String clientIdStr;
         if (state.getLastRegistrationResponse() != null) {
@@ -404,7 +731,7 @@ public final class LoginActivity extends AppCompatActivity {
             clientIdStr = "Static client ID: \n";
         }
         clientIdStr += mClientId;
-        ((TextView)findViewById(R.id.client_id)).setText(clientIdStr);
+        client_id.setText(clientIdStr);
     }
 
     private void displayAuthCancelled() {
@@ -456,53 +783,109 @@ public final class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Responds to changes in the login hint. After a "debounce" delay, warms up the browser
-     * for a request with the new login hint; this avoids constantly re-initializing the
-     * browser while the user is typing.
-     */
-    private final class LoginHintChangeHandler implements TextWatcher {
+    @MainThread
+    private void displayNotAuthorized(String explanation) {
+        error_container.setVisibility(View.VISIBLE);
+        not_authorized.setVisibility(View.VISIBLE);
+        authorized.setVisibility(View.GONE);
+        loading_container.setVisibility(View.GONE);
 
-        private static final int DEBOUNCE_DELAY_MS = 500;
+        Log.e(TAG, explanation);
+        // showLoginFragment();
 
-        private Handler mHandler;
-        private RecreateAuthRequestTask mTask;
+        failure_explanation.setText(explanation);
 
-        LoginHintChangeHandler() {
-            mHandler = new Handler(Looper.getMainLooper());
-            mTask = new RecreateAuthRequestTask();
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence cs, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence cs, int start, int before, int count) {
-            mTask.cancel();
-            mTask = new RecreateAuthRequestTask();
-            mHandler.postDelayed(mTask, DEBOUNCE_DELAY_MS);
-        }
-
-        @Override
-        public void afterTextChanged(Editable ed) {}
     }
 
-    private final class RecreateAuthRequestTask implements Runnable {
+    @WorkerThread
+    private void handleCodeExchangeResponse(
+            @Nullable TokenResponse tokenResponse,
+            @Nullable AuthorizationException authException) {
 
-        private final AtomicBoolean mCanceled = new AtomicBoolean();
+        mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException);
+        if (!mAuthStateManager.getCurrent().isAuthorized()) {
+            final String message = "Authorization Code exchange failed"
+                    + ((authException != null) ? authException.error : "");
 
-        @Override
-        public void run() {
-            if (mCanceled.get()) {
-                return;
-            }
+            // WrongThread inference is incorrect for lambdas
+            //noinspection WrongThread
+            runOnUiThread(() -> displayNotAuthorized(message));
+        } else {
+            runOnUiThread(this::displayAuthorized);
+        }
+    }
 
-            createAuthRequest(getLoginHint());
-            warmUpBrowser();
+    @MainThread
+    private void refreshAccessToken() {
+        displayLoading("Refreshing access token");
+        performTokenRequest(
+                mAuthStateManager.getCurrent().createTokenRefreshRequest(),
+                this::handleAccessTokenResponse);
+    }
+    @MainThread
+    private void performTokenRequest(
+            TokenRequest request,
+            AuthorizationService.TokenResponseCallback callback) {
+        ClientAuthentication clientAuthentication;
+        try {
+            clientAuthentication = mAuthStateManager.getCurrent().getClientAuthentication();
+        } catch (ClientAuthentication.UnsupportedAuthenticationMethod ex) {
+            Log.i(TAG, "Token request cannot be made, client authentication for the token "
+                    + "endpoint could not be constructed (%s)", ex);
+            displayNotAuthorized("Client authentication method is unsupported");
+            return;
         }
 
-        public void cancel() {
-            mCanceled.set(true);
+        mAuthService.performTokenRequest(
+                request,
+                clientAuthentication,
+                callback);
+    }
+
+    @WorkerThread
+    private void handleAccessTokenResponse(
+            @Nullable TokenResponse tokenResponse,
+            @Nullable AuthorizationException authException) {
+        mAuthStateManager.updateAfterTokenResponse(tokenResponse, authException);
+        runOnUiThread(this::displayAuthorized);
+    }
+
+    @MainThread
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
+        displayLoading("Exchanging authorization code");
+        performTokenRequest(
+                authorizationResponse.createTokenExchangeRequest(),
+                this::handleCodeExchangeResponse);
+    }
+
+    @MainThread
+    @OnClick({R.id.sign_out, R.id.reauth})
+    public void signOut() {
+        Log.w(TAG, "Signing out");
+        // discard the authorization and token state, but retain the configuration and
+        // dynamic client registration (if applicable), to save from retrieving them again.
+        AuthState currentState = mAuthStateManager.getCurrent();
+        AuthState clearedState =
+                new AuthState(currentState.getAuthorizationServiceConfiguration());
+        if (currentState.getLastRegistrationResponse() != null) {
+            clearedState.update(currentState.getLastRegistrationResponse());
+        }
+        mAuthStateManager.replace(clearedState);
+
+        Intent mainIntent = new Intent(this, LoginActivity.class);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainIntent);
+        finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        // user info is retained to survive activity restarts, such as when rotating the
+        // device or switching apps. This isn't essential, but it helps provide a less
+        // jarring UX when these events occur - data does not just disappear from the view.
+        if (mUserInfoJson.get() != null) {
+            state.putString(KEY_USER_INFO, mUserInfoJson.toString());
         }
     }
 }

@@ -1,5 +1,7 @@
 package it.geosolutions.savemybike.data;
 
+import com.amazonaws.regions.Regions;
+
 /**
  * Created by Robert Oehler on 02.11.17.
  *
@@ -11,9 +13,10 @@ public class Constants {
     public final static int DEFAULT_PERSISTENCE_INTERVAL = 15000;
     public final static boolean DEFAULT_WIFI_ONLY = true;
 
+    public final static Regions AWS_REGION    = Regions.US_WEST_2;
     public final static String AWS_POOL      = "us-west-2_E1i57PuDf";
     public final static String AWS_CLIENT_ID_WO_SECRET = "69pkdd67bnvko38n9fgftrdt15";
-
+    public final static String AWS_IDENTITY_POOL_ID = "us-west-2:28fe9aee-83c7-42a9-8129-325ccd5fd10c";
     public final static String APP_DIR = "SaveMyBike/";
 
     public final static String SESSION_FILE_NAME = "session_%d.txt";
