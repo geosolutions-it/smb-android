@@ -115,6 +115,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
         if (config.hasConfigurationChanged()) {
+            Log.w(TAG, "hasConfigurationChanged() == true");
             Toast.makeText(
                     this,
                     "Configuration change detected",
@@ -154,6 +155,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             }
         }
 */
+        changeFragment(0);
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
 
@@ -177,12 +179,9 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                         SaveMyBikeActivity.this.configuration = configuration;
                         SaveMyBikeActivity.this.currentVehicle = getCurrentVehicleFromConfig();
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //invalidate UI
-                                invalidateRecordingUI();
-                            }
+                        runOnUiThread(() -> {
+                            //invalidate UI
+                            invalidateRecordingUI();
                         });
 
                     } else {
@@ -195,9 +194,9 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                     Log.e(TAG, "error downloading config " + message);
                 }
             }).execute();
-        } else {
-            //local config is used
         }
+        //else local config is used
+
 
         /*
          * Check if data can be uploaded
@@ -214,13 +213,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             s3Manager.checkUpload();
         }
     }
-
+/*
     void showLoginFragment(){
         changeFragment(3);
         navigation.setVisibility(View.GONE);
         getSupportActionBar().hide();
     }
-
+*/
     @Override
     protected void onStart() {
         super.onStart();
@@ -244,9 +243,8 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         //when not having an ongoing session, invalidate with the local vehicle
         if (!applyServiceVehicle) {
             invalidateRecordingUI();
-        } else {
-            //otherwise the UI update is done when re-binding to the service in @link onServiceConnected()
         }
+        //otherwise the UI update is done when re-binding to the service in @link onServiceConnected()
     }
 
     @Override
@@ -493,11 +491,10 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
                 //the permission was denied by the user, show a message
                 if (permissions.length > 0) {
-                    if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        //sdcard
-                        //TODO show a message or quit app when external storage (data upload) was denied ?
-                    } else if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
-
+                    //sdcard
+                    //TODO show a message or quit app when external storage (data upload) was denied ?
+                    if (!permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                            (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
                         //location
                         Toast.makeText(getBaseContext(), R.string.permission_location_required, Toast.LENGTH_SHORT).show();
                     }

@@ -46,5 +46,10 @@
     <string name="refresh_token_returned">Refresh token returned</string>
     <string name="no_id_token_returned">No ID token returned</string>
     <string name="id_token_returned">ID token returned</string>
+    <string name="pt">PT</string>
+    <string name="km">Km</string>
+    <string name="session_type">session type</string>
+    <string name="session_duration">session_duration</string>
+    <string name="bike_name">bike name</string>
 
 </resources>

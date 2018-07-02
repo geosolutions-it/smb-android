@@ -53,7 +53,6 @@ public class LoginFragment extends Fragment {
     @BindView(R.id.input_username)     EditText _usernameText;
     @BindView(R.id.input_password)  EditText _passwordText;
     @BindView(R.id.btn_login)       Button _loginButton;
-    @BindView(R.id.btn_test)        Button _testButton;
     // @BindView(R.id.link_signup) TextView _signupLink;
 
     private ProgressDialog progressDialog;
@@ -131,13 +130,6 @@ public class LoginFragment extends Fragment {
         }
 
         return valid;
-    }
-
-
-    @OnClick(R.id.btn_test)
-    public void test() {
-        Log.d(TAG, "Test");
-        tryAuthentication();
     }
 
     void tryAuthentication() {

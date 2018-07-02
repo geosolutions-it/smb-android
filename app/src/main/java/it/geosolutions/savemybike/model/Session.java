@@ -1,6 +1,7 @@
 package it.geosolutions.savemybike.model;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
@@ -121,6 +122,7 @@ public class Session {
      * by summing up the single distances between the dataPoints
      * @return the distance
      */
+    @NonNull
     public double getDistance() {
 
         double dist = 0;
@@ -293,4 +295,18 @@ public class Session {
     public void setCurrentVehicleType(Vehicle.VehicleType currentVehicleType) {
         this.currentVehicleType = currentVehicleType;
     }
+
+    /**
+     * Return the first point timeStamp
+     *
+     * @return the overall time of this session
+     */
+    public long getStartingTime(){
+
+        if (dataPoints != null && dataPoints.size() > 0) {
+            return dataPoints.get(0).timeStamp;
+        }
+        return 0;
+    }
+
 }

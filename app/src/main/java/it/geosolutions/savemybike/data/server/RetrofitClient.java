@@ -6,13 +6,22 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.exceptions.CognitoParameterInvalidException;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.ghedeon.AwsInterceptor;
+
+import net.openid.appauth.AuthState;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
+import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Configuration;
@@ -222,8 +231,20 @@ public class RetrofitClient {
     private OkHttpClient getClient(){
 
         if(client == null) {
+            AuthState state = AuthStateManager.getInstance(context).getCurrent();
+            String idToken = state.getIdToken();
+            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(context, it.geosolutions.savemybike.data.Constants.AWS_IDENTITY_POOL_ID, it.geosolutions.savemybike.data.Constants.AWS_REGION);
+
+            // Set up as a credentials provider.
+            Map<String, String> logins = new HashMap<>();
+            logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
+            credentialsProvider.setLogins(logins);
+
+            AwsInterceptor awsInterceptor = new AwsInterceptor(credentialsProvider, "S3", Regions.US_WEST_2.getName());
+
             client  = new OkHttpClient.Builder()
-                    .addInterceptor(new TokenInterceptor(context))
+                    //.addInterceptor(new TokenInterceptor(context))
+                    .addInterceptor(awsInterceptor)
                     .addInterceptor(new LoggingInterceptor())
                     .build();
         }

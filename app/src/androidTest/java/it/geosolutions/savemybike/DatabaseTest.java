@@ -49,7 +49,6 @@ public class DatabaseTest {
         String name = "testSession";
 
         testSession.setName(name);
-        testSession.setName(name);
         testSession.setState(Session.SessionState.ACTIVE);
         testSession.setBike(currentBike);
         testSession.setLastPersistedIndex(1);

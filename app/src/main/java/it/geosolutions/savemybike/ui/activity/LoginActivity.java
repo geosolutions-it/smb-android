@@ -17,12 +17,12 @@ package it.geosolutions.savemybike.ui.activity;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.AnyThread;
 import android.support.annotation.ColorRes;
 import android.support.annotation.MainThread;
@@ -32,9 +32,7 @@ import android.support.annotation.WorkerThread;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +66,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -78,7 +77,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import butterknife.BindView;
@@ -151,6 +149,8 @@ public final class LoginActivity extends AppCompatActivity {
     @BindView(R.id.userinfo_profile) ImageView userinfo_profile;
     @BindView(R.id.loading_description) TextView loading_description;
 
+    public static Boolean isStarting = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,7 +191,8 @@ public final class LoginActivity extends AppCompatActivity {
         if (mAuthStateManager.getCurrent().isAuthorized()
                 && !mConfiguration.hasConfigurationChanged()) {
             Log.i(TAG, "User is already authenticated, proceeding to main activity");
-            launchMainActivity();
+            displayAuthorized();
+
             return;
         }
 
@@ -227,8 +228,7 @@ public final class LoginActivity extends AppCompatActivity {
 
         if (mAuthStateManager.getCurrent().isAuthorized()) {
             displayAuthorized();
-            return;
-        }else {
+         }else {
 
             // the stored AuthState is incomplete, so check if we are currently receiving the result of
             // the authorization flow from the browser.
@@ -324,21 +324,7 @@ public final class LoginActivity extends AppCompatActivity {
             }
         }
 
-
         getCognitoToken();
-        /*
-        Log.i(TAG, "Launching Main Activity");
-        launchMainActivity();
-        */
-    }
-
-    private void launchMainActivity() {
-        Log.w(TAG, "*****************************************************************");
-        Log.w(TAG, "******************   SKIPPING ACTIVITY LAUNCH ******************");
-        Log.w(TAG, "*****************************************************************");
-        if(true) return; // TODO REMOVE
-        startActivity(new Intent(this, SaveMyBikeActivity.class));
-        finish();
     }
 
 
@@ -352,6 +338,12 @@ public final class LoginActivity extends AppCompatActivity {
         Log.i("LogTag", "my RefreshToken is " + state.getRefreshToken());
         Log.i("LogTag", "RefreshToken needs refresh? " + state.getNeedsTokenRefresh());
 
+        if(state.getNeedsTokenRefresh()){
+            Log.w("LogTag", "REFRESHING...");
+            refreshAccessToken();
+            return;
+        }
+
         // Create a credentials provider, or use the existing provider.
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(this, Constants.AWS_IDENTITY_POOL_ID, Constants.AWS_REGION);
 
@@ -360,32 +352,86 @@ public final class LoginActivity extends AppCompatActivity {
         logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
         credentialsProvider.setLogins(logins);
 
-        new getCognitoTokenTask().execute(credentialsProvider);
+        if(!isStarting) {
+            GetCognitoTokenTask m_task =  new GetCognitoTokenTask(LoginActivity.this);
+            m_task.execute(credentialsProvider);
+        }
 
     }
 
-    private static class getCognitoTokenTask extends AsyncTask<CognitoCachingCredentialsProvider , Integer, Long>
+    private static class GetCognitoTokenTask extends AsyncTask<CognitoCachingCredentialsProvider , Integer, Integer>
     {
+        private final WeakReference<LoginActivity> m_activity;
+
+        GetCognitoTokenTask(LoginActivity outerFragment) {
+            m_activity = new WeakReference<>(outerFragment);
+        }
+
         @Override
-        protected Long doInBackground(CognitoCachingCredentialsProvider ...credentialsProviders)
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            isStarting = true;
+        }
+
+        @Override
+        protected Integer doInBackground(CognitoCachingCredentialsProvider ...credentialsProviders)
         {
             int count = credentialsProviders.length;
             CognitoCachingCredentialsProvider credentialsProvider;
-            for (int i = 0; i < count; i++)
-            {
-                credentialsProvider = credentialsProviders[i];
-
-                AWSCredentials awsc = credentialsProvider.getCredentials();
-                Log.d("LogTag", "my cred are " + awsc.getAWSAccessKeyId());
-
-                String identityId = credentialsProvider.getIdentityId();
-                Log.d("LogTag", "my ID is " + identityId);
-
-
+            if(count < 1){
+                return 0;
             }
-            return 42L;
+
+            if (isCancelled()) {
+                return -1;
+            }
+            credentialsProvider = credentialsProviders[0];
+
+            AWSCredentials awsc = credentialsProvider.getCredentials();
+            Log.d("LogTag", "my cred are " + awsc.getAWSAccessKeyId());
+
+            String identityId = credentialsProvider.getIdentityId();
+            Log.d("LogTag", "my ID is " + identityId);
+
+
+            String AccessKey = credentialsProvider.getCredentials().getAWSAccessKeyId();
+            String SecretKey = credentialsProvider.getCredentials().getAWSSecretKey();
+            String SessionKey = credentialsProvider.getCredentials().getSessionToken();
+
+            Log.i(TAG,"AccessKey = " + AccessKey);
+            Log.i(TAG,"SecretKey = " + SecretKey);
+            Log.i(TAG,"SessionKey = " + SessionKey);
+
+
+            Log.w(TAG, "*****************************************************************");
+            Log.w(TAG, "*****************  LOGGED IN - START ACTIVITY  ******************");
+            Log.w(TAG, "*****************************************************************");
+
+
+
+            /*if(m_activity.get() != null){
+                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(m_activity.get()).edit();
+                ed.putString(Constants.PREF_CONFIG_ACCESSTOKEN, accessToken);
+                ed.putString(Constants.PREF_CONFIG_IDTOKEN, idToken);
+                ed.putString(Constants.PREF_CONFIG_REFRESHTOKEN, refreshToken);
+                ed.apply();
+            }*/
+            return 42;
+
         }
 
+        @Override
+        protected void onPostExecute(Integer aInt) {
+            super.onPostExecute(aInt);
+            isStarting = false;
+            if (aInt > 0 && m_activity.get() != null)
+            {
+                m_activity.get().startActivity(new Intent(m_activity.get(), SaveMyBikeActivity.class));
+                m_activity.get().finish();
+            }
+
+        }
     }
 
     @Override

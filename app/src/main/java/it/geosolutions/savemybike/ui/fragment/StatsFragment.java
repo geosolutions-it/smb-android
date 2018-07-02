@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.joda.time.format.DateTimeFormat;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class StatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stats, container,false);
         ButterKnife.bind(this, view);
 
-        adapter = new SessionAdapter(getActivity(), R.layout.item_session, new ArrayList<Session>());
+        adapter = new SessionAdapter(getActivity(), R.layout.item_session, new ArrayList<>());
         listView.setAdapter(adapter);
 
         invalidateSessions();
@@ -229,24 +231,22 @@ public class StatsFragment extends Fragment {
             }
 
             final Session session = getItem(position);
+            if(session != null) {
 
-            final TextView nameTV = view.findViewById(R.id.name_value);
-            final TextView distanceTV = view.findViewById(R.id.dist_value);
-            final TextView dataTV = view.findViewById(R.id.data_value);
+                final TextView distanceTV = view.findViewById(R.id.dist_value);
+                final TextView dataTV = view.findViewById(R.id.data_value);
+                final TextView dateTV = view.findViewById(R.id.session_start_datetime);
+                final TextView durationTV = view.findViewById(R.id.session_duration_text);
 
-            if(session.getName() != null) {
-                nameTV.setText(session.getName());
-            }else{
-                nameTV.setText(Constants.DEFAULT_SESSION_NAME);
+                if (((SaveMyBikeActivity) getActivity()).getConfiguration().metric) {
+                    distanceTV.setText(String.format(Locale.US, "%.1f %s", (session.getDistance() / 1000f), Constants.UNIT_KM));
+                } else {
+                    distanceTV.setText(String.format(Locale.US, "%.1f %s", (session.getDistance() / 1000f) * Constants.KM_TO_MILES, Constants.UNIT_MI));
+                }
+                dataTV.setText(String.format(Locale.US, "%d", session.getDataPoints().size()));
+                dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(session.getStartingTime()));
+                durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(session.getOverallTime()));
             }
-
-            if(((SaveMyBikeActivity)getActivity()).getConfiguration().metric){
-                distanceTV.setText(String.format(Locale.US,"%.1f %s", (session.getDistance() / 1000f), Constants.UNIT_KM));
-            }else{
-                distanceTV.setText(String.format(Locale.US,"%.1f %s", (session.getDistance() / 1000f) * Constants.KM_TO_MILES, Constants.UNIT_MI));
-            }
-            dataTV.setText(String.format(Locale.US,"%d", session.getDataPoints().size()));
-
             return view;
         }
     }
