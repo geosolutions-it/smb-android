@@ -17,7 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,7 +45,7 @@ public class BikeListFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_bikes, container, false);
         ButterKnife.bind(this, view);
 
-        final ArrayList<Bike> bikes = ((SaveMyBikeActivity) getActivity()).getConfiguration().bikes;
+        final List<Bike> bikes = ((SaveMyBikeActivity) getActivity()).getBikes();
 
         final BikeAdapter bikeAdapter = new BikeAdapter(getActivity(), R.layout.item_bike, bikes);
 
@@ -55,7 +56,7 @@ public class BikeListFragment extends Fragment {
 
 
     @OnClick(R.id.add_bike_button)
-    public void onClick(View view) {
+    public void onClick() {
         Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
     }
 
@@ -66,7 +67,7 @@ public class BikeListFragment extends Fragment {
 
         private	int resource;
 
-        public BikeAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Bike> objects) {
+        private BikeAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Bike> objects) {
             super(context, resource, objects);
 
             this.resource = resource;
@@ -88,22 +89,25 @@ public class BikeListFragment extends Fragment {
 
             final Bike bike = getItem(position);
 
-            final TextView titleTv = view.findViewById(R.id.bike_title);
-            final ImageView imageView = view.findViewById(R.id.bike_image);
+            if(bike != null) {
+                final TextView titleTv = view.findViewById(R.id.bike_title);
+                final ImageView imageView = view.findViewById(R.id.bike_image);
 
-            if(bike.getName() != null){
-                titleTv.setText(bike.getName());
-            }
-
-            final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
-            alarmButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Toast.makeText(getContext(),"Todo : ask if bike "+bike.getName()+" should be signaled as stolen", Toast.LENGTH_SHORT).show();
+                if (bike.getNickname() != null) {
+                    titleTv.setText(bike.getNickname());
+                }else{
+                    titleTv.setText("");
                 }
-            });
 
+                if(bike.getPictures() != null && !bike.getPictures().isEmpty()){
+                    Glide.with(getContext()).load(bike.getPictures().get(0)).into(imageView);
+                }else{
+                    imageView.setImageResource(R.drawable.footer_bikes_off);
+                }
+
+                final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
+                alarmButton.setOnClickListener(view1 -> Toast.makeText(getContext(), "Todo : ask if bike " + bike.getNickname() + " should be signaled as stolen", Toast.LENGTH_SHORT).show());
+            }
             return view;
         }
     }

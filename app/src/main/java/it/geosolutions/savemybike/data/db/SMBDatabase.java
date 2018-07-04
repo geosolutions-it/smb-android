@@ -23,11 +23,11 @@ import it.geosolutions.savemybike.model.Session;
 
 public class SMBDatabase extends SQLiteOpenHelper {
 
-    private final String TAG = "SMDDatabase";
+    private final String TAG = "SMBDatabase";
 
     private static final int DATABASE_VERSION = 2;
 
-    static final String DATABASE_NAME = "smbDb.db";
+    private static final String DATABASE_NAME = "smbDb.db";
 
     //Tables
     private static final String BIKES_TABLE = "bikes";
@@ -273,7 +273,7 @@ public class SMBDatabase extends SQLiteOpenHelper {
      * @param update true for updating, false for inserting
      * @return the number of rows affected
      */
-    public long insertBike(final Bike bike, boolean update){
+    private long insertBike(final Bike bike, boolean update){
 
         ContentValues cv = new ContentValues();
 
@@ -463,7 +463,7 @@ public class SMBDatabase extends SQLiteOpenHelper {
      * hence always a list containing at least one bike is returned
      * @return the list of bikes
      */
-    public ArrayList<Bike> getAllBikes() {
+    private ArrayList<Bike> getAllBikes() {
 
         final ArrayList<Bike> bikes = new ArrayList<>();
 
@@ -494,12 +494,14 @@ public class SMBDatabase extends SQLiteOpenHelper {
             long id = insertBike(firstBike, false);
             firstBike.setLocalId(id);
             bikes.add(firstBike);
+        }else{
+            Log.d(TAG, "No bikes found in database");
         }
 
         return bikes;
     }
 
-    public Bike getBike(final long bikeId){
+    private Bike getBike(final long bikeId){
 
         final ArrayList<Bike> bikes = getAllBikes();
 
@@ -530,10 +532,11 @@ public class SMBDatabase extends SQLiteOpenHelper {
 
         return null;
     }
-
+/*
     public int deleteBike(final long index) {
 
         return db.delete(BIKES_TABLE,ID + "=?", new String[]{Long.toString(index)});
 
     }
+*/
 }

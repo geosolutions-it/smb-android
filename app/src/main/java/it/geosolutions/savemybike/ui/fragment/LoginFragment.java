@@ -138,8 +138,8 @@ public class LoginFragment extends Fragment {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final String userId = _usernameText.getText().toString();
-        final String accessTokenString = preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
-        final String idTokenString = preferences.getString(Constants.PREF_CONFIG_ACCESSTOKEN, null);
+        final String idTokenString = preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
+        final String accessTokenString = preferences.getString(Constants.PREF_CONFIG_ACCESSTOKEN, null);
         final String refreshTokenString = preferences.getString(Constants.PREF_CONFIG_REFRESHTOKEN, null);
 
         CognitoUser cognitoUser = userPool.getUser(userId);

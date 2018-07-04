@@ -3,6 +3,7 @@ package it.geosolutions.savemybike.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Robert Oehler on 26.10.17.
@@ -23,6 +24,26 @@ public class Bike implements Serializable {
     @SerializedName("state")
     private int stolen;
     private int selected;
+
+    public List<String> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<String> pictures) {
+        this.pictures = pictures;
+    }
+
+    private List<String> pictures;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    private String nickname;
 
     /**
      * static constructor for a default bike, selected, non stolen

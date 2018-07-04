@@ -269,7 +269,8 @@ public class SessionLogic implements IDataProvider {
                             if (dataPoint.sessionId <= 0) {
                                 dataPoint.sessionId = session.getId();
                             }
-                            database.insertDataPoint(dataPoint);
+                            long inserted_row_index = database.insertDataPoint(dataPoint);
+                            Log.d(TAG, "Inserted row:" + inserted_row_index);
                         }
                         session.setLastPersistedIndex(session.getDataPoints().size());
                         database.insertSession(session, true);

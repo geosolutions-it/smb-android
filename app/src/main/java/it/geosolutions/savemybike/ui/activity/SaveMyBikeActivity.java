@@ -38,6 +38,7 @@ import net.openid.appauth.AuthorizationService;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,6 +53,7 @@ import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
+import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
@@ -99,7 +101,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     private AuthStateManager mStateManager;
     private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private ExecutorService mExecutor;
-    private it.geosolutions.savemybike.Configuration mConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         mStateManager = AuthStateManager.getInstance(this);
         mExecutor = Executors.newSingleThreadExecutor();
-        mConfiguration = it.geosolutions.savemybike.Configuration.getInstance(this);
 
         it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
         if (config.hasConfigurationChanged()) {
@@ -192,6 +192,28 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 @Override
                 public void error(String message) {
                     Log.e(TAG, "error downloading config " + message);
+                }
+            }, new RetrofitClient.GetBikesCallback() {
+                @Override
+                public void gotBikes(final List<Bike> bikesList) {
+
+                    if (bikesList != null) {
+
+                        if (BuildConfig.DEBUG) {
+                            Log.i(TAG, "Number of downloaded bikes: " + bikesList.size());
+                        }
+
+                        //save the config
+                        Configuration.saveBikes(getBaseContext(), bikesList);
+
+                    } else {
+                        Log.e(TAG, "Empty bikes response");
+                    }
+                }
+
+                @Override
+                public void error(String message) {
+                    Log.e(TAG, "error downloading bikes: " + message);
                 }
             }).execute();
         }
@@ -671,23 +693,32 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     }
 
     /**
+     * Returns the saved list of bikes
+     * @return the bikes list
+     */
+    public List<Bike> getBikes() {
+        return Configuration.getBikes(getBaseContext());
+    }
+    /**
      * loads the config from remote
      */
     private static class GetRemoteConfigTask extends AsyncTask<Void, Void, Void> {
 
+        private final RetrofitClient.GetBikesCallback bikesCallback;
         private WeakReference<Context> contextRef;
         private RetrofitClient.GetConfigCallback callback;
 
-        GetRemoteConfigTask(final Context context, @NonNull RetrofitClient.GetConfigCallback callback) {
+        GetRemoteConfigTask(final Context context, @NonNull RetrofitClient.GetConfigCallback callback, @NonNull RetrofitClient.GetBikesCallback bikesCallback) {
             this.contextRef = new WeakReference<>(context);
             this.callback = callback;
+            this.bikesCallback = bikesCallback;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
             RetrofitClient retrofitClient = new RetrofitClient(contextRef.get());
-            retrofitClient.getRemoteConfig(callback);
+            retrofitClient.getRemoteConfig(callback, bikesCallback);
             return null;
         }
     }
@@ -797,6 +828,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         if (mAuthService != null) {
             mAuthService.dispose();
+            mAuthService = null;
         }
 
         if(mExecutor != null) {

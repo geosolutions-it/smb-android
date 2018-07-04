@@ -1,5 +1,5 @@
 {
-  "client_id": "smb-app",
+  "client_id": "smb-portal",
   "redirect_uri": "it.geosolutions.savemybike:/oauth2redirect",
   "authorization_scope": "openid email profile",
   "discovery_uri": "https://dev.savemybike.geo-solutions.it/auth/realms/save-my-bike/.well-known/openid-configuration",

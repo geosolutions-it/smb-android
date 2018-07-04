@@ -42,6 +42,9 @@ import android.widget.Toast;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoRefreshToken;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.util.CognitoJWTParser;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -61,7 +64,9 @@ import net.openid.appauth.TokenResponse;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,6 +77,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -168,8 +174,7 @@ public final class LoginActivity extends AppCompatActivity {
                     "Configuration change detected",
                     Toast.LENGTH_SHORT)
                     .show();
-            signOut();
-            return;
+            clearAuthState();
         }
 
         mAuthService = new AuthorizationService(
@@ -332,18 +337,39 @@ public final class LoginActivity extends AppCompatActivity {
 
         AuthState state = mAuthStateManager.getCurrent();
         String idToken = state.getIdToken();
+
+        // I am using CognitoIdToken to parse the refresh token expiration time
+        // TODO: when AWS dependencies will be removed, the JWT token will need to be parsed with a different library
+        CognitoIdToken cit = new CognitoIdToken(state.getRefreshToken());
+        DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
         Log.i("LogTag", "my IDToken is " + idToken);
         Log.i("LogTag", "my AccessToken is " + state.getAccessToken());
-        Log.i("LogTag", "my AccessToken expiration time is: " + state.getAccessTokenExpirationTime());
+        Log.i("LogTag", "my AccessToken expiration time is: " + df.print(new DateTime(state.getAccessTokenExpirationTime())));
         Log.i("LogTag", "my RefreshToken is " + state.getRefreshToken());
-        Log.i("LogTag", "RefreshToken needs refresh? " + state.getNeedsTokenRefresh());
+        Log.i("LogTag", "my RefreshToken expires " + df.print(new DateTime(cit.getExpiration())));
+        Log.i("LogTag", "AccessToken needs refresh? " + state.getNeedsTokenRefresh());
+        Log.i("LogTag", "RefreshToken needs refresh? " + (cit.getExpiration().compareTo(new Date()) < 0 ));
 
-        if(state.getNeedsTokenRefresh()){
-            Log.w("LogTag", "REFRESHING...");
-            refreshAccessToken();
+
+        SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        ed.putString(Constants.PREF_CONFIG_ACCESSTOKEN, state.getAccessToken());
+        ed.putString(Constants.PREF_CONFIG_IDTOKEN, idToken);
+        ed.putString(Constants.PREF_CONFIG_REFRESHTOKEN, state.getRefreshToken());
+        ed.apply();
+
+        if((cit.getExpiration().compareTo(new Date()) < 0 )){
+            Log.w("LogTag", "RESTARTING AUTHENTICATION FLOW...");
+            initializeAppAuth();
+            //clearAuthState();
+            //startAuth();
             return;
         }
 
+        if(state.getNeedsTokenRefresh()){
+            Log.w("LogTag", "REFRESHING ACCESS TOKEN...");
+            refreshAccessToken();
+            return;
+        }
         // Create a credentials provider, or use the existing provider.
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(this, Constants.AWS_IDENTITY_POOL_ID, Constants.AWS_REGION);
 
@@ -403,20 +429,10 @@ public final class LoginActivity extends AppCompatActivity {
             Log.i(TAG,"SecretKey = " + SecretKey);
             Log.i(TAG,"SessionKey = " + SessionKey);
 
-
             Log.w(TAG, "*****************************************************************");
             Log.w(TAG, "*****************  LOGGED IN - START ACTIVITY  ******************");
             Log.w(TAG, "*****************************************************************");
 
-
-
-            /*if(m_activity.get() != null){
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(m_activity.get()).edit();
-                ed.putString(Constants.PREF_CONFIG_ACCESSTOKEN, accessToken);
-                ed.putString(Constants.PREF_CONFIG_IDTOKEN, idToken);
-                ed.putString(Constants.PREF_CONFIG_REFRESHTOKEN, refreshToken);
-                ed.apply();
-            }*/
             return 42;
 
         }
@@ -446,6 +462,7 @@ public final class LoginActivity extends AppCompatActivity {
 
         if (mAuthService != null) {
             mAuthService.dispose();
+            mAuthService = null;
         }
     }
 
@@ -905,9 +922,19 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     @MainThread
-    @OnClick({R.id.sign_out, R.id.reauth})
+    @OnClick({R.id.sign_out})
     public void signOut() {
         Log.w(TAG, "Signing out");
+        clearAuthState();
+/*
+        Intent mainIntent = new Intent(this, LoginActivity.class);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainIntent);
+        finish();
+*/
+    }
+
+    private void clearAuthState() {
         // discard the authorization and token state, but retain the configuration and
         // dynamic client registration (if applicable), to save from retrieving them again.
         AuthState currentState = mAuthStateManager.getCurrent();
@@ -917,11 +944,6 @@ public final class LoginActivity extends AppCompatActivity {
             clearedState.update(currentState.getLastRegistrationResponse());
         }
         mAuthStateManager.replace(clearedState);
-
-        Intent mainIntent = new Intent(this, LoginActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mainIntent);
-        finish();
     }
 
     @Override

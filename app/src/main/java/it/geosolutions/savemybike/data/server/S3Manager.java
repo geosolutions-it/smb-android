@@ -1,9 +1,11 @@
 package it.geosolutions.savemybike.data.server;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -72,6 +74,11 @@ public class S3Manager implements TransferListener{
             return;
         }
 
+        if(Looper.myLooper() == Looper.getMainLooper()){
+            Log.w(TAG, "I'm in the main Thread!");
+        }else{
+            Log.w(TAG, "I'm in the background");
+        }
         SMBDatabase database = new SMBDatabase(context);
         ArrayList<Session> sessionsToUpload = new ArrayList<>();
 
@@ -89,6 +96,8 @@ public class S3Manager implements TransferListener{
 
         if(sessionsToUpload.size() > 0){
             uploadSessions(sessionsToUpload);
+        }else{
+            Log.d(TAG, "Nothing to upload");
         }
     }
 
@@ -109,6 +118,11 @@ public class S3Manager implements TransferListener{
             return;
         }
 
+        if(Looper.myLooper() == Looper.getMainLooper()){
+            Log.w(TAG, "uploadsession - I'm in the main Thread!");
+        }else{
+            Log.w(TAG, "I'm in the background");
+        }
         // create random object
         Random random = new Random();
 
@@ -147,13 +161,24 @@ public class S3Manager implements TransferListener{
             final int dirtyHackWaitingForARefactor = randomValue;
             getObserverMap().put(dirtyHackWaitingForARefactor, session.getId());
 
+            if(Looper.myLooper() == Looper.getMainLooper()){
+                Log.w(TAG, "beforeuploadFile - I'm in the main Thread!");
+            }else{
+                Log.w(TAG, "beforeuploadFile - I'm in the background");
+            }
             retrofitClient.uploadFile(s3ObjectKey, zipFile,
                 new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call,
                                            retrofit2.Response<ResponseBody> response) {
-                        Log.v("Upload", "success");
-                        S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.COMPLETED);
+                        if(response.isSuccessful()){
+                            Log.v("Upload", "success");
+                            S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.COMPLETED);
+                        }else{
+                            Log.v("Upload", "failed");
+                            S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.FAILED);
+                        }
+
                     }
 
                     @Override
@@ -193,7 +218,10 @@ public class S3Manager implements TransferListener{
                 SMBDatabase database = new SMBDatabase(context);
 
                 if(database.open()) {
-                    database.flagSessionAsUploaded(sessionId);
+                    boolean success = database.flagSessionAsUploaded(sessionId);
+                    if(!success){
+                        Log.w(TAG, "Session was not flagged as Uploaded");
+                    }
                     database.close();
                 }else{
                     Log.e(TAG, "could not open database");
@@ -230,7 +258,7 @@ public class S3Manager implements TransferListener{
         File file = new File(Util.getSMBDirectory().getPath() + String.format(Locale.US, "/%s", zipFile));
 
         try  {
-            BufferedInputStream origin = null;
+            BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(file);
 
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
@@ -296,9 +324,7 @@ public class S3Manager implements TransferListener{
         if(activeNetwork != null && activeNetwork.isConnected()){
             android.net.NetworkInfo connWifiType = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            if(connWifiType.isConnected()){
-                return true;
-            }
+            return connWifiType.isConnected();
         }
         return false;
     }
@@ -344,6 +370,7 @@ public class S3Manager implements TransferListener{
      * a map to map upload ids to session ids
      * @return the map
      */
+    @SuppressLint("UseSparseArrays")
     private HashMap<Integer, Long> getObserverMap() {
 
         if(observerMap == null){

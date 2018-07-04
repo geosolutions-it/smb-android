@@ -9,7 +9,6 @@ import android.util.Log;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.exceptions.CognitoParameterInvalidException;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.ghedeon.AwsInterceptor;
 
@@ -18,16 +17,17 @@ import net.openid.appauth.AuthState;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.data.Constants;
+import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -49,10 +49,13 @@ public class RetrofitClient {
 
     private static final String TAG = "RetrofitClient";
 
-    private final static String ENDPOINT = "https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/";
+    private final static String AWS_ENDPOINT = "https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/";
+    private final static String PORTAL_ENDPOINT = "https://dev.savemybike.geo-solutions.it/";
 
     private Retrofit retrofit;
+    private Retrofit portalRetrofit;
     private OkHttpClient client;
+    private OkHttpClient portalClient;
 
     private Context context;
 
@@ -67,7 +70,7 @@ public class RetrofitClient {
      *
      * @param callback callback for the result
      */
-    public void getRemoteConfig(@NonNull final GetConfigCallback callback) {
+    public void getRemoteConfig(@NonNull final GetConfigCallback callback, @NonNull final GetBikesCallback bikesCallback) {
 
         String idTokenString = getSavedTokenString(context);
 
@@ -82,6 +85,8 @@ public class RetrofitClient {
             if (System.currentTimeMillis() < accessToken.getExpiration().getTime()) {
 
                 fetchConfig(callback);
+
+                fetchBikes(bikesCallback);
 
             } else {
 
@@ -130,6 +135,27 @@ public class RetrofitClient {
         } catch (IOException e) {
             Log.e(TAG, "error executing getConfig", e);
             callback.error("io-error executing getConfig");
+        }
+    }
+
+
+    /**
+     * fetches the current configuration from the AWS server using @param token for authentication
+     * @param callback call for the result
+     */
+    private void fetchBikes(@NonNull final GetBikesCallback callback){
+
+        //do the (retrofit) get call
+        final Call<List<Bike>> call = getPortalServices().getMyBikes();
+
+        try {
+            final List<Bike> bikesList = call.execute().body();
+
+            callback.gotBikes(bikesList);
+
+        } catch (IOException e) {
+            Log.e(TAG, "error executing fetchBikes", e);
+            callback.error("io-error executing fetchBikes");
         }
     }
 
@@ -220,7 +246,7 @@ public class RetrofitClient {
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
                     .client(getClient())
-                    .baseUrl(ENDPOINT)
+                    .baseUrl(AWS_ENDPOINT)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -228,6 +254,17 @@ public class RetrofitClient {
         return retrofit;
     }
 
+    private Retrofit getPortalRetrofit(){
+        if(portalRetrofit == null){
+            portalRetrofit = new Retrofit.Builder()
+                    .client(getPortalClient())
+                    .baseUrl(PORTAL_ENDPOINT)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+        }
+        return portalRetrofit;
+    }
     private OkHttpClient getClient(){
 
         if(client == null) {
@@ -249,6 +286,20 @@ public class RetrofitClient {
                     .build();
         }
         return client;
+    }
+
+    private OkHttpClient getPortalClient(){
+
+        if(portalClient == null) {
+            AuthState state = AuthStateManager.getInstance(context).getCurrent();
+            String accessToken = state.getAccessToken();
+
+            portalClient  = new OkHttpClient.Builder()
+                    .addInterceptor(new TokenInterceptor("Bearer "+accessToken))
+                    .addInterceptor(new LoggingInterceptor())
+                    .build();
+        }
+        return portalClient;
     }
 
     /**
@@ -333,9 +384,21 @@ public class RetrofitClient {
 
     }
 
+    private SMBRemoteServices getPortalServices(){
+
+        return getPortalRetrofit().create(SMBRemoteServices.class);
+
+    }
+
     public interface GetConfigCallback
     {
         void gotConfig(Configuration configuration);
+        void error(String message);
+    }
+
+    public interface GetBikesCallback
+    {
+        void gotBikes(List<Bike> bikesList);
         void error(String message);
     }
 /*

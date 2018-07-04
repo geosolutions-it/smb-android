@@ -7,11 +7,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.geosolutions.savemybike.data.Constants;
 
@@ -67,6 +70,27 @@ public class Configuration implements Serializable {
     }
 
     /**
+     * If a list of bikes was received and saved it is loaded from preferences and returned
+     * @param context a context
+     * @return a list of Bike
+     */
+    public static List<Bike> getBikes(final Context context){
+
+        final String savedBikes = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.PREF_BIKES, null);
+
+        if(savedBikes != null){
+
+            Type listType = new TypeToken<ArrayList<Bike>>(){}.getType();
+            List<Bike> bikesList = new Gson().fromJson(savedBikes, listType);
+            if(bikesList != null){
+                return bikesList;
+            }
+        }
+
+        return new ArrayList<>();
+    }
+
+    /**
      * saves the config @param configuration as json to the preferences of context @param context
      * @param context a context
      * @param configuration a configuration to save
@@ -77,6 +101,21 @@ public class Configuration implements Serializable {
 
         if(json != null) {
             PreferenceManager.getDefaultSharedPreferences(context).edit().putString(Constants.PREF_CURRENT_CONFIG, json).apply();
+        }
+
+    }
+
+    /**
+     * saves the config @param bikesList as json to the preferences of context @param context
+     * @param context a context
+     * @param bikesList the LIST of bikes to save
+     */
+    public static void saveBikes(final Context context, @NonNull final List<Bike> bikesList){
+
+        String json = new Gson().toJson(bikesList);
+
+        if(json != null) {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString(Constants.PREF_BIKES, json).apply();
         }
 
     }

@@ -1,8 +1,8 @@
 package it.geosolutions.savemybike.data.server;
 
-import java.io.File;
+import java.util.List;
 
-import it.geosolutions.savemybike.data.Constants;
+import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -25,4 +25,7 @@ public interface SMBRemoteServices {
             @Path("s3ObjectKey") String s3ObjectKey,
             @Body RequestBody file
     );
+
+    @GET("api/my-bikes")
+    Call<List<Bike>> getMyBikes();
 }
