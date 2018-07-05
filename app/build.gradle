@@ -11,8 +11,8 @@ android {
         applicationId "it.geosolutions.savemybike"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 6
-        versionName "0.5"
+        versionCode 7
+        versionName "0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -36,7 +36,7 @@ android {
 
 repositories {
     maven {
-        url "http://dl.bintray.com/ghedeon/maven"
+        url "https://dl.bintray.com/ghedeon/maven"
     }
 }
 
@@ -67,7 +67,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
-    debugImplementation 'com.ghedeon:aws-interceptor:0.6'
+    implementation 'com.ghedeon:aws-interceptor:0.6'
 }
 
 configurations.all {

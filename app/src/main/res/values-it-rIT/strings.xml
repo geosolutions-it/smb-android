@@ -16,4 +16,8 @@
     <string name="select_a_vehicle">Select a vehicle</string>
     <string name="simulation">simulation</string>
     <string name="session_type">session type</string>
+    <string name="record">Registra</string>
+    <string name="retry_label">Riprova</string>
+    <string name="start_authorization">Login</string>
+    <string name="bike_name">nome bici</string>
 </resources>

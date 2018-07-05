@@ -419,7 +419,7 @@ public class RetrofitClient {
     }
 */
 
-    public void uploadFile(String s3ObjectKey, File file, Callback callback) {
+    public void uploadFile(String s3ObjectKey, File file, Callback<ResponseBody> callback) {
 
         // TODO make a singleton for the services
         // create upload service client
@@ -436,7 +436,5 @@ public class RetrofitClient {
         Call<ResponseBody> call = service.upload(s3ObjectKey, requestFile);
         call.enqueue(callback);
     }
-
-
 
 }

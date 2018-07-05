@@ -107,7 +107,7 @@ public class BikeListFragment extends Fragment {
 
                 final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
                 alarmButton.setOnClickListener(view1 -> {
-                    Toast.makeText(getContext(), "Chenging " + bike.getNickname() + "  status", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Changing " + bike.getNickname() + "  status", Toast.LENGTH_LONG).show();
                     ((SaveMyBikeActivity)getActivity()).updateBikeStatus(bike);
                 });
 

@@ -19,37 +19,37 @@
     <string name="create_account_link">No account yet? Create one</string>
     <string name="select_a_vehicle">Select a vehicle</string>
     <string name="simulation">simulation</string>
-    <string name="mode_foot">mode foot</string>
-    <string name="mode_train">mode train</string>
+    <string name="mode_foot" translatable="false">mode foot</string>
+    <string name="mode_train" translatable="false">mode train</string>
     <string name="record">record</string>
-    <string name="mode_bike">mode bike</string>
-    <string name="mode_moped">mode moped</string>
-    <string name="mode_car">mode car</string>
-    <string name="mode_bus">mode bus</string>
+    <string name="mode_bike" translatable="false">mode bike</string>
+    <string name="mode_moped" translatable="false">mode moped</string>
+    <string name="mode_car" translatable="false">mode car</string>
+    <string name="mode_bus" translatable="false">mode bus</string>
 
     <string name="retry_label">Retry</string>
-    <string name="not_authorized">Not authorized</string>
+    <string name="not_authorized" translatable="false">Not authorized</string>
     <string name="start_authorization">Sign in with Keycloak</string>
-    <string name="reauthorize">Reauthorize</string>
-    <string name="sign_out">Sign out</string>
-    <string name="no_access_token_expiry">Access time has no defined expiry</string>
-    <string name="access_token_expired">Access token has expired</string>
-    <string name="auth_settings">Authorization settings in use:</string>
+    <string name="reauthorize" translatable="false">Reauthorize</string>
+    <string name="sign_out" translatable="false">Sign out</string>
+    <string name="no_access_token_expiry" translatable="false">Access time has no defined expiry</string>
+    <string name="access_token_expired" translatable="false">Access token has expired</string>
+    <string name="auth_settings" translatable="false">Authorization settings in use:</string>
 
-    <string name="auth_granted">Authorization granted</string>
-    <string name="refresh_token">Refresh token</string>
-    <string name="view_profile">View user info</string>
-    <string name="userinfo_profile_content_description">User profile picture</string>
-    <string name="access_token_expires_at">Access token expires at: %s</string>
-    <string name="no_access_token_returned">No access token returned</string>
-    <string name="no_refresh_token_returned">No refresh token returned</string>
-    <string name="refresh_token_returned">Refresh token returned</string>
-    <string name="no_id_token_returned">No ID token returned</string>
-    <string name="id_token_returned">ID token returned</string>
-    <string name="pt">PT</string>
-    <string name="km">Km</string>
+    <string name="auth_granted" translatable="false">Authorization granted</string>
+    <string name="refresh_token" translatable="false">Refresh token</string>
+    <string name="view_profile" translatable="false">View user info</string>
+    <string name="userinfo_profile_content_description" translatable="false">User profile picture</string>
+    <string name="access_token_expires_at" translatable="false">Access token expires at: %s</string>
+    <string name="no_access_token_returned" translatable="false">No access token returned</string>
+    <string name="no_refresh_token_returned" translatable="false">No refresh token returned</string>
+    <string name="refresh_token_returned" translatable="false">Refresh token returned</string>
+    <string name="no_id_token_returned" translatable="false">No ID token returned</string>
+    <string name="id_token_returned" translatable="false">ID token returned</string>
+    <string name="pt" translatable="false">PT</string>
+    <string name="km" translatable="false">Km</string>
     <string name="session_type">session type</string>
-    <string name="session_duration">session_duration</string>
+    <string name="session_duration" translatable="false">session_duration</string>
     <string name="bike_name">bike name</string>
 
 </resources>
