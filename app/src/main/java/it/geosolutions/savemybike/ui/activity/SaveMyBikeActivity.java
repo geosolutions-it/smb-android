@@ -38,6 +38,7 @@ import net.openid.appauth.AuthorizationService;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -213,7 +214,9 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                         Configuration.saveBikes(getBaseContext(), bikesList);
 
                     } else {
-                        Log.e(TAG, "Empty bikes response");
+                        Log.e(TAG, "Wrong bikes response: check for authentication or network errors");
+                        // Removing the bikes list
+                        Configuration.saveBikes(getBaseContext(), new ArrayList<>());
                     }
                 }
 
