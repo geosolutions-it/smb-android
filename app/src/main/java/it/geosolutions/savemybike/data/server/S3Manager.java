@@ -128,7 +128,7 @@ public class S3Manager implements TransferListener{
 
         //create CSV
         CSVCreator csvCreator = new CSVCreator();
-        RetrofitClient retrofitClient = new RetrofitClient(context);
+        RetrofitClient retrofitClient = RetrofitClient.getInstance(context);
 
         for(Session session : sessionsToUpload){
 

@@ -106,9 +106,9 @@ public class Configuration implements Serializable {
     }
 
     /**
-     * saves the config @param bikesList as json to the preferences of context @param context
+     * saves the config @param configuration as json to the preferences of context @param context
      * @param context a context
-     * @param bikesList the LIST of bikes to save
+     * @param bikesList list of bikes to store
      */
     public static void saveBikes(final Context context, @NonNull final List<Bike> bikesList){
 

@@ -34,6 +34,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url "http://dl.bintray.com/ghedeon/maven"
+    }
+}
+
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -61,7 +67,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
-
+    debugImplementation 'com.ghedeon:aws-interceptor:0.6'
 }
 
 configurations.all {

@@ -59,6 +59,16 @@ public class RetrofitClient {
 
     private Context context;
 
+    private static RetrofitClient instance = null;
+
+    public static RetrofitClient getInstance(final Context context) {
+        if (instance == null) {
+            instance = new RetrofitClient(context);
+        }
+
+        return instance;
+    }
+
     public RetrofitClient(final Context context) {
         this.context = context;
     }
@@ -254,7 +264,7 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    private Retrofit getPortalRetrofit(){
+    public Retrofit getPortalRetrofit(){
         if(portalRetrofit == null){
             portalRetrofit = new Retrofit.Builder()
                     .client(getPortalClient())
@@ -384,7 +394,7 @@ public class RetrofitClient {
 
     }
 
-    private SMBRemoteServices getPortalServices(){
+    public SMBRemoteServices getPortalServices(){
 
         return getPortalRetrofit().create(SMBRemoteServices.class);
 
@@ -426,5 +436,7 @@ public class RetrofitClient {
         Call<ResponseBody> call = service.upload(s3ObjectKey, requestFile);
         call.enqueue(callback);
     }
+
+
 
 }

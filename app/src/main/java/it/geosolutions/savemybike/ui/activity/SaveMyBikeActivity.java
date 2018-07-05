@@ -52,15 +52,21 @@ import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.S3Manager;
+import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
+import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.LoginFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -318,6 +324,34 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
             bindToService(serviceIntent);
         }
+    }
+
+    /**
+     * Call the API to update a bike's status
+     */
+    public void updateBikeStatus(Bike bike) {
+
+        RetrofitClient rclient = RetrofitClient.getInstance(this);
+        SMBRemoteServices smbserv = rclient.getPortalServices();
+
+        CurrentStatus newstatus = new CurrentStatus();
+        newstatus.setBike("http://dev.savemybike.geo-solutions.it/api/bikes/"+bike.getRemoteId()+"/");
+        newstatus.setLost(!bike.getCurrentStatus().getLost());
+        Call<Object> call = smbserv.sendNewBikeStatus(newstatus);
+
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.i(TAG, "Response Message: "+ response.message());
+                Log.i(TAG, "Response Body: "+ response.body());
+                bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.e(TAG, "ERROR: "+ t.getMessage());
+            }
+        });
     }
 
     /**
@@ -819,8 +853,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         startActivity(mainIntent);
         finish();
     }
-
-
 
     @Override
     protected void onDestroy() {

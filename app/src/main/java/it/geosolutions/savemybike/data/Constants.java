@@ -44,10 +44,11 @@ public class Constants {
 
     public static final String PREF_WIFI_ONLY_UPLOAD         = "it.geosolutions.savemybike.pref.wifi_only";
     public static final String PREF_CURRENT_CONFIG           = "it.geosolutions.savemybike.pref.config";
-    public static final String PREF_USERID = "it.geosolutions.savemybike.pref.username";
+    public static final String PREF_USERID                   = "it.geosolutions.savemybike.pref.username";
     public static final String PREF_CONFIG_ACCESSTOKEN       = "it.geosolutions.savemybike.pref.config.accessToken";
     public static final String PREF_CONFIG_IDTOKEN           = "it.geosolutions.savemybike.pref.config.idToken";
     public static final String PREF_CONFIG_REFRESHTOKEN      = "it.geosolutions.savemybike.pref.config.refreshToken";
+    public static final String PREF_BIKES                    = "it.geosolutions.savemybike.pref.bikes";
 
     public final static String UNIT_KMH = "km/h";
     public final static String UNIT_MPH = "mph";

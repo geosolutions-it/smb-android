@@ -106,7 +106,16 @@ public class BikeListFragment extends Fragment {
                 }
 
                 final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
-                alarmButton.setOnClickListener(view1 -> Toast.makeText(getContext(), "Todo : ask if bike " + bike.getNickname() + " should be signaled as stolen", Toast.LENGTH_SHORT).show());
+                alarmButton.setOnClickListener(view1 -> {
+                    Toast.makeText(getContext(), "Chenging " + bike.getNickname() + "  status", Toast.LENGTH_LONG).show();
+                    ((SaveMyBikeActivity)getActivity()).updateBikeStatus(bike);
+                });
+
+                if(bike.getCurrentStatus() != null && bike.getCurrentStatus().getLost()){
+                    alarmButton.setImageResource(R.drawable.ic_lock_open_red_24dp);
+                }else{
+                    alarmButton.setImageResource(R.drawable.ic_lock_outline_green_24dp);
+                }
             }
             return view;
         }

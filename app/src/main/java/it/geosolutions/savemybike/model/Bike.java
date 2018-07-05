@@ -1,5 +1,6 @@
 package it.geosolutions.savemybike.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -45,6 +46,9 @@ public class Bike implements Serializable {
 
     private String nickname;
 
+    @SerializedName("current_status")
+    @Expose
+    private CurrentStatus currentStatus;
     /**
      * static constructor for a default bike, selected, non stolen
      */
@@ -109,5 +113,13 @@ public class Bike implements Serializable {
 
     public String getRemoteId() {
         return remoteId;
+    }
+
+    public CurrentStatus getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(CurrentStatus currentStatus) {
+        this.currentStatus = currentStatus;
     }
 }
