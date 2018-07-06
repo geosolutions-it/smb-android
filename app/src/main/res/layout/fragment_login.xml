@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.activity.LoginActivity"
     android:layout_width="fill_parent"
@@ -20,7 +19,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="12dp"
-            android:src="@drawable/sign_in_logo" />
+            android:src="@drawable/sign_in_logo"
+            android:contentDescription="logo"
+            tools:ignore="HardcodedText" />
 
         <!--
         displayed while the discovery document is loaded, and dynamic client registration is
@@ -86,25 +87,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/auth_settings"
-                style="@style/Base.TextAppearance.AppCompat.Subhead"/>
-
-            <TextView
-                android:id="@+id/auth_endpoint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textIsSelectable="true" />
-
-            <TextView
-                android:id="@+id/client_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textIsSelectable="true" />
 
         </LinearLayout>
 
@@ -213,21 +195,13 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:id="@+id/userinfo_profile"
-                        android:contentDescription="@string/userinfo_profile_content_description"
-                        app:srcCompat="@drawable/unknown_user_48dp" />
-
                     <TextView
                         android:id="@+id/userinfo_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
                         android:paddingStart="8dp"
-                        android:paddingRight="0dp"
                         android:paddingEnd="0dp"
+                        android:drawableStart="@drawable/unknown_user_48dp"
                         tools:text="Jane Doe"
                         style="@style/Base.TextAppearance.AppCompat.Title" />
 
@@ -242,39 +216,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ////////////////  OLD COGNITO USER/PASS FIELDS ////////////////-->
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/input_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/username_hint"
-                android:inputType="textEmailAddress"
-                android:visibility="gone" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password_hint"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
             android:layout_width="fill_parent"
@@ -283,29 +224,6 @@
             android:layout_marginTop="24dp"
             android:padding="12dp"
             android:text="@string/login_button_text"
-            android:visibility="gone" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_test"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:layout_marginTop="6dp"
-            android:padding="6dp"
-            android:text="test"
-            android:visibility="gone" />
-
-        <!-- ////////////////  OLD COGNITO USER/PASS FIELDS ////////////////-->
-
-
-        <TextView
-            android:id="@+id/link_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="@string/create_account_link"
-            android:textSize="16sp"
             android:visibility="gone" />
 
     </LinearLayout>

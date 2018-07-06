@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -573,22 +574,15 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if (getCurrentSession() == null) {
+        getMenuInflater().inflate(R.menu.menu_record, menu);
 
-            getMenuInflater().inflate(R.menu.menu_record, menu);
+        MenuItem mItem = menu.findItem(R.id.menu_simulate);
+        mItem.setChecked(simulate);
 
-            MenuItem followItem = menu.findItem(R.id.menu_simulate);
-            followItem.setChecked(simulate);
-            followItem.setIcon(simulate ? android.R.drawable.checkbox_on_background : android.R.drawable.checkbox_off_background);
+        mItem = menu.findItem(R.id.menu_upload_wifi);
+        mItem.setChecked(uploadWithWifiOnly);
 
-            MenuItem wifiOnlyItem = menu.findItem(R.id.menu_upload_wifi);
-            wifiOnlyItem.setChecked(uploadWithWifiOnly);
-            wifiOnlyItem.setIcon(uploadWithWifiOnly ? android.R.drawable.checkbox_on_background : android.R.drawable.checkbox_off_background);
-
-            return true;
-        } else {
-            return super.onCreateOptionsMenu(menu);
-        }
+        return true;
     }
 
 
@@ -612,10 +606,21 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, uploadWithWifiOnly).apply();
                 invalidateOptionsMenu();
                 break;
+            case R.id.menu_logout:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("AppCompatDialog");
+                builder.setMessage("Do you really want to logout?");
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    signOut();
+                    dialog.dismiss();
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+                break;
 
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**
@@ -629,13 +634,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             if (currentFragment != null && currentFragment instanceof RecordFragment) {
                 Session session = getCurrentSession();
                 ((RecordFragment) currentFragment).invalidateSessionStats(session);
-/*
-                String text = "PROVA";
-                Bundle msgBundle = new Bundle();
-                msgBundle.putString("result", text);
-                Message msg = Message.obtain();
-                msg.setData(msgBundle);
-                getHandler().sendMessage(msg);*/
             }
 
             getHandler().postDelayed(this, UI_UPDATE_INTERVAL);

@@ -14,9 +14,6 @@
     <string name="menu_simulate">Simulate</string>
     <string name="menu_wifi">Upload only with Wifi</string>
     <string name="login_button_text">Login</string>
-    <string name="password_hint">Password</string>
-    <string name="username_hint">Username</string>
-    <string name="create_account_link">No account yet? Create one</string>
     <string name="select_a_vehicle">Select a vehicle</string>
     <string name="simulation">simulation</string>
     <string name="mode_foot" translatable="false">mode foot</string>
@@ -30,16 +27,14 @@
     <string name="retry_label">Retry</string>
     <string name="not_authorized" translatable="false">Not authorized</string>
     <string name="start_authorization">Sign in with Keycloak</string>
-    <string name="reauthorize" translatable="false">Reauthorize</string>
+
     <string name="sign_out" translatable="false">Sign out</string>
     <string name="no_access_token_expiry" translatable="false">Access time has no defined expiry</string>
     <string name="access_token_expired" translatable="false">Access token has expired</string>
-    <string name="auth_settings" translatable="false">Authorization settings in use:</string>
 
     <string name="auth_granted" translatable="false">Authorization granted</string>
     <string name="refresh_token" translatable="false">Refresh token</string>
     <string name="view_profile" translatable="false">View user info</string>
-    <string name="userinfo_profile_content_description" translatable="false">User profile picture</string>
     <string name="access_token_expires_at" translatable="false">Access token expires at: %s</string>
     <string name="no_access_token_returned" translatable="false">No access token returned</string>
     <string name="no_refresh_token_returned" translatable="false">No refresh token returned</string>

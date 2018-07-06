@@ -10,9 +10,6 @@
     <string name="menu_simulate">Simula</string>
     <string name="menu_wifi">Carica dati solo con Wifi</string>
     <string name="login_button_text">Login</string>
-    <string name="password_hint">Password</string>
-    <string name="username_hint">Nome Utente</string>
-    <string name="create_account_link">Non hai ancora un account? Creane uno!</string>
     <string name="select_a_vehicle">Select a vehicle</string>
     <string name="simulation">simulation</string>
     <string name="session_type">session type</string>
