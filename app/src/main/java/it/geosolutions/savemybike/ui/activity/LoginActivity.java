@@ -43,8 +43,6 @@ import android.widget.Toast;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoRefreshToken;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.util.CognitoJWTParser;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -154,8 +152,6 @@ public final class LoginActivity extends AppCompatActivity {
     @BindView(R.id.userinfo_json) TextView userinfo_json;
     @BindView(R.id.userinfo_profile) ImageView userinfo_profile;
     @BindView(R.id.loading_description) TextView loading_description;
-
-    public static Boolean isStarting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -329,127 +325,11 @@ public final class LoginActivity extends AppCompatActivity {
             }
         }
 
-        getCognitoToken();
-    }
-
-
-    private void getCognitoToken() {
-
-        AuthState state = mAuthStateManager.getCurrent();
-        String idToken = state.getIdToken();
-
-        // I am using CognitoIdToken to parse the refresh token expiration time
-        // TODO: when AWS dependencies will be removed, the JWT token will need to be parsed with a different library
-        CognitoIdToken cit = new CognitoIdToken(state.getRefreshToken());
-        DateTimeFormatter df = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-        Log.i("LogTag", "my IDToken is " + idToken);
-        Log.i("LogTag", "my AccessToken is " + state.getAccessToken());
-        Log.i("LogTag", "my AccessToken expiration time is: " + df.print(new DateTime(state.getAccessTokenExpirationTime())));
-        Log.i("LogTag", "my RefreshToken is " + state.getRefreshToken());
-        Log.i("LogTag", "my RefreshToken expires " + df.print(new DateTime(cit.getExpiration())));
-        Log.i("LogTag", "AccessToken needs refresh? " + state.getNeedsTokenRefresh());
-        Log.i("LogTag", "RefreshToken needs refresh? " + (cit.getExpiration().compareTo(new Date()) < 0 ));
-
-
-        SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        ed.putString(Constants.PREF_CONFIG_ACCESSTOKEN, state.getAccessToken());
-        ed.putString(Constants.PREF_CONFIG_IDTOKEN, idToken);
-        ed.putString(Constants.PREF_CONFIG_REFRESHTOKEN, state.getRefreshToken());
-        ed.apply();
-
-        if((cit.getExpiration().compareTo(new Date()) < 0 )){
-            Log.w("LogTag", "RESTARTING AUTHENTICATION FLOW...");
-            initializeAppAuth();
-            //clearAuthState();
-            //startAuth();
-            return;
-        }
-
-        if(state.getNeedsTokenRefresh()){
-            Log.w("LogTag", "REFRESHING ACCESS TOKEN...");
-            refreshAccessToken();
-            return;
-        }
-        // Create a credentials provider, or use the existing provider.
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(this, Constants.AWS_IDENTITY_POOL_ID, Constants.AWS_REGION);
-
-        // Set up as a credentials provider.
-        Map<String, String> logins = new HashMap<>();
-        logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
-        credentialsProvider.setLogins(logins);
-
-        if(!isStarting) {
-            GetCognitoTokenTask m_task =  new GetCognitoTokenTask(LoginActivity.this);
-            m_task.execute(credentialsProvider);
-        }
+        Intent intent = new Intent(this, SaveMyBikeActivity.class);
+        startActivity(intent);
 
     }
-
-    private static class GetCognitoTokenTask extends AsyncTask<CognitoCachingCredentialsProvider , Integer, Integer>
-    {
-        private final WeakReference<LoginActivity> m_activity;
-
-        GetCognitoTokenTask(LoginActivity outerFragment) {
-            m_activity = new WeakReference<>(outerFragment);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            isStarting = true;
-        }
-
-        @Override
-        protected Integer doInBackground(CognitoCachingCredentialsProvider ...credentialsProviders)
-        {
-            int count = credentialsProviders.length;
-            CognitoCachingCredentialsProvider credentialsProvider;
-            if(count < 1){
-                return 0;
-            }
-
-            if (isCancelled()) {
-                return -1;
-            }
-            credentialsProvider = credentialsProviders[0];
-
-            AWSCredentials awsc = credentialsProvider.getCredentials();
-            Log.d("LogTag", "my cred are " + awsc.getAWSAccessKeyId());
-
-            String identityId = credentialsProvider.getIdentityId();
-            Log.d("LogTag", "my ID is " + identityId);
-
-
-            String AccessKey = credentialsProvider.getCredentials().getAWSAccessKeyId();
-            String SecretKey = credentialsProvider.getCredentials().getAWSSecretKey();
-            String SessionKey = credentialsProvider.getCredentials().getSessionToken();
-
-            Log.i(TAG,"AccessKey = " + AccessKey);
-            Log.i(TAG,"SecretKey = " + SecretKey);
-            Log.i(TAG,"SessionKey = " + SessionKey);
-
-            Log.w(TAG, "*****************************************************************");
-            Log.w(TAG, "*****************  LOGGED IN - START ACTIVITY  ******************");
-            Log.w(TAG, "*****************************************************************");
-
-            return 42;
-
-        }
-
-        @Override
-        protected void onPostExecute(Integer aInt) {
-            super.onPostExecute(aInt);
-            isStarting = false;
-            if (aInt > 0 && m_activity.get() != null)
-            {
-                m_activity.get().startActivity(new Intent(m_activity.get(), SaveMyBikeActivity.class));
-                m_activity.get().finish();
-            }
-
-        }
-    }
-
+    
     @Override
     protected void onStop() {
         super.onStop();
@@ -474,11 +354,7 @@ public final class LoginActivity extends AppCompatActivity {
             displayAuthCancelled();
         }  else {
             Log.i(TAG, "LOGIN SUCCESS");
-            /*
-            Intent intent = new Intent(this, SaveMyBikeActivity.class);
-            intent.putExtras(data.getExtras());
-            startActivity(intent);
-            */
+
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 for (String key : bundle.keySet()) {
@@ -779,7 +655,7 @@ public final class LoginActivity extends AppCompatActivity {
         AuthorizationServiceConfiguration config = state.getAuthorizationServiceConfiguration();
 
         String authEndpointStr;
-        if (config.discoveryDoc != null) {
+        if (config != null && config.discoveryDoc != null) {
             authEndpointStr = "Discovered auth endpoint: \n";
         } else {
             authEndpointStr = "Static auth endpoint: \n";
@@ -885,6 +761,7 @@ public final class LoginActivity extends AppCompatActivity {
                 mAuthStateManager.getCurrent().createTokenRefreshRequest(),
                 this::handleAccessTokenResponse);
     }
+
     @MainThread
     private void performTokenRequest(
             TokenRequest request,
@@ -926,12 +803,6 @@ public final class LoginActivity extends AppCompatActivity {
     public void signOut() {
         Log.w(TAG, "Signing out");
         clearAuthState();
-/*
-        Intent mainIntent = new Intent(this, LoginActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mainIntent);
-        finish();
-*/
     }
 
     private void clearAuthState() {

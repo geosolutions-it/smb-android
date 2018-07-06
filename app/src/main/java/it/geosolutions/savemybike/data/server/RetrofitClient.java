@@ -121,7 +121,7 @@ public class RetrofitClient {
     }
 
 
-    public static String getSavedTokenString(Context context){
+    static String getSavedTokenString(Context context){
         //do we have a valid token ?
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
@@ -264,7 +264,7 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    public Retrofit getPortalRetrofit(){
+    private Retrofit getPortalRetrofit(){
         if(portalRetrofit == null){
             portalRetrofit = new Retrofit.Builder()
                     .client(getPortalClient())
@@ -287,10 +287,9 @@ public class RetrofitClient {
             logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
             credentialsProvider.setLogins(logins);
 
-            AwsInterceptor awsInterceptor = new AwsInterceptor(credentialsProvider, "S3", Regions.US_WEST_2.getName());
+            AwsInterceptor awsInterceptor = new AwsInterceptor(credentialsProvider, "S3", Constants.AWS_REGION.getName());
 
             client  = new OkHttpClient.Builder()
-                    //.addInterceptor(new TokenInterceptor(context))
                     .addInterceptor(awsInterceptor)
                     .addInterceptor(new LoggingInterceptor())
                     .build();

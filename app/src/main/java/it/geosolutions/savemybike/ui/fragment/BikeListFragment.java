@@ -63,9 +63,9 @@ public class BikeListFragment extends Fragment {
     /**
      * adapter for bikes
      */
-    private class BikeAdapter extends ArrayAdapter<Bike>{
+    private class BikeAdapter extends ArrayAdapter<Bike> {
 
-        private	int resource;
+        private int resource;
 
         private BikeAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Bike> objects) {
             super(context, resource, objects);
@@ -79,41 +79,41 @@ public class BikeListFragment extends Fragment {
 
             RelativeLayout view;
 
-            if(convertView == null){
+            if (convertView == null) {
                 view = new RelativeLayout(getContext());
                 LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                li.inflate(resource, view,true);
-            }else{
+                li.inflate(resource, view, true);
+            } else {
                 view = (RelativeLayout) convertView;
             }
 
             final Bike bike = getItem(position);
 
-            if(bike != null) {
+            if (bike != null) {
                 final TextView titleTv = view.findViewById(R.id.bike_title);
                 final ImageView imageView = view.findViewById(R.id.bike_image);
 
                 if (bike.getNickname() != null) {
                     titleTv.setText(bike.getNickname());
-                }else{
+                } else {
                     titleTv.setText("");
                 }
 
-                if(bike.getPictures() != null && !bike.getPictures().isEmpty()){
+                if (bike.getPictures() != null && !bike.getPictures().isEmpty()) {
                     Glide.with(getContext()).load(bike.getPictures().get(0)).into(imageView);
-                }else{
+                } else {
                     imageView.setImageResource(R.drawable.footer_bikes_off);
                 }
 
                 final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
                 alarmButton.setOnClickListener(view1 -> {
                     Toast.makeText(getContext(), "Changing " + bike.getNickname() + "  status", Toast.LENGTH_LONG).show();
-                    ((SaveMyBikeActivity)getActivity()).updateBikeStatus(bike);
+                    ((SaveMyBikeActivity) getActivity()).updateBikeStatus(bike);
                 });
 
-                if(bike.getCurrentStatus() != null && bike.getCurrentStatus().getLost()){
+                if (bike.getCurrentStatus() != null && bike.getCurrentStatus().getLost()) {
                     alarmButton.setImageResource(R.drawable.ic_lock_open_red_24dp);
-                }else{
+                } else {
                     alarmButton.setImageResource(R.drawable.ic_lock_outline_green_24dp);
                 }
             }

@@ -61,13 +61,11 @@ import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
-import it.geosolutions.savemybike.ui.fragment.LoginFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -474,11 +472,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 }
                 fragment = new BikeListFragment();
                 break;
-            case 3:
-                if (currentFragment != null && currentFragment instanceof LoginFragment) {
-                    return;
-                }
-                fragment = new LoginFragment();
+            default:
                 break;
         }
 
