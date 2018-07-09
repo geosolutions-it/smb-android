@@ -17,4 +17,10 @@
     <string name="retry_label">Riprova</string>
     <string name="start_authorization">Login</string>
     <string name="bike_name">nome bici</string>
+    <string name="logout_title">DISCONNESSIONE</string>
+    <string name="logout_message">Disconnettersi? Sarà necessario rieffettuare l\'accesso.</string>
+    <string name="logout_OK">DISCONNETTI</string>
+    <string name="cancel">Annulla</string>
+    <string name="logout_menu_text">Disconnetti</string>
+    <string name="type_your_message">Type Your Message :</string>
 </resources>

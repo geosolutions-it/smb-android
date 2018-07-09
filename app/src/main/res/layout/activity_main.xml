@@ -25,7 +25,9 @@
             android:cropToPadding="false"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            app:srcCompat="@drawable/goodgo_clippath" />
+            app:srcCompat="@drawable/goodgo_clippath"
+            android:contentDescription="LOGO"
+            tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
 

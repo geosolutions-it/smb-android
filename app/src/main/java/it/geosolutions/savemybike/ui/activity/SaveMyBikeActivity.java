@@ -61,6 +61,7 @@ import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
+import it.geosolutions.savemybike.ui.BikeAdapter;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
@@ -334,15 +335,20 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     /**
      * Call the API to update a bike's status
      */
-    public void updateBikeStatus(Bike bike) {
+    public void updateBikeStatus(Bike bike, String details) {
+
+        if(details == null){
+            details = "";
+        }
 
         RetrofitClient rclient = RetrofitClient.getInstance(this);
         SMBRemoteServices smbserv = rclient.getPortalServices();
 
-        CurrentStatus newstatus = new CurrentStatus();
-        newstatus.setBike("http://dev.savemybike.geo-solutions.it/api/bikes/"+bike.getRemoteId()+"/");
-        newstatus.setLost(!bike.getCurrentStatus().getLost());
-        Call<Object> call = smbserv.sendNewBikeStatus(newstatus);
+        CurrentStatus newStatus = new CurrentStatus();
+        newStatus.setBike("http://dev.savemybike.geo-solutions.it/api/bikes/"+bike.getRemoteId()+"/");
+        newStatus.setDetails(details);
+        newStatus.setLost(!bike.getCurrentStatus().getLost());
+        Call<Object> call = smbserv.sendNewBikeStatus(newStatus);
 
         call.enqueue(new Callback<Object>() {
             @Override
@@ -350,6 +356,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 Log.i(TAG, "Response Message: "+ response.message());
                 Log.i(TAG, "Response Body: "+ response.body());
                 bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
+                bikeAdapter.notifyDataSetInvalidated();
             }
 
             @Override
@@ -611,13 +618,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 break;
             case R.id.menu_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("AppCompatDialog");
-                builder.setMessage("Do you really want to logout?");
-                builder.setPositiveButton("OK", (dialog, which) -> {
+                builder.setTitle(R.string.logout_title);
+                builder.setMessage(R.string.logout_message);
+                builder.setPositiveButton(R.string.logout_OK, (dialog, which) -> {
                     signOut();
                     dialog.dismiss();
                 });
-                builder.setNegativeButton("Cancel", null);
+                builder.setNegativeButton(R.string.cancel, null);
                 builder.show();
                 break;
 
@@ -865,5 +872,18 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             mExecutor.shutdownNow();
         }
     }
+
+    public BikeAdapter getBikeAdapter() {
+
+        if(bikeAdapter == null) {
+
+            final List<Bike> bikes = getBikes();
+
+            bikeAdapter = new BikeAdapter(this, R.layout.item_bike, bikes);
+        }
+        return bikeAdapter;
+    }
+
+    private BikeAdapter bikeAdapter;
 
 }

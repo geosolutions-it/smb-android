@@ -1,17 +1,3 @@
-/*
- * Copyright 2015 The AppAuth for Android Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package it.geosolutions.savemybike.ui.activity;
 
 import android.annotation.TargetApi;
@@ -33,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -62,6 +50,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,19 +65,9 @@ import it.geosolutions.savemybike.R;
 import okio.Okio;
 
 /**
- * Demonstrates the usage of the AppAuth to authorize a user with an OAuth2 / OpenID Connect
- * provider. Based on the configuration provided in `res/raw/auth_config.json`, the code
- * contained here will:
+ * Based on The AppAuth for Android Authors. Licensed under the Apache License, Version 2.0
  *
- * - Retrieve an OpenID Connect discovery document for the provider, or use a local static
- *   configuration.
- * - Utilize dynamic client registration, if no static client id is specified.
- * - Initiate the authorization request using the built-in heuristics or a user-selected browser.
- *
- * _NOTE_: From a clean checkout of this project, the authorization service is not configured.
- * Edit `res/values/auth_config.xml` to provide the required configuration properties. See the
- * README.md in the app/ directory for configuration instructions, and the adjacent IDP-specific
- * instructions.
+ * Heavy changes in the login workflow to allow all the authentication happen in this activity
  */
 public final class LoginActivity extends AppCompatActivity {
 
@@ -240,7 +219,8 @@ public final class LoginActivity extends AppCompatActivity {
 
         AuthState state = mAuthStateManager.getCurrent();
 
-        refreshTokenInfoView.setText((state.getRefreshToken() == null)
+        final String refreshToken = state.getRefreshToken();
+        refreshTokenInfoView.setText((refreshToken == null)
                 ? R.string.no_refresh_token_returned
                 : R.string.refresh_token_returned);
 
@@ -250,12 +230,19 @@ public final class LoginActivity extends AppCompatActivity {
 
         if (state.getAccessToken() == null) {
             accessTokenInfoView.setText(R.string.no_access_token_returned);
+            if(refreshToken == null || new CognitoIdToken(refreshToken).getExpiration().compareTo(new Date()) < 0){
+                signOut();
+                startAuth();
+            }
+
         } else {
             Long expiresAt = state.getAccessTokenExpirationTime();
             if (expiresAt == null) {
                 accessTokenInfoView.setText(R.string.no_access_token_expiry);
             } else if (expiresAt < System.currentTimeMillis()) {
                 accessTokenInfoView.setText(R.string.access_token_expired);
+                refreshAccessToken();
+                return;
             } else {
 
 
@@ -265,12 +252,14 @@ public final class LoginActivity extends AppCompatActivity {
 
 
                 Intent intent = new Intent(this, SaveMyBikeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
+                finish();
                 return;
             }
         }
 
-        refreshTokenButton.setVisibility(state.getRefreshToken() != null
+        refreshTokenButton.setVisibility(refreshToken != null
                 ? View.VISIBLE
                 : View.GONE);
         refreshTokenButton.setOnClickListener((View view) -> refreshAccessToken());
