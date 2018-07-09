@@ -7,9 +7,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.exceptions.CognitoParameterInvalidException;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
-import com.amazonaws.regions.Regions;
 import com.ghedeon.AwsInterceptor;
 
 import net.openid.appauth.AuthState;
@@ -82,26 +79,17 @@ public class RetrofitClient {
      */
     public void getRemoteConfig(@NonNull final GetConfigCallback callback, @NonNull final GetBikesCallback bikesCallback) {
 
-        String idTokenString = getSavedTokenString(context);
+/*
+        if (System.currentTimeMillis() < accessToken.getExpiration().getTime()) {
+/*/
+            fetchConfig(callback);
+            fetchBikes(bikesCallback);
+/*
 
-        // Requests will fail if we use the AccessToken
-        if(idTokenString == null){
-            Log.d(TAG, "Token not available, need to login first");
-            return;
-        }
+        } else {
 
-        CognitoIdToken accessToken = new CognitoIdToken(idTokenString);
-        try {
-            if (System.currentTimeMillis() < accessToken.getExpiration().getTime()) {
+            Log.d(TAG, "Token Expired");
 
-                fetchConfig(callback);
-
-                fetchBikes(bikesCallback);
-
-            } else {
-
-                Log.d(TAG, "Token Expired");
-            /*
             acquireToken(new Authenticate() {
                 @Override
                 public void success() {
@@ -113,11 +101,9 @@ public class RetrofitClient {
                     Log.e(TAG, message);
                 }
             });
-            */
-            }
-        }catch (CognitoParameterInvalidException cpie){
-            Log.e(TAG, "Invalid Token found in preferences");
+
         }
+        */
     }
 
 

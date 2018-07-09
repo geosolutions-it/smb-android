@@ -17,12 +17,8 @@ package it.geosolutions.savemybike.ui.activity;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.AnyThread;
 import android.support.annotation.ColorRes;
 import android.support.annotation.MainThread;
@@ -30,19 +26,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -62,22 +52,16 @@ import net.openid.appauth.TokenResponse;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -88,9 +72,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.Configuration;
-import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.data.Constants;
 import okio.Okio;
 
 /**
@@ -145,12 +127,9 @@ public final class LoginActivity extends AppCompatActivity {
     @BindView(R.id.userinfo_card) View userInfoCard;
     @BindView(R.id.error_container) View error_container;
     @BindView(R.id.auth_container) View auth_container;
-    @BindView(R.id.auth_endpoint) TextView auth_endpoint;
-    @BindView(R.id.client_id) TextView client_id;
     @BindView(R.id.error_description) TextView error_description;
     @BindView(R.id.userinfo_name) TextView userinfo_name;
     @BindView(R.id.userinfo_json) TextView userinfo_json;
-    @BindView(R.id.userinfo_profile) ImageView userinfo_profile;
     @BindView(R.id.loading_description) TextView loading_description;
 
     @Override
@@ -278,9 +257,16 @@ public final class LoginActivity extends AppCompatActivity {
             } else if (expiresAt < System.currentTimeMillis()) {
                 accessTokenInfoView.setText(R.string.access_token_expired);
             } else {
+
+
                 String template = getResources().getString(R.string.access_token_expires_at);
                 accessTokenInfoView.setText(String.format(template,
                         DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss ZZ").print(expiresAt)));
+
+
+                Intent intent = new Intent(this, SaveMyBikeActivity.class);
+                startActivity(intent);
+                return;
             }
         }
 
@@ -310,23 +296,12 @@ public final class LoginActivity extends AppCompatActivity {
                     name = userInfo.getString("name");
                 }
                 userinfo_name.setText(name);
-
-                if (userInfo.has("picture")) {
-                    GlideApp.with(LoginActivity.this)
-                            .load(Uri.parse(userInfo.getString("picture")))
-                            .fitCenter()
-                            .into(userinfo_profile);
-                }
-
                 userinfo_json.setText(mUserInfoJson.toString());
                 userInfoCard.setVisibility(View.VISIBLE);
             } catch (JSONException ex) {
                 Log.e(TAG, "Failed to read userinfo JSON", ex);
             }
         }
-
-        Intent intent = new Intent(this, SaveMyBikeActivity.class);
-        startActivity(intent);
 
     }
     
@@ -650,33 +625,13 @@ public final class LoginActivity extends AppCompatActivity {
         auth_container.setVisibility(View.VISIBLE);
         loading_container.setVisibility(View.GONE);
         error_container.setVisibility(View.GONE);
-
-        AuthState state = mAuthStateManager.getCurrent();
-        AuthorizationServiceConfiguration config = state.getAuthorizationServiceConfiguration();
-
-        String authEndpointStr;
-        if (config != null && config.discoveryDoc != null) {
-            authEndpointStr = "Discovered auth endpoint: \n";
-        } else {
-            authEndpointStr = "Static auth endpoint: \n";
-        }
-        authEndpointStr += config.authorizationEndpoint;
-        auth_endpoint.setText(authEndpointStr);
-
-        String clientIdStr;
-        if (state.getLastRegistrationResponse() != null) {
-            clientIdStr = "Dynamic client ID: \n";
-        } else {
-            clientIdStr = "Static client ID: \n";
-        }
-        clientIdStr += mClientId;
-        client_id.setText(clientIdStr);
     }
 
     private void displayAuthCancelled() {
-        Snackbar.make(findViewById(R.id.coordinator),
+        Toast.makeText(
+                this,
                 "Authorization canceled",
-                Snackbar.LENGTH_SHORT)
+                Toast.LENGTH_SHORT)
                 .show();
     }
 

@@ -225,6 +225,9 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 }
             }).execute();
         }
+        else{
+          Log.w(TAG, "*****  NETWORK NOT DETECTED  ******");
+        }
         //else local config is used
 
 
