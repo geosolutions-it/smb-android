@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:text="@string/type_your_message"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:labelFor="@id/editTextDialogUserInput"/>
+        android:labelFor="@id/editTextDialogUserInput"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/editTextDialogUserInput"

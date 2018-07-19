@@ -5,6 +5,7 @@ import java.util.List;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
+import it.geosolutions.savemybike.model.PaginatedResult;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -29,7 +30,7 @@ public interface SMBRemoteServices {
     );
 
     @GET("api/my-bikes")
-    Call<List<Bike>> getMyBikes();
+    Call<PaginatedResult<Bike>> getMyBikes();
 
     @POST("api/my-bike-statuses/")
     Call<Object> sendNewBikeStatus(

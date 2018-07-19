@@ -78,10 +78,10 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                builder.setTitle("Lost Bike Report");
+                builder.setTitle(R.string.lost_bike_report_title);
                 if(bike.getCurrentStatus().getLost()) {
-                    builder.setMessage("Looks like you found your bike! Do you want to mark this bike as \"found\"?");
-                    builder.setPositiveButton("Send", (dialog, which) -> {
+                    builder.setMessage(R.string.found_bike_message);
+                    builder.setPositiveButton(R.string.send, (dialog, which) -> {
                         smbActivity.updateBikeStatus(bike, "");
                         dialog.dismiss();
                     });
@@ -91,8 +91,8 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
                     builder.setView(promptsView);
                     final EditText userInput = promptsView.findViewById(R.id.editTextDialogUserInput);
 
-                    builder.setMessage("You are about to report your bike as \"lost\", please add some details:");
-                    builder.setPositiveButton("Send", (dialog, which) -> {
+                    builder.setMessage(R.string.lost_bike_message);
+                    builder.setPositiveButton(R.string.send, (dialog, which) -> {
                         smbActivity.updateBikeStatus(bike, userInput.getText().toString());
                         dialog.dismiss();
                     });

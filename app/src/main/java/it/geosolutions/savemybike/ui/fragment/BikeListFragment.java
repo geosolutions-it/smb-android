@@ -1,6 +1,8 @@
 package it.geosolutions.savemybike.ui.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -41,7 +43,11 @@ public class BikeListFragment extends Fragment {
 
     @OnClick(R.id.add_bike_button)
     public void onClick() {
-        Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goodgo.savemybike.geo-solutions.it/bikes/"));
+        startActivity(browserIntent);
+
+        // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
     }
 
 }

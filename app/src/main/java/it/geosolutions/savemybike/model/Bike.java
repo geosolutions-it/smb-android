@@ -26,6 +26,16 @@ public class Bike implements Serializable {
     private int stolen;
     private int selected;
 
+    private String short_uuid;
+
+    public String getShort_uuid() {
+        return short_uuid;
+    }
+
+    public void setShort_uuid(String short_uuid) {
+        this.short_uuid = short_uuid;
+    }
+
     public List<String> getPictures() {
         return pictures;
     }

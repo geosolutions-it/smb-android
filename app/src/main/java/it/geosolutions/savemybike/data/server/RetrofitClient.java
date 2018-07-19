@@ -1,28 +1,22 @@
 package it.geosolutions.savemybike.data.server;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.ghedeon.AwsInterceptor;
 
 import net.openid.appauth.AuthState;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
 
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
+import it.geosolutions.savemybike.model.PaginatedResult;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -38,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Robert Oehler on 07.12.17.
- *
+ * Edit by Lorenzo Pini
  * A Retrofit client which connect to a AWS endpoint
  */
 
@@ -47,7 +41,6 @@ public class RetrofitClient {
     private static final String TAG = "RetrofitClient";
 
     private final static String AWS_ENDPOINT = "https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/";
-    private final static String PORTAL_ENDPOINT = "https://dev.savemybike.geo-solutions.it/";
 
     private Retrofit retrofit;
     private Retrofit portalRetrofit;
@@ -107,10 +100,15 @@ public class RetrofitClient {
     }
 
 
-    static String getSavedTokenString(Context context){
-        //do we have a valid token ?
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
+    /**
+     * get the bikes list from the server
+
+     * @param bikesCallback callback for the result
+     */
+    public void getBikes(@NonNull final GetBikesCallback bikesCallback) {
+
+        fetchBikes(bikesCallback);
+
     }
 
 
@@ -142,10 +140,10 @@ public class RetrofitClient {
     private void fetchBikes(@NonNull final GetBikesCallback callback){
 
         //do the (retrofit) get call
-        final Call<List<Bike>> call = getPortalServices().getMyBikes();
+        final Call<PaginatedResult<Bike>> call = getPortalServices().getMyBikes();
 
         try {
-            final List<Bike> bikesList = call.execute().body();
+            final PaginatedResult<Bike> bikesList = call.execute().body();
 
             callback.gotBikes(bikesList);
 
@@ -155,93 +153,10 @@ public class RetrofitClient {
         }
     }
 
-    /*
-     * acquires a token by accessing the AWS user pool and logging in
-     *
-     * the token is then saved to local prefs for future user
-     * and passed to fetch the actual config
-     *
-     * @see "http://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-integrating-user-pools-android.html#tutorial-integrating-user-pools-user-sign-in-android"
-     *
-     * @param callback for the result of the operation
-     */
-    /*
-    private void acquireToken(@NonNull final Authenticate callback){
-
-        // Create a CognitoUserPool object to refer to your user pool
-        final CognitoUserPool userPool = new CognitoUserPool(context, Constants.AWS_POOL, Constants.AWS_CLIENT_ID_WO_SECRET,null, Regions.US_WEST_2);
-
-        final CognitoUser currentUser = userPool.getCurrentUser();
-
-        // Callback handler for the sign-in process
-        final AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
-
-            @Override
-            public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-
-                // Get id token from CognitoUserSession.
-                String accessToken = userSession.getAccessToken().getJWTToken();
-                String idToken = userSession.getIdToken().getJWTToken();
-                String refreshToken = userSession.getRefreshToken().getToken();
-
-                Log.d(TAG, accessToken);
-                Log.d(TAG, idToken);
-                Log.d(TAG, refreshToken);
-
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                ed.putString(Constants.PREF_CONFIG_ACCESSTOKEN, accessToken);
-                ed.putString(Constants.PREF_CONFIG_IDTOKEN, idToken);
-                ed.putString(Constants.PREF_CONFIG_REFRESHTOKEN, refreshToken);
-                ed.apply();
-
-                callback.success();
-            }
-
-            @Override
-            public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
-
-                // The API needs user sign-in credentials to continue
-                final AuthenticationDetails authenticationDetails = new AuthenticationDetails(Constants.AWS_USER, Constants.AWS_PASS, null);
-                // Pass the user sign-in credentials to the continuation
-                authenticationContinuation.setAuthenticationDetails(authenticationDetails);
-                // Allow the sign-in to continue
-                authenticationContinuation.continueTask();
-            }
-
-            @Override
-            public void getMFACode(MultiFactorAuthenticationContinuation multiFactorAuthenticationContinuation) {
-
-                callback.error("Multi-factor authentication is required");
-            }
-
-            @Override
-            public void authenticationChallenge(ChallengeContinuation continuation) {
-
-                callback.error("authenticationChallenge");
-            }
-
-            @Override
-            public void onFailure(Exception exception) {
-                // Sign-in failed, check exception for the cause
-                callback.error("sign-in failed " + exception.getMessage());
-            }
-        };
-
-        if (currentUser != null) {
-            Log.i(TAG, "requesting session");
-            // get the current session
-            currentUser.getSession(authenticationHandler);
-        }else{
-            callback.error("No current user available");
-        }
-    }
-    */
-
-
     private Retrofit getRetrofit(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .client(getClient())
+                    .client(getPortalClient())
                     .baseUrl(AWS_ENDPOINT)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
@@ -254,33 +169,12 @@ public class RetrofitClient {
         if(portalRetrofit == null){
             portalRetrofit = new Retrofit.Builder()
                     .client(getPortalClient())
-                    .baseUrl(PORTAL_ENDPOINT)
+                    .baseUrl(Constants.PORTAL_ENDPOINT)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
         }
         return portalRetrofit;
-    }
-    private OkHttpClient getClient(){
-
-        if(client == null) {
-            AuthState state = AuthStateManager.getInstance(context).getCurrent();
-            String idToken = state.getIdToken();
-            CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(context, it.geosolutions.savemybike.data.Constants.AWS_IDENTITY_POOL_ID, it.geosolutions.savemybike.data.Constants.AWS_REGION);
-
-            // Set up as a credentials provider.
-            Map<String, String> logins = new HashMap<>();
-            logins.put("dev.savemybike.geo-solutions.it/auth/realms/save-my-bike", idToken);
-            credentialsProvider.setLogins(logins);
-
-            AwsInterceptor awsInterceptor = new AwsInterceptor(credentialsProvider, "S3", Constants.AWS_REGION.getName());
-
-            client  = new OkHttpClient.Builder()
-                    .addInterceptor(awsInterceptor)
-                    .addInterceptor(new LoggingInterceptor())
-                    .build();
-        }
-        return client;
     }
 
     private OkHttpClient getPortalClient(){
@@ -288,6 +182,7 @@ public class RetrofitClient {
         if(portalClient == null) {
             AuthState state = AuthStateManager.getInstance(context).getCurrent();
             String accessToken = state.getAccessToken();
+            Log.i(TAG, "Using ACCESS token: "+accessToken);
 
             portalClient  = new OkHttpClient.Builder()
                     .addInterceptor(new TokenInterceptor("Bearer "+accessToken))
@@ -308,17 +203,11 @@ public class RetrofitClient {
             this.token = token;
         }
 
-        TokenInterceptor(Context context){
-
-            this.token = getSavedTokenString(context);
-
-        }
-
         @Override
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
 
             // TODO: inject authentication token
-
+            Log.d(TAG, "TOKEN IS: "+token);
             Request request = chain.request();
             if (token != null){
                 Request authenticatedRequest = request.newBuilder().header("Authorization", token).build();
@@ -334,7 +223,7 @@ public class RetrofitClient {
      */
     private static class LoggingInterceptor implements Interceptor {
 
-        @Override public Response intercept(Chain chain) throws IOException {
+        @Override public Response intercept(@NonNull Chain chain) throws IOException {
             Request request = chain.request();
             long t1 = System.nanoTime();
             String requestLog = String.format(Locale.US, "Sending request %s on %s%n%s",request.url(), chain.connection(), request.headers());
@@ -373,6 +262,10 @@ public class RetrofitClient {
         }
     }
 
+    /**
+     * This is only used to send the collected points to the S3 instance through the API Gateway
+     * @return retrofit services to interact with the AWS endpoint
+     */
     private SMBRemoteServices getServices(){
 
         return getRetrofit().create(SMBRemoteServices.class);
@@ -393,7 +286,7 @@ public class RetrofitClient {
 
     public interface GetBikesCallback
     {
-        void gotBikes(List<Bike> bikesList);
+        void gotBikes(PaginatedResult<Bike> bikesList);
         void error(String message);
     }
 /*

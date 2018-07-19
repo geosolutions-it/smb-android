@@ -10,17 +10,23 @@
     <string name="menu_simulate">Simula</string>
     <string name="menu_wifi">Carica dati solo con Wifi</string>
     <string name="login_button_text">Login</string>
-    <string name="select_a_vehicle">Select a vehicle</string>
+    <string name="select_a_vehicle">Scegli un veicolo</string>
     <string name="simulation">simulation</string>
     <string name="session_type">session type</string>
     <string name="record">Registra</string>
     <string name="retry_label">Riprova</string>
-    <string name="start_authorization">Login</string>
+    <string name="start_authorization">Accedi</string>
     <string name="bike_name">nome bici</string>
     <string name="logout_title">DISCONNESSIONE</string>
     <string name="logout_message">Disconnettersi? Sarà necessario rieffettuare l\'accesso.</string>
     <string name="logout_OK">DISCONNETTI</string>
     <string name="cancel">Annulla</string>
     <string name="logout_menu_text">Disconnetti</string>
-    <string name="type_your_message">Type Your Message :</string>
+    <string name="type_your_message">Scrivi qui il messaggio :</string>
+    <string name="not_authorized">Pronto per iniziare?</string>
+    <string name="exchanging_authorization_code">Accesso in corso…</string>
+    <string name="found_bike_message">Sembra che tu abbia ritrovato la tua bici! Confermi?</string>
+    <string name="lost_bike_message">Stai per segnalare questa bici come \"smarrita\".\nAggiungi qualche dettaglio.</string>
+    <string name="send">Invia</string>
+    <string name="lost_bike_report_title">Segnala Bici Smarrita</string>
 </resources>

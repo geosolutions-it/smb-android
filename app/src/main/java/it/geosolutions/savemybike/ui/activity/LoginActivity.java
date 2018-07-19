@@ -155,9 +155,6 @@ public final class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        retry.setOnClickListener((View view) ->
-                mExecutor.submit(this::initializeAppAuth));
-
         if (!mConfiguration.isValid()) {
             displayError(mConfiguration.getConfigurationError(), false);
             return;
@@ -176,6 +173,11 @@ public final class LoginActivity extends AppCompatActivity {
 
         displayLoading("Initializing");
         mExecutor.submit(this::initializeAppAuth);
+    }
+
+    @OnClick(R.id.retry)
+    public void reinitializeAppAuth() {
+                mExecutor.submit(this::initializeAppAuth);
     }
 
     @Override
@@ -213,7 +215,7 @@ public final class LoginActivity extends AppCompatActivity {
     @MainThread
     private void displayAuthorized() {
 
-        authorized.setVisibility(View.VISIBLE);
+        // authorized.setVisibility(View.VISIBLE);
         not_authorized.setVisibility(View.GONE);
         loading_container.setVisibility(View.GONE);
 
@@ -232,7 +234,7 @@ public final class LoginActivity extends AppCompatActivity {
             accessTokenInfoView.setText(R.string.no_access_token_returned);
             if(refreshToken == null || new CognitoIdToken(refreshToken).getExpiration().compareTo(new Date()) < 0){
                 signOut();
-                startAuth();
+                reinitializeAppAuth();
             }
 
         } else {
@@ -676,7 +678,7 @@ public final class LoginActivity extends AppCompatActivity {
         Log.e(TAG, explanation);
         // showLoginFragment();
 
-        failure_explanation.setText(explanation);
+        // failure_explanation.setText(explanation);
 
     }
 
@@ -736,7 +738,7 @@ public final class LoginActivity extends AppCompatActivity {
 
     @MainThread
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
-        displayLoading("Exchanging authorization code");
+        displayLoading(getString(R.string.exchanging_authorization_code));
         performTokenRequest(
                 authorizationResponse.createTokenExchangeRequest(),
                 this::handleCodeExchangeResponse);
@@ -747,6 +749,7 @@ public final class LoginActivity extends AppCompatActivity {
     public void signOut() {
         Log.w(TAG, "Signing out");
         clearAuthState();
+        displayAuthOptions();
     }
 
     private void clearAuthState() {

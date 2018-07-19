@@ -36,14 +36,11 @@ import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
-import org.json.JSONObject;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +56,7 @@ import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
+import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.BikeAdapter;
@@ -106,7 +104,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
-    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
+    // private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private ExecutorService mExecutor;
 
     @Override
@@ -202,16 +200,23 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 }
             }, new RetrofitClient.GetBikesCallback() {
                 @Override
-                public void gotBikes(final List<Bike> bikesList) {
+                public void gotBikes(final PaginatedResult<Bike> bikesList) {
 
-                    if (bikesList != null) {
+                    if (bikesList != null){
+                        if (bikesList.getResults() != null) {
 
-                        if (BuildConfig.DEBUG) {
-                            Log.i(TAG, "Number of downloaded bikes: " + bikesList.size());
+                            if (BuildConfig.DEBUG) {
+                                Log.i(TAG, "Number of downloaded bikes: " + bikesList.getResults().size());
+                            }
+
+                            //save the config
+                            Configuration.saveBikes(getBaseContext(), bikesList.getResults());
+
+                        } else {
+                            Log.w(TAG, "Wrong bikes response: server did not return a results array");
+                            // Removing the bikes list
+                            Configuration.saveBikes(getBaseContext(), new ArrayList<>());
                         }
-
-                        //save the config
-                        Configuration.saveBikes(getBaseContext(), bikesList);
 
                     } else {
                         Log.e(TAG, "Wrong bikes response: check for authentication or network errors");
@@ -243,8 +248,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
-            final S3Manager s3Manager = new S3Manager(getBaseContext(), uploadWithWifiOnly);
-            s3Manager.checkUpload();
+            // upload to S3 in the background
+            Runnable runnable = () -> {
+                final S3Manager s3Manager = new S3Manager(getBaseContext(), uploadWithWifiOnly);
+                s3Manager.checkUpload();
+            };
+            new Thread(runnable).start();
+
         }
     }
 /*
@@ -345,7 +355,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         SMBRemoteServices smbserv = rclient.getPortalServices();
 
         CurrentStatus newStatus = new CurrentStatus();
-        newStatus.setBike("http://dev.savemybike.geo-solutions.it/api/bikes/"+bike.getRemoteId()+"/");
+        newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/bikes/"+bike.getShort_uuid()+"/");
         newStatus.setDetails(details);
         newStatus.setLost(!bike.getCurrentStatus().getLost());
         Call<Object> call = smbserv.sendNewBikeStatus(newStatus);
@@ -355,8 +365,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             public void onResponse(Call<Object> call, Response<Object> response) {
                 Log.i(TAG, "Response Message: "+ response.message());
                 Log.i(TAG, "Response Body: "+ response.body());
-                bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
-                bikeAdapter.notifyDataSetInvalidated();
+
+                if(response.isSuccessful()) {
+                    bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
+                    bikeAdapter.notifyDataSetInvalidated();
+                } else {
+                    Log.w(TAG, "Bike update UNSUCCESSFUL");
+                }
             }
 
             @Override
@@ -739,7 +754,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         return Configuration.getBikes(getBaseContext());
     }
     /**
-     * loads the config from remote
+     * loads the config and the bikes from remote
      */
     private static class GetRemoteConfigTask extends AsyncTask<Void, Void, Void> {
 
@@ -757,7 +772,8 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
 
             RetrofitClient retrofitClient = new RetrofitClient(contextRef.get());
-            retrofitClient.getRemoteConfig(callback, bikesCallback);
+            // retrofitClient.getRemoteConfig(callback, bikesCallback);
+            retrofitClient.getBikes(bikesCallback);
             return null;
         }
     }
@@ -795,7 +811,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
     /**
      * Manage both recurring tasks and messages from the background service
-     * @return
+     * @return a handler
      */
     Handler getHandler() {
         if (handler == null) {
@@ -818,7 +834,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         private final WeakReference<SaveMyBikeActivity> currentActivity;
 
-        public HandlerExtension(SaveMyBikeActivity activity){
+        private HandlerExtension(SaveMyBikeActivity activity){
             currentActivity = new WeakReference<>(activity);
         }
 
