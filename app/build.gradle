@@ -62,6 +62,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
+
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }
 
 configurations.all {
