@@ -2,7 +2,7 @@
   "client_id": "smb-portal",
   "redirect_uri": "it.geosolutions.savemybike:/oauth2redirect",
   "authorization_scope": "openid email profile",
-  "discovery_uri": "https://dev.savemybike.geo-solutions.it/auth/realms/save-my-bike/.well-known/openid-configuration",
+  "discovery_uri": "https://goodgo.savemybike.geo-solutions.it/auth/realms/save-my-bike/.well-known/openid-configuration",
   "authorization_endpoint_uri": "",
   "token_endpoint_uri": "",
   "registration_endpoint_uri": "",
