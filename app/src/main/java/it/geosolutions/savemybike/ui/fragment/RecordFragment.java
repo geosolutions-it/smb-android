@@ -1,6 +1,6 @@
 package it.geosolutions.savemybike.ui.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;

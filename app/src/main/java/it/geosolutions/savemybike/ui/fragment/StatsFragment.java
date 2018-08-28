@@ -2,12 +2,14 @@ package it.geosolutions.savemybike.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.format.DateTimeFormat;
 
@@ -41,6 +44,8 @@ import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
 public class StatsFragment extends Fragment {
 
+    private final static String TAG = "StatsFragment";
+
     private SessionAdapter adapter;
 
     @BindView(R.id.distance_overall) TextView overallDistanceTV;
@@ -65,6 +70,20 @@ public class StatsFragment extends Fragment {
         adapter = new SessionAdapter(getActivity(), R.layout.item_session, new ArrayList<>());
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
+            Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "" + arg1.getTag() + " " + arg2 + " " + arg3);
+
+            // Show the Up button in the action bar.
+            ActionBar actionBar = ((SaveMyBikeActivity)getActivity()).getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowHomeEnabled(true);
+            }
+            ((SaveMyBikeActivity)getActivity()).changeFragment(3);
+
+        }
+        );
         invalidateSessions();
 
         return view;
@@ -179,27 +198,31 @@ public class StatsFragment extends Fragment {
      */
     private void showProgress(final boolean show) {
 
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        if(isAdded()) {
 
-        progress.setVisibility(View.VISIBLE);
-        progress.animate().setDuration(shortAnimTime)
-                .alpha(show ? 1 : 0)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        progress.setVisibility(show ? View.VISIBLE : View.GONE);
-                    }
-                });
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        content.setVisibility(View.VISIBLE);
-        content.animate().setDuration(shortAnimTime)
-                .alpha(show ? 0 : 1)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        content.setVisibility(show ? View.GONE : View.VISIBLE);
-                    }
-                });
+            progress.setVisibility(View.VISIBLE);
+            progress.animate().setDuration(shortAnimTime)
+                    .alpha(show ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            progress.setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
+
+            content.setVisibility(View.VISIBLE);
+            content.animate().setDuration(shortAnimTime)
+                    .alpha(show ? 0 : 1)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            content.setVisibility(show ? View.GONE : View.VISIBLE);
+                        }
+                    });
+
+        }
 
     }
 

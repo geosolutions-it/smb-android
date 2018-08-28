@@ -2,7 +2,8 @@ package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.app.Fragment;
+import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,16 +65,18 @@ import it.geosolutions.savemybike.ui.BikeAdapter;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
+import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Created by Robert Oehler on 25.10.17.
+ * Edited by Lorenzo Pini on 2018.
  *
  * Main activity of the SaveMyBike app
  */
-public class SaveMyBikeActivity extends AppCompatActivity {
+public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetailsFragment.OnFragmentInteractionListener {
 
     private final static String TAG = "SaveMyBikeActivity";
 
@@ -87,6 +91,11 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     protected static final byte PERMISSION_REQUEST = 122;
     private Handler handler;
     private MReceiver mReceiver;
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 
     public enum PermissionIntent {
         LOCATION,
@@ -498,11 +507,17 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 }
                 fragment = new BikeListFragment();
                 break;
+            case 3:
+                if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
+                    return;
+                }
+                fragment = new TrackDetailsFragment();
+                break;
             default:
                 break;
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
     }
 
     /**
@@ -623,14 +638,14 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                     ((RecordFragment) currentFragment).applySimulate(simulate);
                 }
                 invalidateOptionsMenu();
-                break;
+                return true;
             case R.id.menu_upload_wifi:
 
                 uploadWithWifiOnly = !uploadWithWifiOnly;
                 //save this setting
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, uploadWithWifiOnly).apply();
                 invalidateOptionsMenu();
-                break;
+                return true;
             case R.id.menu_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.logout_title);
@@ -641,11 +656,10 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 });
                 builder.setNegativeButton(R.string.cancel, null);
                 builder.show();
-                break;
-
+                return true;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -799,7 +813,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
      */
     private Fragment getCurrentFragment() {
 
-        return getFragmentManager().findFragmentById(R.id.content);
+        return getSupportFragmentManager().findFragmentById(R.id.content);
     }
 
     /**
@@ -902,4 +916,24 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
     private BikeAdapter bikeAdapter;
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+        changeFragment(1);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
+            onSupportNavigateUp();
+        }else {
+            super.onBackPressed();
+        }
+    }
 }
