@@ -2,13 +2,15 @@ package it.geosolutions.savemybike.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.support.v4.app.Fragment;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.db.SMBDatabase;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -70,17 +73,26 @@ public class StatsFragment extends Fragment {
         adapter = new SessionAdapter(getActivity(), R.layout.item_session, new ArrayList<>());
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
-            Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "" + arg1.getTag() + " " + arg2 + " " + arg3);
+        listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
-            // Show the Up button in the action bar.
-            ActionBar actionBar = ((SaveMyBikeActivity)getActivity()).getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowHomeEnabled(true);
-            }
-            ((SaveMyBikeActivity)getActivity()).changeFragment(3);
+
+            Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
+
+            intent.putExtra(TrackDetailsActivity.TRACK_ID, (Long) itemView.getTag());
+
+            /* TODO: animation transition. Something like this...
+            // Check if we're running on Android 5.0 or higher
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // create the transition animation - the images in the layouts
+                // of both activities are defined with android:transitionName="track-details-open"
+                ActivityOptions options = ActivityOptions
+                        .makeSceneTransitionAnimation(this, androidRobotView, "track-details-open");
+                getActivity().startActivity(intent, options.toBundle());
+            } else {
+                getActivity().startActivity(intent);
+            }*/
+            getActivity().startActivity(intent);
+
 
         }
         );
@@ -247,6 +259,7 @@ public class StatsFragment extends Fragment {
 
             if(convertView == null){
                 view = new RelativeLayout(getContext());
+
                 LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 li.inflate(resource, view,true);
             }else{
@@ -269,7 +282,9 @@ public class StatsFragment extends Fragment {
                 dataTV.setText(String.format(Locale.US, "%d", session.getDataPoints().size()));
                 dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(session.getStartingTime()));
                 durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(session.getOverallTime()));
+                view.setTag(session.getId());
             }
+
             return view;
         }
     }

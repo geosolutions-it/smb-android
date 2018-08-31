@@ -2,8 +2,6 @@ package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +22,10 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -62,6 +61,7 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.BikeAdapter;
+import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
@@ -76,7 +76,7 @@ import retrofit2.Response;
  *
  * Main activity of the SaveMyBike app
  */
-public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetailsFragment.OnFragmentInteractionListener {
+public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInteractionListener {
 
     private final static String TAG = "SaveMyBikeActivity";
 
@@ -84,7 +84,6 @@ public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetail
 
     private SaveMyBikeService mService;
 
-    private Configuration configuration;
     private Vehicle currentVehicle;
     private boolean applyServiceVehicle = false;
 
@@ -265,6 +264,8 @@ public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetail
             new Thread(runnable).start();
 
         }
+        // TODO: Initialize MapView to speedup first activity load.
+
     }
 /*
     void showLoginFragment(){
@@ -748,17 +749,7 @@ public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetail
         return null;
     }
 
-    /**
-     * gets the configuration - if it is null it is loaded
-     *
-     * @return the configuration
-     */
-    public Configuration getConfiguration() {
-        if (configuration == null) {
-            configuration = Configuration.loadConfiguration(getBaseContext());
-        }
-        return configuration;
-    }
+
 
     /**
      * Returns the saved list of bikes
@@ -936,4 +927,6 @@ public class SaveMyBikeActivity extends AppCompatActivity implements TrackDetail
             super.onBackPressed();
         }
     }
+
+
 }
