@@ -36,6 +36,7 @@ import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.db.SMBDatabase;
 import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
@@ -131,7 +132,7 @@ public class StatsFragment extends Fragment {
                     elev += session.getOverallElevation();
                 }
 
-                if(((SaveMyBikeActivity)getActivity()).getConfiguration().metric) {
+                if(((SMBBaseActivity)getActivity()).getConfiguration().metric) {
                     overallDistanceTV.setText(String.format(Locale.US, "%.1f %s", dist / 1000f, Constants.UNIT_KM));
                     overallElevTV.setText(String.format(Locale.US, "%.0f %s", elev, Constants.UNIT_M));
                 }else{

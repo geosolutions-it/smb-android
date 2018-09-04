@@ -61,5 +61,22 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="segments">Segments</string>
     <string name="track_details">Details</string>
+    <string name="benefit_index">Benefit Index</string>
+    <string name="calories_consumed">Calories Consumed</string>
+    <string name="calories_uom">cal</string>
+    <string name="vehicles">Veichles</string>
+    <string name="health_data">Health Data</string>
+    <string name="loading">Loading...</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="emissions">Emissions</string>
+    <string name="value">Value</string>
+    <string name="saved">Saved</string>
+    <string name="fuel">Fuel</string>
+    <string name="costs_uom">€</string>
+    <string name="costs">Costs</string>
+    <string name="c_depreciation">Depreciation</string>
+    <string name="c_operation">Operation</string>
+    <string name="total">Total</string>
 
 </resources>

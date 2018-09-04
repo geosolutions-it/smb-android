@@ -1,0 +1,110 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/veichles_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <FrameLayout
+        android:id="@+id/icon_walk"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_directions_walk"
+        />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/icon_bike"
+        android:visibility="gone"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/inner_icon"
+            android:src="@drawable/ic_directions_bike"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/icon_motorcycle"
+        android:visibility="gone"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_directions_motorcycle"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/icon_car"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_directions_car"
+            />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/icon_bus"
+        android:visibility="gone"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_directions_bus"
+            />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/icon_train"
+        android:visibility="gone"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/circle_drawable">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_directions_train"
+            />
+    </FrameLayout>
+</LinearLayout>

@@ -6,9 +6,48 @@
     tools:context=".ui.fragment.TrackDetailsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+        <!-- TODO show start-end <include layout="@layout/track_start_end" /> -->
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vehicles"/>
+        <include layout="@layout/vehicles_list"/>
+        <include layout="@layout/health_data" />
+        <include layout="@layout/emissions" />
+        <include layout="@layout/costs" />
+
+    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+    <FrameLayout
+        android:id="@+id/loading_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/browser_actions_bg_grey"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/loading" />
+    </FrameLayout>
 
 </FrameLayout>

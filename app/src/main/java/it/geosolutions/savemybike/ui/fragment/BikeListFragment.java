@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
 /**
@@ -43,7 +44,7 @@ public class BikeListFragment extends Fragment {
     @OnClick(R.id.add_bike_button)
     public void onClick() {
 
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goodgo.savemybike.geo-solutions.it/bikes/"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
         startActivity(browserIntent);
 
         // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();

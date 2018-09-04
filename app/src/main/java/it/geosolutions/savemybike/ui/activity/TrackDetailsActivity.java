@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -107,30 +108,6 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
 
         bottomSheetBehaviour.setPeekHeight(300);
         bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    tapActionLayout.setVisibility(View.VISIBLE);
-                }
-
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    // tapActionLayout.setVisibility(View.GONE);
-
-                }
-
-                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    // tapActionLayout.setVisibility(View.GONE);
-                }
-            }
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if(mMap != null) {
-
-                }
-
-            }
-        });
         tapActionLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
