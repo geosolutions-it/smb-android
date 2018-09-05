@@ -20,6 +20,7 @@ import it.geosolutions.savemybike.model.Cost;
 import it.geosolutions.savemybike.model.EmissionData;
 import it.geosolutions.savemybike.model.HealthData;
 import it.geosolutions.savemybike.model.Track;
+import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.EmissionAdapter;
 import it.geosolutions.savemybike.ui.adapters.IconDataAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
@@ -59,9 +60,10 @@ public class TrackDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setLoading(true);
+        Long itemId = (Long) getActivity().getIntent().getExtras().get(TrackDetailsActivity.TRACK_ID);
         RetrofitClient client = RetrofitClient.getInstance(this.getContext());
         SMBRemoteServices portalServices = client.getPortalServices();
-        portalServices.getTrack(79).enqueue(new Callback<Track>() {
+        portalServices.getTrack(itemId).enqueue(new Callback<Track>() {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
                 setLoading(false);
@@ -82,7 +84,6 @@ public class TrackDetailsFragment extends Fragment {
                 if(t.getCosts() != null) {
                     showCosts(t.getCosts().get("totals"));
                 }
-
             }
 
             @Override
@@ -183,7 +184,7 @@ public class TrackDetailsFragment extends Fragment {
                 case "bike":
                     getActivity().findViewById(R.id.icon_bike).setVisibility(View.VISIBLE);
                     break;
-                case "motocycle":
+                case "motorcycle":
                     getActivity().findViewById(R.id.icon_motorcycle).setVisibility(View.VISIBLE);
                     break;
                 case "car":

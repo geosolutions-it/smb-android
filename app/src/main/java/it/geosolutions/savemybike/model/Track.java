@@ -1,53 +1,24 @@
 package it.geosolutions.savemybike.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Track {
-
-    private long id;
-
-    private String owner;
-
-    private Double duration;
+/**
+ * @author Lorenzo Natali, GeoSolutions s.a.s.
+ * Track object from SMB REST API
+ */
+public class Track extends BaseTrack{
 
     private ArrayList<Segment> segments;
-
-    @SerializedName("created_at")
-    private String cretaedAt;
-
-    @SerializedName("vehicle_types")
-    private ArrayList<String> vehicleTypes;
 
     private HashMap<String, EmissionData> emissions;
 
     private HashMap<String, Cost> costs;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public Double getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Double duration) {
-        this.duration = duration;
-    }
+    private HashMap<String, HealthData> health;
 
     public ArrayList<Segment> getSegments() {
         return segments;
@@ -63,14 +34,6 @@ public class Track {
 
     public void setCretaedAt(String cretaedAt) {
         this.cretaedAt = cretaedAt;
-    }
-
-    public ArrayList<String> getVehicleTypes() {
-        return vehicleTypes;
-    }
-
-    public void setVehicleTypes(ArrayList<String> vehicleTypes) {
-        this.vehicleTypes = vehicleTypes;
     }
 
     public HashMap<String, EmissionData> getEmissions() {
@@ -97,7 +60,7 @@ public class Track {
         this.health = health;
     }
 
-    private HashMap<String, HealthData> health;
+
 
 
 

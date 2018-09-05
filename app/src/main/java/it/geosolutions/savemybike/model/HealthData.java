@@ -2,6 +2,11 @@ package it.geosolutions.savemybike.model;
 
 import com.google.gson.annotations.SerializedName;
 
+
+/**
+ * @author Lorenzo Natali, GeoSolutions s.a.s.
+ * from SMB REST API
+ */
 public class HealthData {
     @SerializedName("benefit_index")
     private Double benefitIndex;

@@ -1,16 +1,18 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,22 +21,36 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.data.geojson.GeoJsonFeature;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonLineString;
+import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.data.Constants;
-import it.geosolutions.savemybike.model.DataPoint;
-import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.data.server.RetrofitClient;
+import it.geosolutions.savemybike.data.server.SMBRemoteServices;
+import it.geosolutions.savemybike.model.BaseTrack;
+import it.geosolutions.savemybike.model.Segment;
+import it.geosolutions.savemybike.model.Track;
+import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.adapters.TrackDetailsViewPagerAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
-import it.geosolutions.savemybike.ui.tasks.GetSessionTask;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -46,7 +62,7 @@ import it.geosolutions.savemybike.ui.tasks.GetSessionTask;
 public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyCallback, OnFragmentInteractionListener {
 
     private GoogleMap mMap;
-    private Session session;
+    private Track track;
     public static final String TRACK_ID = "TRACK_ID";
     View bottomSheet;
     BottomSheetBehavior bottomSheetBehaviour;
@@ -119,26 +135,25 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         });
     }
     private void loadData() {
+        setLoading(true);
         Long itemId = (Long) getIntent().getExtras().get(TRACK_ID);
-        new GetSessionTask(getBaseContext(), new GetSessionTask.SessionCallback() {
+        RetrofitClient client = RetrofitClient.getInstance(this);
+        SMBRemoteServices portalServices = client.getPortalServices();
+        portalServices.getTrack(itemId).enqueue(new Callback<Track>() {
             @Override
-            public void showProgressView() {
+            public void onResponse(Call<Track> call, Response<Track> response) {
+                setLoading(false);
+                track = response.body();
+                displayData();
 
             }
 
             @Override
-            public void hideProgressView() {
-
+            public void onFailure(Call<Track> call, Throwable t) {
+                setLoading(false);
+                // showNoData();
             }
-
-            @Override
-            public void done(Session s) {
-                session = s;
-                if(mMap != null) {
-                    displayData();
-                }
-            }
-        }, itemId).execute();
+        });
     }
 
     /**
@@ -166,42 +181,131 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
     private void displayData() {
         // setup data in map
         // update item view
-        if(session != null) {
-            // TODO: share code with StatsFragment
+        if(track != null) {
             View view = findViewById(R.id.session_row);
-            final TextView distanceTV = view.findViewById(R.id.dist_value);
-            final TextView dataTV = view.findViewById(R.id.data_value);
-            final TextView dateTV = view.findViewById(R.id.session_start_datetime);
-            final TextView durationTV = view.findViewById(R.id.session_duration_text);
+            inflateTrackDataToRecordView(track, view);
+            // update map
+            if(mMap != null) {
+                GeoJsonLayer layer = new GeoJsonLayer(mMap, createGeoJsonObject(track.getSegments()) );
+                layer.addLayerToMap();
+                // Set the color of the linestring to CYAN
+                GeoJsonLineStringStyle lineStringStyle = layer.getDefaultLineStringStyle();
+                lineStringStyle.setColor(Color.CYAN);
+                // lineStringStyle.setWidth(2);
 
-            if (this.getConfiguration().metric) {
-                distanceTV.setText(String.format(Locale.US, "%.1f %s", (session.getDistance() / 1000f), Constants.UNIT_KM));
-            } else {
-                distanceTV.setText(String.format(Locale.US, "%.1f %s", (session.getDistance() / 1000f) * Constants.KM_TO_MILES, Constants.UNIT_MI));
+
+                LatLngBounds.Builder builder = LatLngBounds.builder();
+                for(GeoJsonFeature f: layer.getFeatures()) {
+                    // calculate bounding box
+                    for (LatLng latLng : ((GeoJsonLineString) f.getGeometry()).getCoordinates()) {
+                        builder.include(latLng);
+                    }
+
+                    String v = f.getProperty("vehicle_type");
+                    GeoJsonLineStringStyle style = new GeoJsonLineStringStyle();
+                    switch (v) {
+                        case "walk":
+                            style.setColor(Color.BLUE);
+                            f.setLineStringStyle(style);
+                            break;
+                        case "bike":
+                            style.setColor(getResources().getColor(R.color.colorPrimary));
+                            f.setLineStringStyle(style);
+                            break;
+                        case "motorcycle":
+                            style.setColor(Color.RED);
+                            f.setLineStringStyle(style);
+                            break;
+                        case "car":
+                            style.setColor(Color.BLACK);
+                            f.setLineStringStyle(style);
+                            break;
+                        case "bus":
+                            style.setColor(Color.LTGRAY);
+                            f.setLineStringStyle(style);
+                            break;
+                        case "train":
+                            style.setColor(Color.YELLOW);
+                            f.setLineStringStyle(style);
+                            break;
+                    }
+
+                }
+                // zoom to bounding box
+                LatLngBounds bounds = builder.build();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 40));
+
             }
-            dataTV.setText(String.format(Locale.US, "%d", session.getDataPoints().size()));
-            dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(session.getStartingTime()));
-            durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(session.getOverallTime()));
         }
-        // update item info
-        if(session != null && mMap != null) {
-            ArrayList<DataPoint> points = session.getDataPoints();
-            PolylineOptions pOpts = new PolylineOptions();
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (DataPoint p : points) {
-                LatLng latLng = new LatLng(p.latitude, p.longitude);
-                pOpts.add(latLng);
-                builder.include(latLng);
-            }
-            mMap.addPolyline(pOpts);
-            LatLngBounds bounds = builder.build();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 40));
-        }
+
 
     }
 
+    public static void inflateTrackDataToRecordView(BaseTrack track, View view) {
+        final TextView distanceTV = view.findViewById(R.id.dist_value);
+        final TextView dataTV = view.findViewById(R.id.data_value);
+        final TextView dateTV = view.findViewById(R.id.session_start_datetime);
+        final TextView durationTV = view.findViewById(R.id.session_duration_text);
+        dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((track.getCretaedAt()))));
+
+        long millis = Math.round(60000 * track.getDuration());
+        Duration duration = new Duration(millis);
+        DateTime date = new DateTime(0, 1, 1, 0, 0, 0, 0);
+        durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
+        ImageView vehicle1 = view.findViewById(R.id.vehicle_1);
+        ImageView vehicle2 = view.findViewById(R.id.vehicle_2);
+        View more = view.findViewById(R.id.more_veihicles);
+        List<String> types = track.getVehicleTypes();
+        // remove duplicates
+        Set<String> hs = new HashSet<>();
+        hs.addAll(types);
+        types.clear();
+        types.addAll(hs);
+        if(types.size() > 2) {
+            more.setVisibility(View.VISIBLE);
+        } else {
+            more.setVisibility(View.GONE);
+        }
+        if(types.get(0) != null){
+            vehicle1.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(0)));
+        }
+        if(types.get(1) != null){
+            vehicle2.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(1)));
+        }
+    }
+
+    /**
+     * Creates the (Geo)JSONObject required by the GeoJsonLayer
+     * @param segments
+     * @return
+     */
+    private JSONObject createGeoJsonObject(ArrayList<Segment> segments) {
+        JSONObject featureCollection = new JSONObject();
+        try {
+            featureCollection.put("type", "FeatureCollection");
+            JSONArray arr = new JSONArray();
+            for(Segment segment : segments) {
+                JSONObject feature = new JSONObject();
+                feature.put("type", "Feature");
+                JSONObject properties = new JSONObject();
+                properties.put("id", segment.getId());
+                properties.put("start_date", segment.getStartDate());
+                properties.put("vehicle_type", segment.getVeihicleType());
+                feature.put("properties", properties);
+                feature.put("geometry", new JSONObject(segment.getGeom()));
+                arr.put(feature);
+            }
+
+            featureCollection.put("features", arr);
+        } finally {
+            return featureCollection;
+        }
+    }
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+    public void setLoading(boolean loading) {
+        // TODO: show and hide loading
     }
 }

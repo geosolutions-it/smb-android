@@ -17,10 +17,15 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.data.server.RetrofitClient;
+import it.geosolutions.savemybike.data.server.SMBRemoteServices;
+import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
-import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
-import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
+import it.geosolutions.savemybike.ui.adapters.TrackItemAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -28,11 +33,11 @@ import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
  * A fragment showing the stats of the session of the local database
  */
 
-public class StatsFragment extends Fragment {
+public class TracksFragment extends Fragment {
 
-    private final static String TAG = "StatsFragment";
+    private final static String TAG = "TracksFragment";
 
-    private SessionAdapter adapter;
+    private TrackItemAdapter adapter;
 
     @BindView(R.id.progress_layout) LinearLayout progress;
     @BindView(R.id.content_layout) LinearLayout content;
@@ -49,7 +54,7 @@ public class StatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_stats, container,false);
         ButterKnife.bind(this, view);
 
-        adapter = new SessionAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
+        adapter = new TrackItemAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
@@ -71,50 +76,35 @@ public class StatsFragment extends Fragment {
                 getActivity().startActivity(intent);
             }*/
             getActivity().startActivity(intent);
-
-
-        }
-        );
+        });
         // TODO: show also sessions, grayed out
-        // invalidateSessions();
-
+        getTracks();
+        listView.setEmptyView(getActivity().findViewById(R.id.emptyView));
         return view;
     }
 
     /**
      * loads the locally available sessions from the database and invalidates the UI
      */
-    private void invalidateSessions() {
-
-        new InvalidateSessionsTask(getActivity(), new InvalidateSessionsTask.InvalidateSessionsCallback() {
+    private void getTracks() {
+        RetrofitClient client = RetrofitClient.getInstance(this.getContext());
+        SMBRemoteServices portalServices = client.getPortalServices();
+        portalServices.getTracks().enqueue(new Callback<PaginatedResult<TrackItem>>() {
             @Override
-            public void showProgressView() {
-
-                showProgress(true);
-            }
-
-            @Override
-            public void hideProgressView() {
-
+            public void onResponse(Call<PaginatedResult<TrackItem>> call, Response<PaginatedResult<TrackItem>> response) {
                 showProgress(false);
-            }
-
-            @Override
-            public void done(ArrayList<Session> sessions) {
-
-                double dist = 0, elev = 0;
-                long time = 0;
-
-                for(Session session : sessions){
-                    dist += session.getDistance();
-                    time += session.getOverallTime();
-                    elev += session.getOverallElevation();
-                }
-
-                adapter.addAll(sessions);
+                adapter.addAll(response.body().getResults());
                 adapter.notifyDataSetChanged();
             }
-        }).execute();
+
+            @Override
+            public void onFailure(Call<PaginatedResult<TrackItem>> call, Throwable t) {
+                showProgress(false);
+                // TODO: Show empty view
+            }
+        });
+
+
     }
 
 
@@ -150,6 +140,5 @@ public class StatsFragment extends Fragment {
                     });
 
         }
-
     }
 }

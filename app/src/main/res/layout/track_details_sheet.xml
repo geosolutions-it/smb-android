@@ -21,7 +21,7 @@
 
         <include
             android:id="@+id/session_row"
-            layout="@layout/item_session"
+            layout="@layout/item_track"
              />
 
     </LinearLayout>

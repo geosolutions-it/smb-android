@@ -17,8 +17,8 @@
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
         android:fontFamily="sans-serif-light"
+        android:gravity="center_horizontal|center_vertical"
         android:text="You have not created a bike yet"
         android:textSize="19.0sp"
         android:visibility="gone" />

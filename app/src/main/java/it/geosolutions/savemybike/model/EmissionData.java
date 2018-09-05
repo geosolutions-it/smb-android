@@ -2,6 +2,10 @@ package it.geosolutions.savemybike.model;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * @author Lorenzo Natali, GeoSolutions s.a.s.
+ * EmissionData object from SMB REST API
+ */
 public class EmissionData {
     private double co;
     private double c02;

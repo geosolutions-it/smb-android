@@ -6,6 +6,7 @@ import it.geosolutions.savemybike.model.Session;
 import java.lang.ref.WeakReference;
 
 import it.geosolutions.savemybike.data.db.SMBDatabase;
+import it.geosolutions.savemybike.model.Track;
 
 
 /**

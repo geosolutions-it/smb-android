@@ -66,6 +66,7 @@ import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
+import it.geosolutions.savemybike.ui.fragment.TracksFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -500,7 +501,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 if (currentFragment != null && currentFragment instanceof StatsFragment) {
                     return;
                 }
-                fragment = new StatsFragment();
+                fragment = new TracksFragment();
                 break;
             case 2:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {
