@@ -299,4 +299,9 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
             v.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onRequestPermissionGrant(PermissionIntent permissionIntent) {
+        // nothing to do, this activity don't require permission.
+    }
 }

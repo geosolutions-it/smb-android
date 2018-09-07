@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +45,7 @@ public class TracksFragment extends Fragment {
     @BindView(R.id.content_layout) LinearLayout content;
 
     @BindView(R.id.tracks_list) ListView listView;
-
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout mySwipeRefreshLayout;
     /**
      * inflate and setup the view of this fragment
      */
@@ -56,6 +58,14 @@ public class TracksFragment extends Fragment {
         adapter = new TrackItemAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
         listView.setAdapter(adapter);
 
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getTracks();
+                    }
+                }
+        );
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
 
@@ -145,6 +155,9 @@ public class TracksFragment extends Fragment {
                         }
                     });
 
+        }
+        if(mySwipeRefreshLayout != null & !show) {
+            mySwipeRefreshLayout.setRefreshing(show);
         }
     }
     private void showEmpty() {

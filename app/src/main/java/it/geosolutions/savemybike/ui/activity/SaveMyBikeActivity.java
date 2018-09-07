@@ -68,6 +68,7 @@ import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import it.geosolutions.savemybike.ui.fragment.TracksFragment;
+import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,12 +99,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     }
 
-    public enum PermissionIntent {
-        LOCATION,
-        SD_CARD
-    }
-
-    protected PermissionIntent mPermissionIntent;
 
     private boolean simulate = false;
     private boolean uploadWithWifiOnly = true;
@@ -127,6 +122,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         mStateManager = AuthStateManager.getInstance(this);
         mExecutor = Executors.newSingleThreadExecutor();
+
 
         it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
         if (config.hasConfigurationChanged()) {
@@ -258,12 +254,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
-            // upload to S3 in the background
-            Runnable runnable = () -> {
-                final S3Manager s3Manager = new S3Manager(getBaseContext(), uploadWithWifiOnly);
-                s3Manager.checkUpload();
-            };
-            new Thread(runnable).start();
+            uploadData();
 
         }
         // TODO: Initialize MapView to speedup first activity load.
@@ -549,69 +540,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 vehicle.setSelected(false);
             }
         }
-    }
-
-    /**
-     * ////////////// ANDROID 6 permissions /////////////////
-     * checks if the permission @param is granted and if not requests it
-     *
-     * @param permission the permission to check
-     * @return if the permission is necessary
-     */
-    public boolean permissionNecessary(final String permission, final PermissionIntent intent) {
-
-        boolean required = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(getBaseContext(), permission) != PackageManager.PERMISSION_GRANTED;
-
-        if (required) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_REQUEST);
-            mPermissionIntent = intent;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * ////////////// ANDROID 6 permissions /////////////////
-     * returns the result of the permission request
-     *
-     * @param requestCode  a requestCode
-     * @param permissions  the requested permission
-     * @param grantResults the result of the user decision
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (PERMISSION_REQUEST == requestCode) {
-            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                //the permission was denied by the user, show a message
-                if (permissions.length > 0) {
-                    //sdcard
-                    //TODO show a message or quit app when external storage (data upload) was denied ?
-                    if (!permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                            (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                        //location
-                        Toast.makeText(getBaseContext(), R.string.permission_location_required, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                return;
-            }
-
-            //user did grant permission, what did we want to do ?
-            switch (mPermissionIntent) {
-                case LOCATION:
-                    startRecording();
-                    break;
-                case SD_CARD:
-                    new S3Manager(getBaseContext(), uploadWithWifiOnly).checkUpload();
-                    break;
-
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -930,5 +858,36 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     }
 
+    @Override
+    public void onRequestPermissionGrant(PermissionIntent permissionIntent) {
+        //user did grant permission, what did we want to do ?
+        switch (permissionIntent) {
+            case LOCATION:
+                startRecording();
+                break;
+            case SD_CARD:
+                uploadData();
+                break;
+
+        }
+    }
+    public void uploadData() {
+        new UploadSessionTask(this, new UploadSessionTask.SessionCallback() {
+            @Override
+            public void showProgressView() {
+
+            }
+
+            @Override
+            public void hideProgressView() {
+
+            }
+
+            @Override
+            public void done(boolean success) {
+
+            }
+        }, uploadWithWifiOnly).execute();
+    }
 
 }

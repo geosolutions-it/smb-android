@@ -1,7 +1,9 @@
 package it.geosolutions.savemybike.ui.fragment;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,10 +17,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
 import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
 import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
+import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -49,6 +55,13 @@ public class SessionsFragment extends Fragment {
 
         adapter = new SessionAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
         listView.setAdapter(adapter);
+        view.findViewById(R.id.upload_button).setOnClickListener(new DebouncingOnClickListener() {
+            @Override
+            public void doClick(View p0) {
+                startUpload();
+            }
+        });
+
         /* not clickable
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
@@ -123,6 +136,31 @@ public class SessionsFragment extends Fragment {
                         });
 
             }
+
+        }
+
+    }
+    public void startUpload() {
+
+        SMBBaseActivity activity = (SMBBaseActivity) getActivity();
+        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, SMBBaseActivity.PermissionIntent.SD_CARD))) {
+
+            new UploadSessionTask(getContext(), new UploadSessionTask.SessionCallback() {
+                @Override
+                public void showProgressView() {
+                    showProgress(true);
+                }
+
+                @Override
+                public void hideProgressView() {
+                    showProgress(false);
+                }
+
+                @Override
+                public void done(boolean success) {
+
+                }
+            }, false).execute();
 
         }
 
