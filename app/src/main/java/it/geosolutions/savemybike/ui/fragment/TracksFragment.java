@@ -42,7 +42,7 @@ public class TracksFragment extends Fragment {
     @BindView(R.id.progress_layout) LinearLayout progress;
     @BindView(R.id.content_layout) LinearLayout content;
 
-    @BindView(R.id.sessions_list) ListView listView;
+    @BindView(R.id.tracks_list) ListView listView;
 
     /**
      * inflate and setup the view of this fragment
@@ -51,9 +51,8 @@ public class TracksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_stats, container,false);
+        View view = inflater.inflate(R.layout.fragment_tracks, container,false);
         ButterKnife.bind(this, view);
-
         adapter = new TrackItemAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
         listView.setAdapter(adapter);
 
@@ -76,10 +75,11 @@ public class TracksFragment extends Fragment {
                 getActivity().startActivity(intent);
             }*/
             getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         });
         // TODO: show also sessions, grayed out
         getTracks();
-        listView.setEmptyView(getActivity().findViewById(R.id.emptyView));
+
         return view;
     }
 
@@ -93,7 +93,13 @@ public class TracksFragment extends Fragment {
             @Override
             public void onResponse(Call<PaginatedResult<TrackItem>> call, Response<PaginatedResult<TrackItem>> response) {
                 showProgress(false);
-                adapter.addAll(response.body().getResults());
+                PaginatedResult<TrackItem> result = response.body();
+                if(result != null && result.getResults() != null) {
+                    adapter.addAll(response.body().getResults());
+                } else {
+                    adapter.addAll(new ArrayList<>());
+                    showEmpty();
+                }
                 adapter.notifyDataSetChanged();
             }
 
@@ -139,6 +145,14 @@ public class TracksFragment extends Fragment {
                         }
                     });
 
+        }
+    }
+    private void showEmpty() {
+        if(getActivity() != null) {
+            View v = getActivity().findViewById(R.id.emptyView);
+            if (v != null) {
+                v.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

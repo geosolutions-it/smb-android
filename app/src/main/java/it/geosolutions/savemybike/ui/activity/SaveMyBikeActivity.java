@@ -64,6 +64,7 @@ import it.geosolutions.savemybike.ui.BikeAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
+import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import it.geosolutions.savemybike.ui.fragment.TracksFragment;
@@ -498,10 +499,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new RecordFragment();
                 break;
             case 1:
-                if (currentFragment != null && currentFragment instanceof StatsFragment) {
+                if (currentFragment != null && currentFragment instanceof SessionsFragment) {
                     return;
                 }
-                fragment = new TracksFragment();
+                fragment = new StatsFragment();
                 break;
             case 2:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {

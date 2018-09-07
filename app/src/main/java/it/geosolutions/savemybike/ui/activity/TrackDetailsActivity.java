@@ -1,7 +1,6 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -10,8 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,7 +42,7 @@ import it.geosolutions.savemybike.model.BaseTrack;
 import it.geosolutions.savemybike.model.Segment;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.ui.VehicleUtils;
-import it.geosolutions.savemybike.ui.adapters.TrackDetailsViewPagerAdapter;
+import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import retrofit2.Call;
@@ -74,6 +71,10 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         loadData();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.track_details);
+        View ev = findViewById(R.id.emptyView);
+        if(ev != null) {
+            ev.setVisibility(View.GONE);
+        }
         bindDependencies();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -88,7 +89,7 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
 
     private void setupViewPager() {
         ViewPager viewPager = findViewById(R.id.track_details_viewpager);
-        TrackDetailsViewPagerAdapter adapter = new TrackDetailsViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         // Add Fragments to adapter one by one
         adapter.addFragment(new TrackDetailsFragment(), getBaseContext().getResources().getString(R.string.track_details));
@@ -142,16 +143,20 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         portalServices.getTrack(itemId).enqueue(new Callback<Track>() {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
-                setLoading(false);
                 track = response.body();
-                displayData();
-
+                if(track != null) {
+                    displayData();
+                } else {
+                    showNoData();
+                }
             }
 
             @Override
             public void onFailure(Call<Track> call, Throwable t) {
                 setLoading(false);
-                // showNoData();
+
+                showNoData();
+
             }
         });
     }
@@ -186,11 +191,12 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
             inflateTrackDataToRecordView(track, view);
             // update map
             if(mMap != null) {
+                mMap.setPadding(0, 150, 0, 50);
                 GeoJsonLayer layer = new GeoJsonLayer(mMap, createGeoJsonObject(track.getSegments()) );
                 layer.addLayerToMap();
                 // Set the color of the linestring to CYAN
                 GeoJsonLineStringStyle lineStringStyle = layer.getDefaultLineStringStyle();
-                lineStringStyle.setColor(Color.CYAN);
+                lineStringStyle.setColor(R.color.default_track_color);
                 // lineStringStyle.setWidth(2);
 
 
@@ -203,42 +209,16 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
 
                     String v = f.getProperty("vehicle_type");
                     GeoJsonLineStringStyle style = new GeoJsonLineStringStyle();
-                    switch (v) {
-                        case "walk":
-                            style.setColor(Color.BLUE);
-                            f.setLineStringStyle(style);
-                            break;
-                        case "bike":
-                            style.setColor(getResources().getColor(R.color.colorPrimary));
-                            f.setLineStringStyle(style);
-                            break;
-                        case "motorcycle":
-                            style.setColor(Color.RED);
-                            f.setLineStringStyle(style);
-                            break;
-                        case "car":
-                            style.setColor(Color.BLACK);
-                            f.setLineStringStyle(style);
-                            break;
-                        case "bus":
-                            style.setColor(Color.LTGRAY);
-                            f.setLineStringStyle(style);
-                            break;
-                        case "train":
-                            style.setColor(Color.YELLOW);
-                            f.setLineStringStyle(style);
-                            break;
-                    }
+                    style.setColor(getResources().getColor(VehicleUtils.getVehicleColor(v)));
+                    f.setLineStringStyle(style);
 
                 }
                 // zoom to bounding box
                 LatLngBounds bounds = builder.build();
                 mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 40));
-
+                setLoading(false);
             }
         }
-
-
     }
 
     public static void inflateTrackDataToRecordView(BaseTrack track, View view) {
@@ -261,16 +241,18 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         hs.addAll(types);
         types.clear();
         types.addAll(hs);
+
+        // display vehicles
+        if(types.size() > 0){
+            vehicle1.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(0)));
+        }
+        if(types.size() > 1){
+            vehicle2.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(1)));
+        }
         if(types.size() > 2) {
             more.setVisibility(View.VISIBLE);
         } else {
             more.setVisibility(View.GONE);
-        }
-        if(types.get(0) != null){
-            vehicle1.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(0)));
-        }
-        if(types.get(1) != null){
-            vehicle2.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(1)));
         }
     }
 
@@ -306,6 +288,15 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
 
     }
     public void setLoading(boolean loading) {
-        // TODO: show and hide loading
+        View v = findViewById(R.id.loading_container);
+        if(v != null) {
+            v.setVisibility(loading ? View.VISIBLE : View.GONE);
+        }
+    }
+    public void showNoData() {
+        View v = findViewById(R.id.emptyView);
+        if(v != null) {
+            v.setVisibility(View.VISIBLE);
+        }
     }
 }

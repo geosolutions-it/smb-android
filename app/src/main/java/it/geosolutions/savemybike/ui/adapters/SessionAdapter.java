@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
@@ -52,7 +54,7 @@ public class SessionAdapter extends ArrayAdapter<Session> {
         if(session != null) {
 
             final TextView distanceTV = view.findViewById(R.id.dist_value);
-            final TextView dataTV = view.findViewById(R.id.data_value);
+            // final TextView dataTV = view.findViewById(R.id.data_value);
             final TextView dateTV = view.findViewById(R.id.session_start_datetime);
             final TextView durationTV = view.findViewById(R.id.session_duration_text);
 
@@ -61,12 +63,21 @@ public class SessionAdapter extends ArrayAdapter<Session> {
             } else {
                 distanceTV.setText(String.format(Locale.US, "%.1f %s", (session.getDistance() / 1000f) * Constants.KM_TO_MILES, Constants.UNIT_MI));
             }
-            dataTV.setText(String.format(Locale.US, "%d", session.getDataPoints().size()));
+
             dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(session.getStartingTime()));
-            durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(session.getOverallTime()));
+            long millis = Math.round(60000 * session.getOverallTime());
+            Duration duration = new Duration(millis);
+            DateTime date = new DateTime(0, 1, 1, 0, 0, 0, 0);
+            durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
             view.setTag(session.getId());
         }
 
         return view;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        // disable all the items
+        return false;
     }
 }

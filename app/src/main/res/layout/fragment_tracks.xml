@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-    android:background="@drawable/background_grey">
+    android:background="@drawable/background_grey"
+    tools:context=".ui.activity.SaveMyBikeActivity">
 
     <LinearLayout
         android:id="@+id/progress_layout"
@@ -27,11 +28,11 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:visibility="visible">
 
         <ListView
-            android:id="@+id/sessions_list"
+            android:id="@+id/tracks_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -79,5 +79,7 @@
     <string name="c_operation">Operation</string>
     <string name="total">Total</string>
     <string name="no_data">No Data</string>
+    <string name="tracks">Tracks</string>
+    <string name="sessions">Sessions</string>
 
 </resources>

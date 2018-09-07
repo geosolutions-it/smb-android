@@ -6,6 +6,12 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Vehicle;
 
 public class VehicleUtils {
+    /**
+     * Returns the resource id of the drawable assigned to a vehicle.
+     * Example: vehicleIcon.setImageResource(getVehicleColor("bike"))
+     * @param v
+     * @return
+     */
     public static int getDrawableForVeichle(String v) {
         switch (v) {
             case "walk":
@@ -24,5 +30,30 @@ public class VehicleUtils {
                 return R.drawable.ic_home; // TODO: some question mark.
         }
 
+    }
+
+    /**
+     * Returns the resource id of the color assigned to a vehicle.
+     * Example: getResources().getColor(getVehicleColor("bike"))
+     * @param v
+     * @return
+     */
+    public static int getVehicleColor(String v) {
+        switch (v) {
+            case "walk":
+                return R.color.walk_color;
+            case "bike":
+                return R.color.bike_color;
+            case "motorcycle":
+                return R.color.motorcycle_color;
+            case "car":
+                return R.color.car_color;
+            case "bus":
+                return R.color.bus_color;
+            case "train":
+                return R.color.train_color;
+            default:
+                return R.color.default_track_color; // TODO: some question mark.
+        }
     }
 }

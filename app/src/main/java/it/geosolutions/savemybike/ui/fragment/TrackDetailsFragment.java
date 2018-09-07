@@ -1,10 +1,15 @@
 package it.geosolutions.savemybike.ui.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +25,7 @@ import it.geosolutions.savemybike.model.Cost;
 import it.geosolutions.savemybike.model.EmissionData;
 import it.geosolutions.savemybike.model.HealthData;
 import it.geosolutions.savemybike.model.Track;
+import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.EmissionAdapter;
 import it.geosolutions.savemybike.ui.adapters.IconDataAdapter;
@@ -66,24 +72,24 @@ public class TrackDetailsFragment extends Fragment {
         portalServices.getTrack(itemId).enqueue(new Callback<Track>() {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
-                setLoading(false);
                 Track t = response.body();
-                if (t == null) {
+                if (t == null && getActivity() != null) {
                     showNoData();
-                    return;
+                } else if (getActivity() != null){
+                    if(t.getHealth() != null) {
+                        showHealthData(t.getHealth().get("totals"));
+                    }
+                    if(t.getVehicleTypes() != null) {
+                        showVehicleTypes(t.getVehicleTypes());
+                    }
+                    if(t.getEmissions() != null) {
+                        showEmissions(t.getEmissions().get("totals"));
+                    }
+                    if(t.getCosts() != null) {
+                        showCosts(t.getCosts().get("totals"));
+                    }
                 }
-                if(t.getHealth() != null) {
-                    showHealthData(t.getHealth().get("totals"));
-                }
-                if(t.getVehicleTypes() != null) {
-                    showVehicleTypes(t.getVehicleTypes());
-                }
-                if(t.getEmissions() != null) {
-                    showEmissions(t.getEmissions().get("totals"));
-                }
-                if(t.getCosts() != null) {
-                    showCosts(t.getCosts().get("totals"));
-                }
+
             }
 
             @Override
@@ -177,32 +183,48 @@ public class TrackDetailsFragment extends Fragment {
 
     public void showVehicleTypes(ArrayList<String> vehicles) {
         for (String vehicle : vehicles) {
+            View v = null;
             switch (vehicle) {
                 case "walk":
-                    getActivity().findViewById(R.id.icon_walk).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_walk);
                     break;
                 case "bike":
-                    getActivity().findViewById(R.id.icon_bike).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_bike);
                     break;
                 case "motorcycle":
-                    getActivity().findViewById(R.id.icon_motorcycle).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_motorcycle);
                     break;
                 case "car":
-                    getActivity().findViewById(R.id.icon_car).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_car);
                     break;
                 case "bus":
-                    getActivity().findViewById(R.id.icon_bus).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_bus);
                     break;
                 case "train":
-                    getActivity().findViewById(R.id.icon_train).setVisibility(View.VISIBLE);
+                    v = getActivity().findViewById(R.id.icon_train);
                     break;
+
+            }
+            if(v != null) {
+                v.setVisibility(View.VISIBLE);
+                Drawable background = v.getBackground();
+                background.mutate();
+                if (background instanceof ShapeDrawable) {
+                    ((ShapeDrawable)background).getPaint().setColor(getResources().getColor(VehicleUtils.getVehicleColor(vehicle)));
+                } else if (background instanceof GradientDrawable) {
+                    ((GradientDrawable)background).setColor(getResources().getColor(VehicleUtils.getVehicleColor(vehicle)));
+                } else if (background instanceof ColorDrawable) {
+                    ((ColorDrawable)background).setColor(getResources().getColor(VehicleUtils.getVehicleColor(vehicle)));
+                }
             }
         }
     }
     public void setLoading(boolean loading) {
-        View v = getActivity().findViewById(R.id.loading_container);
-        if(v != null) {
-            v.setVisibility(loading ? View.VISIBLE : View.GONE);
+        if(getActivity() != null) {
+            View v = getActivity().findViewById(R.id.loading_container);
+            if(v != null) {
+                v.setVisibility(loading ? View.VISIBLE : View.GONE);
+            }
         }
     }
     @Override
