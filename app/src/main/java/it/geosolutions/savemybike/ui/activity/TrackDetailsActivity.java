@@ -245,9 +245,13 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         // display vehicles
         if(types.size() > 0){
             vehicle1.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(0)));
+        } else {
+            vehicle1.setVisibility(View.GONE);
         }
         if(types.size() > 1){
             vehicle2.setImageResource(VehicleUtils.getDrawableForVeichle(types.get(1)));
+        }else {
+            vehicle2.setVisibility(View.GONE);
         }
         if(types.size() > 2) {
             more.setVisibility(View.VISIBLE);

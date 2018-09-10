@@ -177,7 +177,7 @@ public class Session {
     }
 
     /**
-     * calculates the duration of this session
+     * calculates the duration of this session in milliseconds
      *
      * when start and end time are valid the difference between these is returned
      * otherwise the diff between the first and the last dataPoint

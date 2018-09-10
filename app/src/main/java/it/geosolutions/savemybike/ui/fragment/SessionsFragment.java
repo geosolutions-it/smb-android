@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class SessionsFragment extends Fragment {
 
     @BindView(R.id.progress_layout) LinearLayout progress;
     @BindView(R.id.content_layout) LinearLayout content;
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout mySwipeRefreshLayout;
 
     @BindView(R.id.sessions_list) ListView listView;
 
@@ -61,7 +63,14 @@ public class SessionsFragment extends Fragment {
                 startUpload();
             }
         });
-
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        invalidateSessions();
+                    }
+                }
+        );
         /* not clickable
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
@@ -88,15 +97,22 @@ public class SessionsFragment extends Fragment {
             @Override
             public void showProgressView() {
                 showProgress(true);
+                if(mySwipeRefreshLayout != null) {
+                    mySwipeRefreshLayout.setRefreshing(true);
+                }
             }
 
             @Override
             public void hideProgressView() {
                 showProgress(false);
+                if(mySwipeRefreshLayout != null ) {
+                    mySwipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
             public void done(ArrayList<Session> sessions) {
+                adapter.clear();
                 adapter.addAll(sessions);
                 adapter.notifyDataSetChanged();
             }

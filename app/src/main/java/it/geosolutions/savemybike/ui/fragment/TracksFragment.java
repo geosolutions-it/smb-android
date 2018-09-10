@@ -105,8 +105,10 @@ public class TracksFragment extends Fragment {
                 showProgress(false);
                 PaginatedResult<TrackItem> result = response.body();
                 if(result != null && result.getResults() != null) {
+                    adapter.clear();
                     adapter.addAll(response.body().getResults());
                 } else {
+                    adapter.clear();
                     adapter.addAll(new ArrayList<>());
                     showEmpty();
                 }

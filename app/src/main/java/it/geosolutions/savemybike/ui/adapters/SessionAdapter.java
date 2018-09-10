@@ -23,7 +23,8 @@ import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
 /**
- * adapter for sessions
+ * @Author Lorenzo Natali
+ * adapter for sessions list.
  */
 public class SessionAdapter extends ArrayAdapter<Session> {
 
@@ -65,11 +66,16 @@ public class SessionAdapter extends ArrayAdapter<Session> {
             }
 
             dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(session.getStartingTime()));
-            long millis = Math.round(60000 * session.getOverallTime());
+            long millis = Math.round(session.getOverallTime());
             Duration duration = new Duration(millis);
             DateTime date = new DateTime(0, 1, 1, 0, 0, 0, 0);
             durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
             view.setTag(session.getId());
+            if(session.isUploaded()) {
+                view.findViewById(R.id.uploaded).setVisibility(View.VISIBLE);
+            } else {
+                view.findViewById(R.id.uploaded).setVisibility(View.GONE);
+            }
         }
 
         return view;
