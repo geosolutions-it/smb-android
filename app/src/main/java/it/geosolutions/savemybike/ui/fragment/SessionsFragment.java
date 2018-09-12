@@ -20,10 +20,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
 import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
+import it.geosolutions.savemybike.ui.tasks.DeleteSessionTask;
 import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
 import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
 
@@ -55,7 +55,27 @@ public class SessionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sessions, container,false);
         ButterKnife.bind(this, view);
 
-        adapter = new SessionAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
+        adapter = new SessionAdapter(getActivity(), R.layout.swipable_session_item, new ArrayList<>()) {
+            @Override
+            public void onDelete(Session s) {
+                new DeleteSessionTask(getContext(), new DeleteSessionTask.DeleteSessionCallback() {
+                    @Override
+                    public void showProgressView() {
+                        // TODO show progress delete
+                    }
+
+                    @Override
+                    public void hideProgressView() {
+                        // TODO hide progress delete
+                    }
+
+                    @Override
+                    public void done(Boolean res) {
+                        invalidateSessions();
+                    }
+                }, s).execute();
+            }
+        };
         listView.setAdapter(adapter);
         view.findViewById(R.id.upload_button).setOnClickListener(new DebouncingOnClickListener() {
             @Override
@@ -63,14 +83,8 @@ public class SessionsFragment extends Fragment {
                 startUpload();
             }
         });
-        mySwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        invalidateSessions();
-                    }
-                }
-        );
+        mySwipeRefreshLayout.setOnRefreshListener(() -> invalidateSessions());
+
         /* not clickable
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
@@ -87,6 +101,8 @@ public class SessionsFragment extends Fragment {
 
         return view;
     }
+
+
 
     /**
      * loads the locally available sessions from the database and invalidates the UI

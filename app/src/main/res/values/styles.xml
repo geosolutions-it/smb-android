@@ -10,6 +10,7 @@
 
 <style name="DotsDarkTheme" parent="@style/Widget.AppCompat.ActionButton.Overflow" >
     <item name="android:tint">@color/colorPrimary</item>
+
 </style>
 <style name="MapToolbar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
     <!-- Customize color of navigation drawer icon and back arrow -->

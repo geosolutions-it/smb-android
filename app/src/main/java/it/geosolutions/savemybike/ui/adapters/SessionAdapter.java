@@ -22,18 +22,23 @@ import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
+
 /**
  * @Author Lorenzo Natali
  * adapter for sessions list.
  */
-public class SessionAdapter extends ArrayAdapter<Session> {
+public abstract class SessionAdapter extends ArrayAdapter<Session> {
 
     private	int resource;
-
+    private ViewBinderHelper binderHelper;
     public SessionAdapter(final Context context, int textViewResourceId, List<Session> sessions){
         super(context, textViewResourceId, sessions);
 
         resource = textViewResourceId;
+        binderHelper = new ViewBinderHelper();
+        binderHelper.setOpenOnlyOne(true);
     }
 
     @NonNull
@@ -42,18 +47,18 @@ public class SessionAdapter extends ArrayAdapter<Session> {
 
         RelativeLayout view;
 
+        final Session session = getItem(position);
         if(convertView == null){
             view = new RelativeLayout(getContext());
-
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             li.inflate(resource, view,true);
+            setupSwipe(view, session);
         }else{
             view = (RelativeLayout) convertView;
         }
 
-        final Session session = getItem(position);
-        if(session != null) {
 
+        if(session != null) {
             final TextView distanceTV = view.findViewById(R.id.dist_value);
             // final TextView dataTV = view.findViewById(R.id.data_value);
             final TextView dateTV = view.findViewById(R.id.session_start_datetime);
@@ -81,9 +86,39 @@ public class SessionAdapter extends ArrayAdapter<Session> {
         return view;
     }
 
+    /**
+     * Setup the swipable item
+     * @param convertView
+     * @param item
+     */
+    void setupSwipe(View convertView, Session item) {
+        String id = item.getId() + "";
+        SwipeRevealLayout layout = (SwipeRevealLayout)convertView.findViewById(R.id.swipe_layout);
+        binderHelper.bind(layout, id);
+
+        if(item.isUploaded()) {
+            binderHelper.lockSwipe(id);
+        } else {
+            binderHelper.unlockSwipe(id);
+        }
+        if (convertView != null && item != null) {
+            View deleteView = convertView.findViewById(R.id.delete_layout);
+            deleteView.setOnClickListener((view) -> {
+
+                onDelete(item);
+
+                SwipeRevealLayout l = (SwipeRevealLayout)convertView.findViewById(R.id.swipe_layout);
+
+                l.close(false);
+            });
+        }
+    }
+
     @Override
     public boolean isEnabled(int position) {
         // disable all the items
         return false;
     }
+
+    public abstract void onDelete(Session s);
 }

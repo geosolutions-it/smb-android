@@ -13,7 +13,7 @@
         android:background="@android:color/white"
         />
 
-    <android.support.v4.view.ViewPager
+    <it.geosolutions.savemybike.ui.custom.NoSwipeViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

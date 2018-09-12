@@ -68,6 +68,7 @@ import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import it.geosolutions.savemybike.ui.fragment.TracksFragment;
+import it.geosolutions.savemybike.ui.tasks.UpdateSessionsTask;
 import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -254,19 +255,13 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
-            uploadData();
+            // uploadData();
 
         }
         // TODO: Initialize MapView to speedup first activity load.
 
     }
-/*
-    void showLoginFragment(){
-        changeFragment(3);
-        navigation.setVisibility(View.GONE);
-        getSupportActionBar().hide();
-    }
-*/
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -866,13 +861,13 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 startRecording();
                 break;
             case SD_CARD:
-                uploadData();
+                // uploadData();
                 break;
 
         }
     }
     public void uploadData() {
-        new UploadSessionTask(this, new UploadSessionTask.SessionCallback() {
+        new UpdateSessionsTask(this, new UpdateSessionsTask.SessionCallback() {
             @Override
             public void showProgressView() {
 
@@ -884,10 +879,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             }
 
             @Override
-            public void done(boolean success) {
+            public void done(Boolean success) {
 
             }
-        }, uploadWithWifiOnly).execute();
+        }).execute();
     }
 
 }

@@ -364,6 +364,23 @@ public class SMBDatabase extends SQLiteOpenHelper {
         }
         return filtered;
     }
+    /**
+     * gets all sessions which have been uploaded to verify if they
+     * was processed
+     * @return a list of sessions
+     */
+    public ArrayList<Session> getSessionToUpdate(){
+
+        ArrayList<Session> allSessions = getAllSessions();
+        ArrayList<Session> filtered = new ArrayList<>();
+
+        for(Session session : allSessions){
+            if(session.isUploaded()){
+                filtered.add(session);
+            }
+        }
+        return filtered;
+    }
 
     /**
      * flags the session @param sessionId as uploaded
@@ -531,6 +548,11 @@ public class SMBDatabase extends SQLiteOpenHelper {
         }
 
         return null;
+    }
+    public int deleteSession(final long index) {
+
+        return db.delete(SESSIONS_TABLE,ID + "=?", new String[]{Long.toString(index)});
+
     }
 /*
     public int deleteBike(final long index) {

@@ -11,4 +11,5 @@
     <color name="bus_color">#aaaaaa</color>
     <color name="train_color">#ffff00</color>
     <color name="default_track_color">#00ffff</color>
+    <color name="delete">#FF0000</color>
 </resources>
