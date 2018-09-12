@@ -130,6 +130,7 @@ public class SessionsFragment extends Fragment {
             public void done(ArrayList<Session> sessions) {
                 adapter.clear();
                 adapter.addAll(sessions);
+                showEmpty(sessions.size() == 0);
                 adapter.notifyDataSetChanged();
             }
         }).execute();
@@ -196,5 +197,13 @@ public class SessionsFragment extends Fragment {
 
         }
 
+    }
+    private void showEmpty(boolean show) {
+        if(getActivity() != null) {
+            View v =  getView().findViewById(R.id.emptyView);
+            if (v != null) {
+                v.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 }

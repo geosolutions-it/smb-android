@@ -15,6 +15,7 @@ public class BaseTrack {
 
     protected String owner;
 
+    @SerializedName("duration_minutes")
     protected Double duration;
 
     @SerializedName("created_at")
@@ -22,6 +23,15 @@ public class BaseTrack {
 
     @SerializedName("vehicle_types")
     protected ArrayList<String> vehicleTypes;
+
+    @SerializedName("length_meters")
+    protected Double length;
+
+    @SerializedName("start_date")
+    protected String startDate;
+
+    @SerializedName("end_date")
+    protected String endDate;
 
     public long getId() {
         return id;
@@ -53,6 +63,30 @@ public class BaseTrack {
 
     public void setCretaedAt(String cretaedAt) {
         this.cretaedAt = cretaedAt;
+    }
+
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     public ArrayList<String> getVehicleTypes() {

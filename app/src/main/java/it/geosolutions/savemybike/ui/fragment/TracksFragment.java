@@ -107,10 +107,11 @@ public class TracksFragment extends Fragment {
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
+                    showEmpty(false);
                 } else {
                     adapter.clear();
                     adapter.addAll(new ArrayList<>());
-                    showEmpty();
+                    showEmpty(true);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -118,7 +119,7 @@ public class TracksFragment extends Fragment {
             @Override
             public void onFailure(Call<PaginatedResult<TrackItem>> call, Throwable t) {
                 showProgress(false);
-                // TODO: Show empty view
+                showEmpty(true);
             }
         });
 
@@ -162,11 +163,11 @@ public class TracksFragment extends Fragment {
             mySwipeRefreshLayout.setRefreshing(show);
         }
     }
-    private void showEmpty() {
+    private void showEmpty(boolean show) {
         if(getActivity() != null) {
             View v = getActivity().findViewById(R.id.emptyView);
             if (v != null) {
-                v.setVisibility(View.VISIBLE);
+                v.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         }
     }

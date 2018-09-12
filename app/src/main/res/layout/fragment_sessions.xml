@@ -22,6 +22,8 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <include android:id="@+id/emptyView" layout="@layout/empty_view" />
+
     <LinearLayout
         android:id="@+id/content_layout"
         android:layout_width="match_parent"

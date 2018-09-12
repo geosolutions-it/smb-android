@@ -32,10 +32,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.BaseTrack;
@@ -226,15 +228,34 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         final TextView dataTV = view.findViewById(R.id.data_value);
         final TextView dateTV = view.findViewById(R.id.session_start_datetime);
         final TextView durationTV = view.findViewById(R.id.session_duration_text);
-        dateTV.setText(DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((track.getCretaedAt()))));
+        if(track.getStartDate() != null) {
+            try {
+                String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((track.getStartDate())));
+                dateTV.setText(dateFormatted);
+            } catch (Exception e) {
+                dateTV.setText("--/--/----");
+            }
+        }
 
-        long millis = Math.round(60000 * track.getDuration());
-        Duration duration = new Duration(millis);
-        DateTime date = new DateTime(0, 1, 1, 0, 0, 0, 0);
-        durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
+        if(track.getDuration() != null) {
+            long millis = Math.round(60000 * track.getDuration());
+            Duration duration = new Duration(millis);
+            DateTime date = new DateTime(0, 1, 1, 0, 0, 0, 0);
+            durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
+        } else {
+            durationTV.setText("--:--:--");
+        }
+
+
         ImageView vehicle1 = view.findViewById(R.id.vehicle_1);
         ImageView vehicle2 = view.findViewById(R.id.vehicle_2);
         View more = view.findViewById(R.id.more_veihicles);
+        if(track.getLength() != null) {
+            distanceTV.setText(String.format(Locale.US, "%.1f %s", (track.getLength() / 1000f), Constants.UNIT_KM));
+        } else {
+            distanceTV.setText("--" + Constants.UNIT_KM);
+        }
+
         List<String> types = track.getVehicleTypes();
         // remove duplicates
         Set<String> hs = new HashSet<>();
