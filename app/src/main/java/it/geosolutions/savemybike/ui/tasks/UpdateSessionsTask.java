@@ -43,7 +43,7 @@ public class UpdateSessionsTask extends AsyncTask<Void,Void, Boolean> {
         try {
 
             database.open();
-            List<Session> sessions = database.getSessionsToUpload();
+            List<Session> sessions = database.getSessionToUpdate();
             for (Session s : sessions) {
                 database.deleteSession(s.getId());
             }

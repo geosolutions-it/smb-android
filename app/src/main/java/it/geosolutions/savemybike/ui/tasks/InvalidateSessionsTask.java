@@ -45,14 +45,12 @@ public class InvalidateSessionsTask extends AsyncTask<Void,Void,ArrayList<Sessio
         try{
 
             database.open();
-            sessions = database.getAllSessions();
-            // TODO: check if the session has a track uploaded and then delete them
-            // TODO: so only the sessions that has not been ingested yet
+            sessions = database.getSessionsToUpload(); // TODO: return all sessions and show uploaded in a different way
+
 
         }finally {
             database.close();
         }
-
         return sessions;
     }
 

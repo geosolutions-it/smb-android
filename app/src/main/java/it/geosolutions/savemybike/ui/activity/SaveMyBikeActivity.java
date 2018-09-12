@@ -255,7 +255,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
-            // uploadData();
+            updateSessions();
 
         }
         // TODO: Initialize MapView to speedup first activity load.
@@ -861,12 +861,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 startRecording();
                 break;
             case SD_CARD:
-                // uploadData();
+
                 break;
 
         }
     }
-    public void uploadData() {
+    public void updateSessions() {
         new UpdateSessionsTask(this, new UpdateSessionsTask.SessionCallback() {
             @Override
             public void showProgressView() {
