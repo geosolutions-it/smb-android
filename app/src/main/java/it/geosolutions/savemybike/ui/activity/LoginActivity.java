@@ -316,10 +316,9 @@ public final class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "Returned. Code: "+ resultCode);
         displayAuthOptions();
-        if (resultCode == RESULT_CANCELED) {
+        if (resultCode == RESULT_CANCELED && data == null) {
             displayAuthCancelled();
         }  else {
-            Log.i(TAG, "LOGIN SUCCESS");
 
             Bundle bundle = data.getExtras();
             if (bundle != null) {
@@ -339,6 +338,7 @@ public final class LoginActivity extends AppCompatActivity {
             }
 
             if (response != null && response.authorizationCode != null) {
+                Log.i(TAG, "LOGIN SUCCESS");
                 // authorization code exchange is required
                 mAuthStateManager.updateAfterAuthorization(response, ex);
                 exchangeAuthorizationCode(response);
@@ -356,7 +356,7 @@ public final class LoginActivity extends AppCompatActivity {
     public void startAuth() {
         displayLoading("Making authorization request");
 
-        mUsePendingIntents = false;
+        mUsePendingIntents = (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) ;
 
         // WrongThread inference is incorrect for lambdas
         // noinspection WrongThread
@@ -487,15 +487,15 @@ public final class LoginActivity extends AppCompatActivity {
         }
 
         if (mUsePendingIntents) {
-            Intent completionIntent = new Intent(this, SaveMyBikeActivity.class);
+            Intent completionIntent = new Intent(this, LoginActivity.class);
             Intent cancelIntent = new Intent(this, LoginActivity.class);
             cancelIntent.putExtra(EXTRA_FAILED, true);
             cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             mAuthService.performAuthorizationRequest(
                     mAuthRequest.get(),
-                    PendingIntent.getActivity(this, 0, completionIntent, 0),
-                    PendingIntent.getActivity(this, 0, cancelIntent, 0),
+                    createPendingResult( RC_AUTH, completionIntent, 0),
+                    createPendingResult(RC_AUTH, cancelIntent, 0),
                     mAuthIntent.get());
         } else {
             Intent intent = mAuthService.getAuthorizationRequestIntent(
@@ -675,10 +675,9 @@ public final class LoginActivity extends AppCompatActivity {
         authorized.setVisibility(View.GONE);
         loading_container.setVisibility(View.GONE);
 
-        Log.e(TAG, explanation);
-        // showLoginFragment();
+        retry.setVisibility(View.GONE);
 
-        // failure_explanation.setText(explanation);
+        Log.e(TAG, explanation);
 
     }
 
