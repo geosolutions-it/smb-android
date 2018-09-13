@@ -21,9 +21,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +29,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -51,7 +49,6 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
-import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
@@ -67,9 +64,7 @@ import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
-import it.geosolutions.savemybike.ui.fragment.TracksFragment;
 import it.geosolutions.savemybike.ui.tasks.UpdateSessionsTask;
-import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,11 +123,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
         if (config.hasConfigurationChanged()) {
             Log.w(TAG, "hasConfigurationChanged() == true");
-            Toast.makeText(
-                    this,
-                    "Configuration change detected",
-                    Toast.LENGTH_SHORT)
-                    .show();
+
             signOut();
             return;
         }
@@ -152,21 +143,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
- /*
-        final String idTokenString = preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
-        if(idTokenString == null){
-            // login
-            showLoginFragment();
-        }else {
-            CognitoIdToken cidt = new CognitoIdToken(idTokenString);
-            if(System.currentTimeMillis() > cidt.getExpiration().getTime()){
-                showLoginFragment();
-            }else {
-                //select the "record" fragment
-                changeFragment(0);
-            }
-        }
-*/
+
         changeFragment(0);
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
@@ -784,7 +761,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             Session session = getCurrentSession();
             ((RecordFragment) currentFragment).invalidateSessionStats(session);
         }
-        Toast.makeText(this, results, Toast.LENGTH_SHORT).show();
     }
 
     @MainThread

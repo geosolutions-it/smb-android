@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_record">Registra</string>
-    <string name="title_stats">Stats</string>
+    <string name="title_stats">Statistiche</string>
     <string name="title_bikes">Bici</string>
     <string name="state_started">Sessione iniziata</string>
     <string name="permission_location_required">Attiva la geolocalizzazione per continuare</string>
@@ -31,7 +31,7 @@
     <string name="lost_bike_report_title">Segnala Bici Smarrita</string>
     <string name="segments">Segmenti</string>
     <string name="benefit_index">Indice dei benefici</string>
-    <string name="calories_consumed">Calorie Consumante</string>
+    <string name="calories_consumed">Calorie Consumate</string>
     <string name="health_data">Salute</string>
     <string name="loading">Caricamento...</string>
     <string name="start">Inizio</string>
@@ -48,4 +48,11 @@
     <string name="vehicles">Veicoli</string>
     <string name="value">Valore</string>
     <string name="calories_uom">Cal</string>
+    <string name="no_session_description">Non c\'è nessuna nuova sessione da inviare. Per creare una nuova sessione usa il tab \"Registra\"</string>
+    <string name="sessions">Sessioni</string>
+    <string name="tracks">Tracce</string>
+    <string name="no_data">Nessun dato</string>
+    <string name="no__track_title">Nessuna traccia disponibile</string>
+    <string name="no_track_description">Non hai ancora nessuna traccia. Per creare una nuova traccia, registra una sessione utlizzando la sezione \"Registra\". Alla fine della registrazione della sessione, apri il tab \"Session\" nella sezione \"Statistiche\" ed invia la sessione. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
+    <string name="no_session_title">Nesuna sessione</string>
 </resources>

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <include android:id="@+id/emptyView" layout="@layout/empty_view" />
+    <include android:id="@+id/empty_sessions" layout="@layout/empty_sessions" />
 
     <LinearLayout
         android:id="@+id/content_layout"
@@ -31,52 +31,7 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <!-- <TextView
-            android:id="@+id/distance_overall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_horizontal"
-            android:text="321.12km"
-            android:textColor="@android:color/black"
-            android:textSize="48dp"
-            android:textStyle=""/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/elev_overall"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="50dp"
-                android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center_horizontal"
-                android:text="1140 m"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
-                android:textStyle=""/>
-
-            <TextView
-                android:id="@+id/time_overall"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="50dp"
-                android:layout_weight=".5"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center_horizontal"
-                android:text="3h 15 min"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle=""/>
-        </LinearLayout>
-        -->
         <android.support.v4.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swiperefresh"

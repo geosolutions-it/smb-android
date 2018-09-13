@@ -113,6 +113,7 @@ public class SessionsFragment extends Fragment {
             @Override
             public void showProgressView() {
                 showProgress(true);
+                showEmpty(false);
                 if(mySwipeRefreshLayout != null) {
                     mySwipeRefreshLayout.setRefreshing(true);
                 }
@@ -200,7 +201,7 @@ public class SessionsFragment extends Fragment {
     }
     private void showEmpty(boolean show) {
         if(getActivity() != null) {
-            View v =  getView().findViewById(R.id.emptyView);
+            View v =  getActivity().findViewById(R.id.empty_sessions);
             if (v != null) {
                 v.setVisibility(show ? View.VISIBLE : View.GONE);
             }

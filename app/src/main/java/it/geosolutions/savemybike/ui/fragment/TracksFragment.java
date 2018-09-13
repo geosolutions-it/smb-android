@@ -58,14 +58,7 @@ public class TracksFragment extends Fragment {
         adapter = new TrackItemAdapter(getActivity(), R.layout.item_track, new ArrayList<>());
         listView.setAdapter(adapter);
 
-        mySwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        getTracks();
-                    }
-                }
-        );
+        mySwipeRefreshLayout.setOnRefreshListener(() -> getTracks());
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
 
@@ -107,7 +100,7 @@ public class TracksFragment extends Fragment {
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
-                    showEmpty(false);
+                    showEmpty(response.body().getResults().size() == 0);
                 } else {
                     adapter.clear();
                     adapter.addAll(new ArrayList<>());
@@ -122,11 +115,7 @@ public class TracksFragment extends Fragment {
                 showEmpty(true);
             }
         });
-
-
     }
-
-
 
     /**
      * Switches the UI of this screen to show either the progress UI or the content
@@ -165,7 +154,7 @@ public class TracksFragment extends Fragment {
     }
     private void showEmpty(boolean show) {
         if(getActivity() != null) {
-            View v = getActivity().findViewById(R.id.emptyView);
+            View v = getActivity().findViewById(R.id.emptyTracks);
             if (v != null) {
                 v.setVisibility(show ? View.VISIBLE : View.GONE);
             }

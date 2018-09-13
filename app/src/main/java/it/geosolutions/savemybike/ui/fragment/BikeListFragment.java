@@ -40,7 +40,7 @@ public class BikeListFragment extends Fragment {
         return view;
     }
 
-
+    /*
     @OnClick(R.id.add_bike_button)
     public void onClick() {
 
@@ -49,5 +49,6 @@ public class BikeListFragment extends Fragment {
 
         // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
     }
+    */
 
 }

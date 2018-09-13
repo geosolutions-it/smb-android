@@ -81,5 +81,9 @@
     <string name="no_data">No Data</string>
     <string name="tracks">Tracks</string>
     <string name="sessions">Sessions</string>
+    <string name="no_session_description">There is no session to send. If you want to create a new session use the \"Record\" tab</string>
+    <string name="no__track_title">No Track Available</string>
+    <string name="no_track_description">You don\'t have any track recorded. To create track, record a session using the \"Record\" tab first. At the end of the recording session, open the \"Sessions\" tab in the \"Stats\" section and upload your session. When the data has been processed, you will see the new track here</string>
+    <string name="no_session_title">No Session</string>
 
 </resources>
