@@ -54,5 +54,6 @@
     <string name="no_data">Nessun dato</string>
     <string name="no__track_title">Nessuna traccia disponibile</string>
     <string name="no_track_description">Non hai ancora nessuna traccia. Per creare una nuova traccia, registra una sessione utlizzando la sezione \"Registra\". Alla fine della registrazione della sessione, apri il tab \"Session\" nella sezione \"Statistiche\" ed invia la sessione. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
-    <string name="no_session_title">Nesuna sessione</string>
+    <string name="no_session_title">Nessuna sessione</string>
+    <string name="no_bikes_title">Nessuna Bici</string>
 </resources>

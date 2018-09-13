@@ -1,8 +1,6 @@
 package it.geosolutions.savemybike.ui.fragment;
 
 import android.support.v4.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,9 +10,7 @@ import android.widget.ListView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
 /**
@@ -34,13 +30,13 @@ public class BikeListFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_bikes, container, false);
         ButterKnife.bind(this, view);
-
+        listView.setEmptyView(getActivity().findViewById(R.id.empty_bikes));
         listView.setAdapter(((SaveMyBikeActivity)getActivity()).getBikeAdapter());
 
         return view;
     }
 
-    /*
+    /* TODO: allow to add bikes
     @OnClick(R.id.add_bike_button)
     public void onClick() {
 
