@@ -20,6 +20,15 @@ public class Vehicle implements Serializable {
         MOPED,
         TRAIN
     }
+    public static final class StringTypes {
+        public static final String FOOT = "foot";
+        public static final String BIKE = "bike";
+        public static final String MOPED = "motorcycle";
+        public static final String CAR = "car";
+        public static final String BUS = "bus";
+        public static final String TRAIN = "train";
+
+    }
 
     @SerializedName("id")
     private int vehicleType;

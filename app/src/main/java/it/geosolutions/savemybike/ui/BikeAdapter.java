@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import java.util.List;
 
 import it.geosolutions.savemybike.GlideApp;
@@ -90,6 +93,11 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
                     View promptsView = li.inflate(R.layout.prompt, null);
                     builder.setView(promptsView);
                     final EditText userInput = promptsView.findViewById(R.id.editTextDialogUserInput);
+
+                    SupportMapFragment mapFragment = (SupportMapFragment) smbActivity.getSupportFragmentManager()
+                            .findFragmentById(R.id.map);
+                    mapFragment.getMapAsync(new MapCallback(smbActivity));
+
 
                     builder.setMessage(R.string.lost_bike_message);
                     builder.setPositiveButton(R.string.send, (dialog, which) -> {

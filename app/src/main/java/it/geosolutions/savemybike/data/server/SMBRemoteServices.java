@@ -1,11 +1,11 @@
 package it.geosolutions.savemybike.data.server;
 
-import java.util.List;
-
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.Track;
+import it.geosolutions.savemybike.model.TrackItem;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Lorenzo Pini on 23/03/2018.
@@ -36,5 +37,14 @@ public interface SMBRemoteServices {
     Call<Object> sendNewBikeStatus(
             @Body CurrentStatus newStatus
     );
+
+    @GET("api/my-tracks/?format=json")
+    Call <PaginatedResult<Track>> getTracks(@Query("page") int page);
+
+    @GET("api/my-tracks/?format=json")
+    Call<PaginatedResult<TrackItem>> getTracks();
+
+    @GET("api/my-tracks/{id}?format=json")
+    Call <Track> getTrack(@Path("id") long id);
 
 }

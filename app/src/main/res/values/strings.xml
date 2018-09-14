@@ -57,4 +57,35 @@
     <string name="send">Send</string>
     <string name="lost_bike_report_title">Lost Bike Report</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="segments">Segments</string>
+    <string name="track_details">Details</string>
+    <string name="benefit_index">Benefit Index</string>
+    <string name="calories_consumed">Calories Consumed</string>
+    <string name="calories_uom">cal</string>
+    <string name="vehicles">Veichles</string>
+    <string name="health_data">Health Data</string>
+    <string name="loading">Loading...</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="emissions">Emissions</string>
+    <string name="value">Value</string>
+    <string name="saved">Saved</string>
+    <string name="fuel">Fuel</string>
+    <string name="costs_uom">€</string>
+    <string name="costs">Costs</string>
+    <string name="c_depreciation">Depreciation</string>
+    <string name="c_operation">Operation</string>
+    <string name="total">Total</string>
+    <string name="no_data">No Data</string>
+    <string name="tracks">Tracks</string>
+    <string name="sessions">Sessions</string>
+    <string name="no_session_description">There is no session to send. If you want to create a new session use the \"Record\" tab</string>
+    <string name="no__track_title">No Track Available</string>
+    <string name="no_track_description">You don\'t have any track recorded. To create track, record a session using the \"Record\" tab first. At the end of the recording session, open the \"Sessions\" tab in the \"Stats\" section and upload your session. When the data has been processed, you will see the new track here</string>
+    <string name="no_session_title">No Session</string>
+    <string name="no_bikes_title">No bikes</string>
+    <string name="server_took_too_long_to_respond" >Server took to much to respond</string>
+
 </resources>

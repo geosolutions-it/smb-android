@@ -1,19 +1,16 @@
 package it.geosolutions.savemybike.ui.fragment;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
@@ -34,20 +31,26 @@ public class BikeListFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_bikes, container, false);
         ButterKnife.bind(this, view);
-
-        listView.setAdapter(((SaveMyBikeActivity)getActivity()).getBikeAdapter());
-
+        SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
+        listView.setAdapter(activity.getBikeAdapter());
+        View empty = view.findViewById(R.id.empty_bikes);
+        if(empty != null && activity.getBikes() != null && activity.getBikes().size() > 0) {
+            empty.setVisibility(View.GONE);
+        } else {
+            empty.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 
-
+    /* TODO: allow to add bikes
     @OnClick(R.id.add_bike_button)
     public void onClick() {
 
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://goodgo.savemybike.geo-solutions.it/bikes/"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
         startActivity(browserIntent);
 
         // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
     }
+    */
 
 }

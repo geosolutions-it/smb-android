@@ -10,13 +10,16 @@
         android:visible="true"
         app:showAsAction="never">
     </item>
-
+<!--
+    not visible until re-implemented
+    In the new user interface the user uploads data directly. So this option became obsolete/misleading
+    -->
     <item
         android:id="@+id/menu_upload_wifi"
         android:checkable="true"
         android:checked="true"
         android:title="@string/menu_wifi"
-        android:visible="true"
+        android:visible="false"
         app:showAsAction="never">
     </item>
 

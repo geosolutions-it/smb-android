@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Full view with Map, Toolbar and BottomSheet
+-->
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/tracks_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@android:color/transparent"
+        app:elevation="0dp"
+        >
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/track_details_toolbar"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="parallax"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:background="@drawable/background_toolbar_translucent"
+            app:theme="@style/MapToolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.TrackDetailsActivity" />
+        <include layout="@layout/loading_container" android:id="@+id/loading_container"/>
+        <include layout="@layout/empty_view" android:id="@+id/emptyView"/>
+    </FrameLayout>
+
+    <!-- Bottom sheet -->
+    <include android:id="@+id/track_details_bottom_sheet" layout="@layout/track_details_sheet"></include>
+
+</android.support.design.widget.CoordinatorLayout>

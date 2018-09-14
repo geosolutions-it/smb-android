@@ -2,7 +2,6 @@ package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
 import android.app.ActivityManager;
-import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,16 +21,15 @@ import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -50,7 +49,6 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
-import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
@@ -60,19 +58,25 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.BikeAdapter;
+import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.RecordFragment;
+import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
+import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
+import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
+import it.geosolutions.savemybike.ui.tasks.UpdateSessionsTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
  * Created by Robert Oehler on 25.10.17.
+ * Edited by Lorenzo Pini on 2018.
  *
  * Main activity of the SaveMyBike app
  */
-public class SaveMyBikeActivity extends AppCompatActivity {
+public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInteractionListener {
 
     private final static String TAG = "SaveMyBikeActivity";
 
@@ -80,7 +84,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
     private SaveMyBikeService mService;
 
-    private Configuration configuration;
     private Vehicle currentVehicle;
     private boolean applyServiceVehicle = false;
 
@@ -88,12 +91,11 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     private Handler handler;
     private MReceiver mReceiver;
 
-    public enum PermissionIntent {
-        LOCATION,
-        SD_CARD
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
-    protected PermissionIntent mPermissionIntent;
 
     private boolean simulate = false;
     private boolean uploadWithWifiOnly = true;
@@ -118,14 +120,11 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         mStateManager = AuthStateManager.getInstance(this);
         mExecutor = Executors.newSingleThreadExecutor();
 
+
         it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
         if (config.hasConfigurationChanged()) {
             Log.w(TAG, "hasConfigurationChanged() == true");
-            Toast.makeText(
-                    this,
-                    "Configuration change detected",
-                    Toast.LENGTH_SHORT)
-                    .show();
+
             signOut();
             return;
         }
@@ -145,21 +144,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
- /*
-        final String idTokenString = preferences.getString(Constants.PREF_CONFIG_IDTOKEN, null);
-        if(idTokenString == null){
-            // login
-            showLoginFragment();
-        }else {
-            CognitoIdToken cidt = new CognitoIdToken(idTokenString);
-            if(System.currentTimeMillis() > cidt.getExpiration().getTime()){
-                showLoginFragment();
-            }else {
-                //select the "record" fragment
-                changeFragment(0);
-            }
-        }
-*/
+
         changeFragment(0);
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
@@ -248,22 +233,13 @@ public class SaveMyBikeActivity extends AppCompatActivity {
 
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
-            // upload to S3 in the background
-            Runnable runnable = () -> {
-                final S3Manager s3Manager = new S3Manager(getBaseContext(), uploadWithWifiOnly);
-                s3Manager.checkUpload();
-            };
-            new Thread(runnable).start();
+            updateSessions();
 
         }
+        // TODO: Initialize MapView to speedup first activity load.
+
     }
-/*
-    void showLoginFragment(){
-        changeFragment(3);
-        navigation.setVisibility(View.GONE);
-        getSupportActionBar().hide();
-    }
-*/
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -487,7 +463,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 fragment = new RecordFragment();
                 break;
             case 1:
-                if (currentFragment != null && currentFragment instanceof StatsFragment) {
+                if (currentFragment != null && currentFragment instanceof SessionsFragment) {
                     return;
                 }
                 fragment = new StatsFragment();
@@ -498,11 +474,17 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 }
                 fragment = new BikeListFragment();
                 break;
+            case 3:
+                if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
+                    return;
+                }
+                fragment = new TrackDetailsFragment();
+                break;
             default:
                 break;
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
     }
 
     /**
@@ -533,69 +515,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ////////////// ANDROID 6 permissions /////////////////
-     * checks if the permission @param is granted and if not requests it
-     *
-     * @param permission the permission to check
-     * @return if the permission is necessary
-     */
-    public boolean permissionNecessary(final String permission, final PermissionIntent intent) {
-
-        boolean required = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(getBaseContext(), permission) != PackageManager.PERMISSION_GRANTED;
-
-        if (required) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSION_REQUEST);
-            mPermissionIntent = intent;
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * ////////////// ANDROID 6 permissions /////////////////
-     * returns the result of the permission request
-     *
-     * @param requestCode  a requestCode
-     * @param permissions  the requested permission
-     * @param grantResults the result of the user decision
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (PERMISSION_REQUEST == requestCode) {
-            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                //the permission was denied by the user, show a message
-                if (permissions.length > 0) {
-                    //sdcard
-                    //TODO show a message or quit app when external storage (data upload) was denied ?
-                    if (!permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
-                            (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                        //location
-                        Toast.makeText(getBaseContext(), R.string.permission_location_required, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                return;
-            }
-
-            //user did grant permission, what did we want to do ?
-            switch (mPermissionIntent) {
-                case LOCATION:
-                    startRecording();
-                    break;
-                case SD_CARD:
-                    new S3Manager(getBaseContext(), uploadWithWifiOnly).checkUpload();
-                    break;
-
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -623,14 +542,14 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                     ((RecordFragment) currentFragment).applySimulate(simulate);
                 }
                 invalidateOptionsMenu();
-                break;
+                return true;
             case R.id.menu_upload_wifi:
 
                 uploadWithWifiOnly = !uploadWithWifiOnly;
                 //save this setting
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, uploadWithWifiOnly).apply();
                 invalidateOptionsMenu();
-                break;
+                return true;
             case R.id.menu_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.logout_title);
@@ -641,11 +560,10 @@ public class SaveMyBikeActivity extends AppCompatActivity {
                 });
                 builder.setNegativeButton(R.string.cancel, null);
                 builder.show();
-                break;
-
+                return true;
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -734,17 +652,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
         return null;
     }
 
-    /**
-     * gets the configuration - if it is null it is loaded
-     *
-     * @return the configuration
-     */
-    public Configuration getConfiguration() {
-        if (configuration == null) {
-            configuration = Configuration.loadConfiguration(getBaseContext());
-        }
-        return configuration;
-    }
+
 
     /**
      * Returns the saved list of bikes
@@ -753,30 +661,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
     public List<Bike> getBikes() {
         return Configuration.getBikes(getBaseContext());
     }
-    /**
-     * loads the config and the bikes from remote
-     */
-    private static class GetRemoteConfigTask extends AsyncTask<Void, Void, Void> {
 
-        private final RetrofitClient.GetBikesCallback bikesCallback;
-        private WeakReference<Context> contextRef;
-        private RetrofitClient.GetConfigCallback callback;
-
-        GetRemoteConfigTask(final Context context, @NonNull RetrofitClient.GetConfigCallback callback, @NonNull RetrofitClient.GetBikesCallback bikesCallback) {
-            this.contextRef = new WeakReference<>(context);
-            this.callback = callback;
-            this.bikesCallback = bikesCallback;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            RetrofitClient retrofitClient = new RetrofitClient(contextRef.get());
-            // retrofitClient.getRemoteConfig(callback, bikesCallback);
-            retrofitClient.getBikes(bikesCallback);
-            return null;
-        }
-    }
 
     /**
      * gets the currently selected vehicle from the configuration
@@ -799,7 +684,7 @@ public class SaveMyBikeActivity extends AppCompatActivity {
      */
     private Fragment getCurrentFragment() {
 
-        return getFragmentManager().findFragmentById(R.id.content);
+        return getSupportFragmentManager().findFragmentById(R.id.content);
     }
 
     /**
@@ -854,7 +739,6 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             Session session = getCurrentSession();
             ((RecordFragment) currentFragment).invalidateSessionStats(session);
         }
-        Toast.makeText(this, results, Toast.LENGTH_SHORT).show();
     }
 
     @MainThread
@@ -896,10 +780,64 @@ public class SaveMyBikeActivity extends AppCompatActivity {
             final List<Bike> bikes = getBikes();
 
             bikeAdapter = new BikeAdapter(this, R.layout.item_bike, bikes);
+
         }
         return bikeAdapter;
     }
 
     private BikeAdapter bikeAdapter;
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+        }
+        changeFragment(1);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getCurrentFragment();
+        if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
+            onSupportNavigateUp();
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionGrant(PermissionIntent permissionIntent) {
+        //user did grant permission, what did we want to do ?
+        switch (permissionIntent) {
+            case LOCATION:
+                startRecording();
+                break;
+            case SD_CARD:
+
+                break;
+
+        }
+    }
+    public void updateSessions() {
+        new UpdateSessionsTask(this, new UpdateSessionsTask.SessionCallback() {
+            @Override
+            public void showProgressView() {
+
+            }
+
+            @Override
+            public void hideProgressView() {
+
+            }
+
+            @Override
+            public void done(Boolean success) {
+
+            }
+        }).execute();
+    }
 
 }
