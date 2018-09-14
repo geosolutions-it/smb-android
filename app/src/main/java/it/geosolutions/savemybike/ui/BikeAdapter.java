@@ -85,7 +85,7 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
                 if(bike.getCurrentStatus().getLost()) {
                     builder.setMessage(R.string.found_bike_message);
                     builder.setPositiveButton(R.string.send, (dialog, which) -> {
-                        smbActivity.updateBikeStatus(bike, "");
+                        // smbActivity.updateBikeStatus(bike, "");
                         dialog.dismiss();
                     });
                 }else {
@@ -101,7 +101,7 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
 
                     builder.setMessage(R.string.lost_bike_message);
                     builder.setPositiveButton(R.string.send, (dialog, which) -> {
-                        smbActivity.updateBikeStatus(bike, userInput.getText().toString());
+                        // smbActivity.updateBikeStatus(bike, userInput.getText().toString());
                         dialog.dismiss();
                     });
                 }

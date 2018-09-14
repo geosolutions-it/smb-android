@@ -21,7 +21,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -104,6 +108,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     @BindView(R.id.my_toolbar) Toolbar smbToolbar;
 
+    @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
+
+    @BindView(R.id.nav_view) NavigationView navView ;
+
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
     // private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
@@ -114,7 +122,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         super.onCreate(savedInstanceState);
 
         //inflate
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
 
         mStateManager = AuthStateManager.getInstance(this);
@@ -237,7 +245,35 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         }
         // TODO: Initialize MapView to speedup first activity load.
+        configureToolbar();
+    }
+    private void configureToolbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer_menu);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    private void configureNavigationDrawer() {
 
+
+        navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
+                Fragment f = null;
+                int itemId = menuItem.getItemId();
+                /*if (itemId == R.id.refresh) {
+                    f = new RefreshFragment();
+                } else if (itemId == R.id.stop) {
+                    f = new StopFragment();
+                }
+                if (f != null) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.frame, f);
+                    transaction.commit();
+                    drawerLayout.closeDrawers();
+                    return true;
+                }*/
+                return true;
+        });
     }
 
     @Override
@@ -318,44 +354,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     }
 
-    /**
-     * Call the API to update a bike's status
-     */
-    public void updateBikeStatus(Bike bike, String details) {
 
-        if(details == null){
-            details = "";
-        }
-
-        RetrofitClient rclient = RetrofitClient.getInstance(this);
-        SMBRemoteServices smbserv = rclient.getPortalServices();
-
-        CurrentStatus newStatus = new CurrentStatus();
-        newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/bikes/"+bike.getShort_uuid()+"/");
-        newStatus.setDetails(details);
-        newStatus.setLost(!bike.getCurrentStatus().getLost());
-        Call<Object> call = smbserv.sendNewBikeStatus(newStatus);
-
-        call.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.i(TAG, "Response Message: "+ response.message());
-                Log.i(TAG, "Response Body: "+ response.body());
-
-                if(response.isSuccessful()) {
-                    bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
-                    bikeAdapter.notifyDataSetInvalidated();
-                } else {
-                    Log.w(TAG, "Bike update UNSUCCESSFUL");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(TAG, "ERROR: "+ t.getMessage());
-            }
-        });
-    }
 
     /**
      * stops recording a session
@@ -480,6 +479,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 }
                 fragment = new TrackDetailsFragment();
                 break;
+            case 4:
+
             default:
                 break;
         }
@@ -653,16 +654,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     }
 
 
-
-    /**
-     * Returns the saved list of bikes
-     * @return the bikes list
-     */
-    public List<Bike> getBikes() {
-        return Configuration.getBikes(getBaseContext());
-    }
-
-
     /**
      * gets the currently selected vehicle from the configuration
      *
@@ -773,39 +764,13 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     }
 
-    public BikeAdapter getBikeAdapter() {
 
-        if(bikeAdapter == null) {
-
-            final List<Bike> bikes = getBikes();
-
-            bikeAdapter = new BikeAdapter(this, R.layout.item_bike, bikes);
-
-        }
-        return bikeAdapter;
-    }
-
-    private BikeAdapter bikeAdapter;
 
     @Override
     public boolean onSupportNavigateUp() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-        }
-        changeFragment(1);
-        return true;
-    }
 
-    @Override
-    public void onBackPressed() {
-        Fragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
-            onSupportNavigateUp();
-        }else {
-            super.onBackPressed();
-        }
+        drawerLayout.openDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
