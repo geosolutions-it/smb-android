@@ -1,5 +1,7 @@
 package it.geosolutions.savemybike.data.server;
 
+import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
@@ -24,7 +26,7 @@ public interface SMBRemoteServices {
     @GET("config")
     Call<Configuration> getConfig();
 
-    @PUT("upload/{s3ObjectKey}")
+    @PUT(Constants.UPLOAD_RESOURCE + "{s3ObjectKey}")
     Call<ResponseBody> upload(
             @Path("s3ObjectKey") String s3ObjectKey,
             @Body RequestBody file
