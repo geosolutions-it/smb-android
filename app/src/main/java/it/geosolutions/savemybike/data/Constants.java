@@ -7,7 +7,12 @@ package it.geosolutions.savemybike.data;
 
 public class Constants {
 
+
     public final static String PORTAL_ENDPOINT = "https://goodgo.savemybike.geo-solutions.it/";
+    // public final static String PORTAL_ENDPOINT = "https://dev.savemybike.geo-solutions.it/"; // DEV
+
+    public final static String UPLOAD_RESOURCE = "upload/";
+    // public final static String UPLOAD_RESOURCE = "upload-dev/"; // DEV
 
     public final static int DEFAULT_DATA_READ_INTERVAL = 1000;
     public final static int DEFAULT_PERSISTENCE_INTERVAL = 15000;
