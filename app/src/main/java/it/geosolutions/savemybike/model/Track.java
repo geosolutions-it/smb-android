@@ -14,11 +14,11 @@ public class Track extends BaseTrack{
 
     private ArrayList<Segment> segments;
 
-    private HashMap<String, EmissionData> emissions;
+    private EmissionData emissions;
 
-    private HashMap<String, Cost> costs;
+    private Cost costs;
 
-    private HashMap<String, HealthData> health;
+    private HealthData health;
 
     public ArrayList<Segment> getSegments() {
         return segments;
@@ -36,27 +36,27 @@ public class Track extends BaseTrack{
         this.cretaedAt = cretaedAt;
     }
 
-    public HashMap<String, EmissionData> getEmissions() {
+    public EmissionData getEmissions() {
         return emissions;
     }
 
-    public void setEmissions(HashMap<String, EmissionData> emissions) {
+    public void setEmissions(EmissionData emissions) {
         this.emissions = emissions;
     }
 
-    public HashMap<String, Cost> getCosts() {
+    public Cost getCosts() {
         return costs;
     }
 
-    public void setCosts(HashMap<String, Cost> costs) {
+    public void setCosts(Cost costs) {
         this.costs = costs;
     }
 
-    public HashMap<String, HealthData> getHealth() {
+    public HealthData getHealth() {
         return health;
     }
 
-    public void setHealth(HashMap<String, HealthData> health) {
+    public void setHealth(HealthData health) {
         this.health = health;
     }
 

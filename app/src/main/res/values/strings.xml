@@ -86,5 +86,6 @@
     <string name="no_track_description">You don\'t have any track recorded. To create track, record a session using the \"Record\" tab first. At the end of the recording session, open the \"Sessions\" tab in the \"Stats\" section and upload your session. When the data has been processed, you will see the new track here</string>
     <string name="no_session_title">No Session</string>
     <string name="no_bikes_title">No bikes</string>
+    <string name="server_took_too_long_to_respond" >Server took to much to respond</string>
 
 </resources>

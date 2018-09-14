@@ -64,6 +64,7 @@ import it.geosolutions.savemybike.ui.fragment.RecordFragment;
 import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
 import it.geosolutions.savemybike.ui.fragment.StatsFragment;
 import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
+import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.UpdateSessionsTask;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -660,30 +661,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     public List<Bike> getBikes() {
         return Configuration.getBikes(getBaseContext());
     }
-    /**
-     * loads the config and the bikes from remote
-     */
-    private static class GetRemoteConfigTask extends AsyncTask<Void, Void, Void> {
 
-        private final RetrofitClient.GetBikesCallback bikesCallback;
-        private WeakReference<Context> contextRef;
-        private RetrofitClient.GetConfigCallback callback;
-
-        GetRemoteConfigTask(final Context context, @NonNull RetrofitClient.GetConfigCallback callback, @NonNull RetrofitClient.GetBikesCallback bikesCallback) {
-            this.contextRef = new WeakReference<>(context);
-            this.callback = callback;
-            this.bikesCallback = bikesCallback;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            RetrofitClient retrofitClient = new RetrofitClient(contextRef.get());
-            // retrofitClient.getRemoteConfig(callback, bikesCallback);
-            retrofitClient.getBikes(bikesCallback);
-            return null;
-        }
-    }
 
     /**
      * gets the currently selected vehicle from the configuration
@@ -802,6 +780,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             final List<Bike> bikes = getBikes();
 
             bikeAdapter = new BikeAdapter(this, R.layout.item_bike, bikes);
+
         }
         return bikeAdapter;
     }

@@ -14,17 +14,17 @@ public class VehicleUtils {
      */
     public static int getDrawableForVeichle(String v) {
         switch (v) {
-            case "walk":
+            case Vehicle.StringTypes.FOOT:
                 return R.drawable.ic_directions_walk;
-            case "bike":
+            case Vehicle.StringTypes.BIKE:
                 return R.drawable.ic_directions_bike;
-            case "motorcycle":
+            case Vehicle.StringTypes.MOPED:
                 return R.drawable.ic_directions_motorcycle;
-            case "car":
+            case Vehicle.StringTypes.CAR:
                 return R.drawable.ic_directions_car;
-            case "bus":
+            case Vehicle.StringTypes.BUS:
                 return R.drawable.ic_directions_bus;
-            case "train":
+            case Vehicle.StringTypes.TRAIN:
                 return R.drawable.ic_directions_train;
             default:
                 return R.drawable.ic_home; // TODO: some question mark.
@@ -40,17 +40,17 @@ public class VehicleUtils {
      */
     public static int getVehicleColor(String v) {
         switch (v) {
-            case "walk":
+            case Vehicle.StringTypes.FOOT:
                 return R.color.walk_color;
-            case "bike":
+            case Vehicle.StringTypes.BIKE:
                 return R.color.bike_color;
-            case "motorcycle":
+            case Vehicle.StringTypes.MOPED:
                 return R.color.motorcycle_color;
-            case "car":
+            case Vehicle.StringTypes.CAR:
                 return R.color.car_color;
-            case "bus":
+            case Vehicle.StringTypes.BUS:
                 return R.color.bus_color;
-            case "train":
+            case Vehicle.StringTypes.TRAIN:
                 return R.color.train_color;
             default:
                 return R.color.default_track_color; // TODO: some question mark.

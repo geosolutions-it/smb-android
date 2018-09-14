@@ -25,6 +25,7 @@ import it.geosolutions.savemybike.model.Cost;
 import it.geosolutions.savemybike.model.EmissionData;
 import it.geosolutions.savemybike.model.HealthData;
 import it.geosolutions.savemybike.model.Track;
+import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.EmissionAdapter;
@@ -77,16 +78,16 @@ public class TrackDetailsFragment extends Fragment {
                     showNoData();
                 } else if (getActivity() != null){
                     if(t.getHealth() != null) {
-                        showHealthData(t.getHealth().get("totals"));
+                        showHealthData(t.getHealth());
                     }
                     if(t.getVehicleTypes() != null) {
                         showVehicleTypes(t.getVehicleTypes());
                     }
                     if(t.getEmissions() != null) {
-                        showEmissions(t.getEmissions().get("totals"));
+                        showEmissions(t.getEmissions());
                     }
                     if(t.getCosts() != null) {
-                        showCosts(t.getCosts().get("totals"));
+                        showCosts(t.getCosts());
                     }
                 }
 
@@ -185,22 +186,22 @@ public class TrackDetailsFragment extends Fragment {
         for (String vehicle : vehicles) {
             View v = null;
             switch (vehicle) {
-                case "walk":
+                case Vehicle.StringTypes.FOOT:
                     v = getActivity().findViewById(R.id.icon_walk);
                     break;
-                case "bike":
+                case Vehicle.StringTypes.BIKE:
                     v = getActivity().findViewById(R.id.icon_bike);
                     break;
-                case "motorcycle":
+                case Vehicle.StringTypes.MOPED:
                     v = getActivity().findViewById(R.id.icon_motorcycle);
                     break;
-                case "car":
+                case Vehicle.StringTypes.CAR:
                     v = getActivity().findViewById(R.id.icon_car);
                     break;
-                case "bus":
+                case Vehicle.StringTypes.BUS:
                     v = getActivity().findViewById(R.id.icon_bus);
                     break;
-                case "train":
+                case Vehicle.StringTypes.TRAIN:
                     v = getActivity().findViewById(R.id.icon_train);
                     break;
 

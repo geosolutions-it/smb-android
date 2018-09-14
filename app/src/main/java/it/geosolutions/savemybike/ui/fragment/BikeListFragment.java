@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
@@ -30,9 +31,14 @@ public class BikeListFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_bikes, container, false);
         ButterKnife.bind(this, view);
-        listView.setEmptyView(getActivity().findViewById(R.id.empty_bikes));
-        listView.setAdapter(((SaveMyBikeActivity)getActivity()).getBikeAdapter());
-
+        SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
+        listView.setAdapter(activity.getBikeAdapter());
+        View empty = view.findViewById(R.id.empty_bikes);
+        if(empty != null && activity.getBikes() != null && activity.getBikes().size() > 0) {
+            empty.setVisibility(View.GONE);
+        } else {
+            empty.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 

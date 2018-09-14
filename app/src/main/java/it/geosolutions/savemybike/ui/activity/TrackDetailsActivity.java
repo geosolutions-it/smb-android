@@ -29,6 +29,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -149,7 +150,7 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
                 if(track != null) {
                     displayData();
                 } else {
-                    showNoData();
+                    showNoData(null);
                 }
             }
 
@@ -157,7 +158,7 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
             public void onFailure(Call<Track> call, Throwable t) {
                 setLoading(false);
 
-                showNoData();
+                showNoData(t instanceof SocketTimeoutException ? "timeout" : null);
 
             }
         });
@@ -318,10 +319,13 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
             v.setVisibility(loading ? View.VISIBLE : View.GONE);
         }
     }
-    public void showNoData() {
+    public void showNoData(String errorType) {
         View v = findViewById(R.id.emptyView);
         if(v != null) {
             v.setVisibility(View.VISIBLE);
+            if(errorType == "timeout") {
+                ((TextView) v.findViewById(R.id.empty_description)).setText(R.string.server_took_too_long_to_respond);
+            }
         }
     }
 
