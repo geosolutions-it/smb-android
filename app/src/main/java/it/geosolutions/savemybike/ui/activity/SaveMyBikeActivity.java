@@ -152,11 +152,35 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
+        configureNavigationDrawer();
         changeFragment(0);
+
+        loadConfiguration();
+
+
+
+
+        /*
+         * Check if data can be uploaded
+         *
+         *   //for the upload we need the permission to write to the sd card
+         *  TODO we may give an explanation for what the SD card access is necessary
+         *  TODO we may ask the user for upload permission and only then check this sd-permission
+         */
+        this.uploadWithWifiOnly = preferences.getBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, Constants.DEFAULT_WIFI_ONLY);
+
+        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
+
+            updateSessions();
+
+        }
+        // TODO: Initialize MapView to speedup first activity load.
+        configureToolbar();
+    }
+
+    private void loadConfiguration() {
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
-
         //when online, update the config from remote
         if (Util.isOnline(getBaseContext())) {
 
@@ -228,25 +252,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
           Log.w(TAG, "*****  NETWORK NOT DETECTED  ******");
         }
         //else local config is used
-
-
-        /*
-         * Check if data can be uploaded
-         *
-         *   //for the upload we need the permission to write to the sd card
-         *  TODO we may give an explanation for what the SD card access is necessary
-         *  TODO we may ask the user for upload permission and only then check this sd-permission
-         */
-        this.uploadWithWifiOnly = preferences.getBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, Constants.DEFAULT_WIFI_ONLY);
-
-        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
-
-            updateSessions();
-
-        }
-        // TODO: Initialize MapView to speedup first activity load.
-        configureToolbar();
     }
+
     private void configureToolbar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -259,19 +266,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
-                int itemId = menuItem.getItemId();
-                /*if (itemId == R.id.refresh) {
-                    f = new RefreshFragment();
-                } else if (itemId == R.id.stop) {
-                    f = new StopFragment();
-                }
-                if (f != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.frame, f);
-                    transaction.commit();
-                    drawerLayout.closeDrawers();
-                    return true;
-                }*/
+                changeFragment(menuItem.getItemId());
                 return true;
         });
     }
@@ -430,13 +425,13 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             = item -> {
                 switch (item.getItemId()) {
                     case R.id.navigation_record:
-                        changeFragment(0);
+                        changeFragment(R.id.navigation_record);
                         return true;
                     case R.id.navigation_stats:
-                        changeFragment(1);
+                        changeFragment(R.id.navigation_stats);
                         return true;
                     case R.id.navigation_bikes:
-                        changeFragment(2);
+                        changeFragment(R.id.navigation_bikes);
                         return true;
                 }
                 return false;
@@ -454,6 +449,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         Fragment fragment = null;
         switch (position) {
             case 0:
+            case R.id.navigation_record:
                 navigation.setVisibility(View.VISIBLE);
                 getSupportActionBar().show();
                 if (currentFragment != null && currentFragment instanceof RecordFragment) {
@@ -462,22 +458,22 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new RecordFragment();
                 break;
             case 1:
+            case R.id.navigation_stats:
                 if (currentFragment != null && currentFragment instanceof SessionsFragment) {
                     return;
                 }
                 fragment = new StatsFragment();
                 break;
             case 2:
+            case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {
                     return;
                 }
                 fragment = new BikeListFragment();
                 break;
-            case 3:
-                if (currentFragment != null && currentFragment instanceof TrackDetailsFragment) {
-                    return;
-                }
-                fragment = new TrackDetailsFragment();
+            case 3: // TODO user profile
+                if (currentFragment != null && currentFragment instanceof BikeListFragment)
+                    fragment = new BikeListFragment();
                 break;
             case 4:
 
