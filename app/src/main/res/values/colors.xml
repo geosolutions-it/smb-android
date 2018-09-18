@@ -9,7 +9,7 @@
     <color name="motorcycle_color">#ff0000</color>
     <color name="car_color">#000000</color>
     <color name="bus_color">#aaaaaa</color>
-    <color name="train_color">#ffff00</color>
+    <color name="train_color">#087b00</color>
     <color name="default_track_color">#00ffff</color>
     <color name="delete">#FF0000</color>
 </resources>
