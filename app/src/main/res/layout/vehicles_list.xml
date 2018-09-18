@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_directions_walk"
+        android:tint="@android:color/white"
         />
     </FrameLayout>
     <FrameLayout
@@ -69,6 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/ic_directions_car"
+            android:tint="@android:color/white"
             />
     </FrameLayout>
 
