@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,10 +18,9 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -33,6 +30,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import net.openid.appauth.AppAuthConfiguration;
@@ -41,7 +40,6 @@ import net.openid.appauth.AuthorizationService;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -53,26 +51,20 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
-import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
-import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
-import it.geosolutions.savemybike.ui.BikeAdapter;
+import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
+import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
+import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
-import it.geosolutions.savemybike.ui.fragment.RecordFragment;
-import it.geosolutions.savemybike.ui.fragment.SessionsFragment;
-import it.geosolutions.savemybike.ui.fragment.StatsFragment;
-import it.geosolutions.savemybike.ui.fragment.TrackDetailsFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
-import it.geosolutions.savemybike.ui.tasks.UpdateSessionsTask;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
+
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -103,8 +95,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     private boolean simulate = false;
     private boolean uploadWithWifiOnly = true;
-
-    @BindView(R.id.navigation) BottomNavigationView navigation;
 
     @BindView(R.id.my_toolbar) Toolbar smbToolbar;
 
@@ -146,19 +136,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
 
         setSupportActionBar(smbToolbar);
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         configureNavigationDrawer();
-        changeFragment(0);
-
+        changeFragment(R.id.navigation_record);
         loadConfiguration();
-
-
-
 
         /*
          * Check if data can be uploaded
@@ -184,38 +167,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         //when online, update the config from remote
         if (Util.isOnline(getBaseContext())) {
 
-            new GetRemoteConfigTask(getBaseContext(), new RetrofitClient.GetConfigCallback() {
-                @Override
-                public void gotConfig(final Configuration configuration) {
-
-                    if (configuration != null) {
-
-                        if (BuildConfig.DEBUG) {
-                            Log.i(TAG, "config downloaded : " + configuration.id);
-                        }
-
-                        //save the config
-                        Configuration.saveConfiguration(getBaseContext(), configuration);
-
-                        //update model
-                        SaveMyBikeActivity.this.configuration = configuration;
-                        SaveMyBikeActivity.this.currentVehicle = getCurrentVehicleFromConfig();
-
-                        runOnUiThread(() -> {
-                            //invalidate UI
-                            invalidateRecordingUI();
-                        });
-
-                    } else {
-                        Log.e(TAG, "error downloading config ");
-                    }
-                }
-
-                @Override
-                public void error(String message) {
-                    Log.e(TAG, "error downloading config " + message);
-                }
-            }, new RetrofitClient.GetBikesCallback() {
+            new GetRemoteConfigTask(getBaseContext(),  null, new RetrofitClient.GetBikesCallback() {
                 @Override
                 public void gotBikes(final PaginatedResult<Bike> bikesList) {
 
@@ -262,13 +214,44 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     }
     private void configureNavigationDrawer() {
-
-
+        User user = Configuration.getUserProfile(getBaseContext());
+        if(user != null) {
+            setupUserView(user);
+        }
+        updateUser();
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
                 changeFragment(menuItem.getItemId());
+                drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
         });
+    }
+    void updateUser() {
+
+    }
+    void setupUserView(User user) {
+        TextView uname = findViewById(R.id.userName);
+        TextView email = findViewById(R.id.userEmail);
+        ImageView avatar = findViewById(R.id.userAvatar);
+        avatar.setVisibility(View.GONE); // TODO Avatar
+        if(user != null) {
+
+            if(uname != null) {
+                String f = user.getFirstName();
+                String l = user.getLastName();
+
+                uname.setText(
+                        f != null && l != null
+                                ? f + " "  + l
+                                : f != null
+                                ? f
+                                : l != null ? l : "");
+            }
+            if (email != null) {
+                email.setText(user.getUsername());
+            }
+        }
+
     }
 
     @Override
@@ -318,8 +301,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
      */
     private void invalidateRecordingUI() {
         Fragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof RecordFragment) {
-            ((RecordFragment) currentFragment).invalidateUI(currentVehicle);
+        if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+            ((RecordCallbacks) currentFragment).invalidateUI(currentVehicle);
         }
     }
 
@@ -348,8 +331,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             bindToService(serviceIntent);
         }
     }
-
-
 
     /**
      * stops recording a session
@@ -393,11 +374,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 if (applyServiceVehicle) {
 
                     Fragment currentFragment = getCurrentFragment();
-                    if (currentFragment != null && currentFragment instanceof RecordFragment && mService.getSessionLogic() != null && mService.getSessionLogic().getVehicle() != null) {
+                    if (currentFragment != null && currentFragment instanceof RecordCallbacks && mService.getSessionLogic() != null && mService.getSessionLogic().getVehicle() != null) {
                         if (BuildConfig.DEBUG) {
                             Log.d(TAG, "rebound to service, applying vehicle " + mService.getSessionLogic().getVehicle().toString());
                         }
-                        ((RecordFragment) currentFragment).invalidateUI(mService.getSessionLogic().getVehicle());
+                        ((RecordCallbacks) currentFragment).invalidateUI(mService.getSessionLogic().getVehicle());
                     }
 
                     applyServiceVehicle = false;
@@ -418,24 +399,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     };
 
-    /**
-     * navigation listener to switch between fragments
-     */
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = item -> {
-                switch (item.getItemId()) {
-                    case R.id.navigation_record:
-                        changeFragment(R.id.navigation_record);
-                        return true;
-                    case R.id.navigation_stats:
-                        changeFragment(R.id.navigation_stats);
-                        return true;
-                    case R.id.navigation_bikes:
-                        changeFragment(R.id.navigation_bikes);
-                        return true;
-                }
-                return false;
-            };
 
     /**
      * load fragment (if necessary) for index @param position
@@ -448,40 +411,43 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         Fragment fragment = null;
         switch (position) {
-            case 0:
-            case R.id.navigation_record:
-                navigation.setVisibility(View.VISIBLE);
+            case R.id.navigation_record: {
                 getSupportActionBar().show();
-                if (currentFragment != null && currentFragment instanceof RecordFragment) {
+                if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
+                    ((ActivitiesFragment) currentFragment).setNavigation(R.id.navigation_record);
                     return;
                 }
-                fragment = new RecordFragment();
+                ActivitiesFragment f = new ActivitiesFragment();
+                f.setInitialItem(R.id.navigation_record);
+                fragment = f;
                 break;
-            case 1:
-            case R.id.navigation_stats:
-                if (currentFragment != null && currentFragment instanceof SessionsFragment) {
+            }
+            case R.id.navigation_stats: {
+                if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
+                    ((ActivitiesFragment) currentFragment).setNavigation(R.id.navigation_stats);
                     return;
                 }
-                fragment = new StatsFragment();
+                ActivitiesFragment f = new ActivitiesFragment();
+                f.setInitialItem(R.id.navigation_stats);
+                fragment = f;
+
                 break;
-            case 2:
+            }
             case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {
                     return;
                 }
                 fragment = new BikeListFragment();
                 break;
-            case 3: // TODO user profile
-                if (currentFragment != null && currentFragment instanceof BikeListFragment)
-                    fragment = new BikeListFragment();
-                break;
-            case 4:
+
 
             default:
                 break;
         }
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();
+        }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
     }
 
     /**
@@ -497,8 +463,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 vehicle.setSelected(true);
                 Fragment currentFragment = getCurrentFragment();
 
-                if (currentFragment != null && currentFragment instanceof RecordFragment) {
-                    ((RecordFragment) currentFragment).selectVehicle(vehicle);
+                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+                    ((RecordCallbacks) currentFragment).selectVehicle(vehicle);
                 }
                 currentVehicle = vehicle;
 
@@ -535,8 +501,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
                 simulate = !simulate;
                 Fragment currentFragment = getCurrentFragment();
-                if (currentFragment != null && currentFragment instanceof RecordFragment) {
-                    ((RecordFragment) currentFragment).applySimulate(simulate);
+                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+                    ((RecordCallbacks) currentFragment).applySimulate(simulate);
                 }
                 invalidateOptionsMenu();
                 return true;
@@ -571,9 +537,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         public void run() {
 
             Fragment currentFragment = getCurrentFragment();
-            if (currentFragment != null && currentFragment instanceof RecordFragment) {
+            if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
                 Session session = getCurrentSession();
-                ((RecordFragment) currentFragment).invalidateSessionStats(session);
+                ((RecordCallbacks) currentFragment).invalidateSessionStats(session);
             }
 
             getHandler().postDelayed(this, UI_UPDATE_INTERVAL);
@@ -602,8 +568,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 invalidateOptionsMenu();
 
                 Fragment currentFragment = getCurrentFragment();
-                if (currentFragment != null && currentFragment instanceof RecordFragment) {
-                    ((RecordFragment) currentFragment).applySessionState(Session.SessionState.STOPPED);
+                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+                    ((RecordCallbacks) currentFragment).applySessionState(Session.SessionState.STOPPED);
                 }
             } else if (intent.getAction().equals(Constants.INTENT_VEHICLE_UPDATE)) {
                 // Here we are reacting to the notification vehicle change
@@ -671,7 +637,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
      */
     private Fragment getCurrentFragment() {
 
-        return getSupportFragmentManager().findFragmentById(R.id.content);
+        return getSupportFragmentManager().findFragmentById(R.id.main_content_frame);
     }
 
     /**
@@ -722,9 +688,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     public void updateResults(String results) {
 
         Fragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof RecordFragment) {
+        if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
             Session session = getCurrentSession();
-            ((RecordFragment) currentFragment).invalidateSessionStats(session);
+            ((RecordCallbacks) currentFragment).invalidateSessionStats(session);
         }
     }
 
@@ -783,7 +749,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
     }
     public void updateSessions() {
-        new UpdateSessionsTask(this, new UpdateSessionsTask.SessionCallback() {
+        new CleanUploadedSessionsTask(this, new CleanUploadedSessionsTask.SessionCallback() {
             @Override
             public void showProgressView() {
 

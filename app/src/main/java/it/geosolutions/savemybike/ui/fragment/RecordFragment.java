@@ -28,6 +28,7 @@ import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -35,7 +36,7 @@ import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
  * A fragment containing the UI to switch between vehicles, start/stop a session and to show some session stats
  */
 
-public class RecordFragment extends Fragment {
+public class RecordFragment extends Fragment implements RecordCallbacks{
 
     private final static String TAG = "RecordFragment";
 
@@ -80,22 +81,25 @@ public class RecordFragment extends Fragment {
      * 3. invalidating session stats if possible/necessary
      * @param vehicle the current vehicle
      */
+    @Override
     public void invalidateUI(Vehicle vehicle){
-
-        Session session = ((SaveMyBikeActivity) getActivity()).getCurrentSession();
-        if(session == null){
-            applySessionState(Session.SessionState.STOPPED);
-        }else{
-            applySessionState(session.getState());
+        if(getActivity() != null) {
+            Session session = ((SaveMyBikeActivity) getActivity()).getCurrentSession();
+            if (session == null) {
+                applySessionState(Session.SessionState.STOPPED);
+            } else {
+                applySessionState(session.getState());
+            }
+            selectVehicle(vehicle);
+            invalidateSessionStats(session);
         }
-        selectVehicle(vehicle);
-        invalidateSessionStats(session);
     }
 
     /**
      * applies the session state by changing the icon of the record button according to @param state
      * @param state the current state
      */
+    @Override
     public void applySessionState(final Session.SessionState state){
 
         switch (state){

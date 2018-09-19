@@ -11,10 +11,4 @@
         android:icon="@drawable/ic_footer_stats_off"
         android:title="@string/title_stats"/>
 
-    <item
-        android:id="@+id/navigation_bikes"
-        android:icon="@drawable/footer_bikes_off"
-        android:title="@string/title_bikes" />
-
-
 </menu>

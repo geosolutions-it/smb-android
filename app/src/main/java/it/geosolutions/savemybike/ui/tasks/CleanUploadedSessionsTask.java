@@ -11,9 +11,9 @@ import it.geosolutions.savemybike.model.Track;
 
 
 /**
- * a task to load session from the local database
+ * a task to clean up uploaded sessions from the local database
  */
-public class UpdateSessionsTask extends AsyncTask<Void,Void, Boolean> {
+public class CleanUploadedSessionsTask extends AsyncTask<Void,Void, Boolean> {
     public interface SessionCallback {
         void showProgressView();
         void hideProgressView();
@@ -22,7 +22,7 @@ public class UpdateSessionsTask extends AsyncTask<Void,Void, Boolean> {
     private WeakReference<Context> contextRef;
     private SessionCallback callback;
 
-    public UpdateSessionsTask(final Context context, final SessionCallback pCallback ){
+    public CleanUploadedSessionsTask(final Context context, final SessionCallback pCallback ){
         this.contextRef = new WeakReference<>(context);
         this.callback = pCallback;
     }

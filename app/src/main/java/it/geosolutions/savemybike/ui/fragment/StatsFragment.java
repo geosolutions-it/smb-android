@@ -32,14 +32,7 @@ public class StatsFragment extends Fragment {
 
         return view;
     }
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // refresh the fragments on selection
-            getChildFragmentManager().beginTransaction().detach(this).attach(this).commit();
-        }
-    }
+
     private void setupViewPager(View view) {
         ViewPager viewPager = view.findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
