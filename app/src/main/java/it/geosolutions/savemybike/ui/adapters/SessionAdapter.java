@@ -51,12 +51,11 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
         if(convertView == null){
             view = new RelativeLayout(getContext());
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            li.inflate(resource, view,true);
-            setupSwipe(view, session);
+            li.inflate(resource, view,true);git
         }else{
             view = (RelativeLayout) convertView;
         }
-
+        setupSwipe(view, session);
 
         if(session != null) {
             final TextView distanceTV = view.findViewById(R.id.dist_value);
