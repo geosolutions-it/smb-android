@@ -15,13 +15,5 @@
             android:id="@+id/navigation_bikes"
             android:icon="@drawable/footer_bikes_off"
             android:title="@string/title_bikes" />
-        <item
-            android:id="@+id/user_profile"
-            android:icon="@drawable/ic_account_circle"
-            android:title="@string/user_profile" />
-        <item
-            android:id="@+id/badges"
-            android:icon="@drawable/ic_badge"
-            android:title="@string/badges" />
     </group>
 </menu>

@@ -64,6 +64,7 @@ import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
+import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
 import retrofit2.Call;
@@ -141,12 +142,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         setSupportActionBar(smbToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        configureToolbar();
+        configureNavigationDrawer();
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        configureNavigationDrawer();
-        changeFragment(R.id.navigation_record);
-        loadConfiguration();
-
         /*
          * Check if data can be uploaded
          *
@@ -156,13 +155,18 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
          */
         this.uploadWithWifiOnly = preferences.getBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, Constants.DEFAULT_WIFI_ONLY);
 
+
+        changeFragment(R.id.navigation_record);
+        loadConfiguration();
+        // TODO: Initialize MapView to speedup first activity load.
+
+
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && permissionNecessary(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionIntent.SD_CARD))) {
 
             updateSessions();
 
         }
-        // TODO: Initialize MapView to speedup first activity load.
-        configureToolbar();
+
     }
 
     private void loadConfiguration() {
@@ -223,6 +227,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             setupUserView(user);
         }
         updateUser();
+        /*navView.getHeaderView(0).findViewById(R.id.userName).setOnClickListener((view) -> {
+            changeFragment(R.id.userName);
+            drawerLayout.closeDrawer(GravityCompat.START);
+        });*/
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
                 changeFragment(menuItem.getItemId());
@@ -249,9 +257,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         });
     }
     void setupUserView(User user) {
-        TextView uname = findViewById(R.id.userName);
-        TextView email = findViewById(R.id.userEmail);
-        ImageView avatar = findViewById(R.id.userAvatar);
+        View header = navView.getHeaderView(0);
+        TextView uname = header.findViewById(R.id.userName);
+        TextView email = header.findViewById(R.id.userEmail);
+        ImageView avatar = header.findViewById(R.id.userAvatar);
         avatar.setVisibility(View.GONE); // TODO Avatar
         if(user != null) {
 
@@ -451,6 +460,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = f;
 
                 break;
+            }
+            case R.id.userName: {
+                if(currentFragment != null&& currentFragment instanceof UserFragment) {
+                    fragment = new UserFragment();
+                }
             }
             case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {

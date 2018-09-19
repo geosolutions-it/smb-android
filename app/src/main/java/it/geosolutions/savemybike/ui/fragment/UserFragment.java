@@ -27,7 +27,7 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_stats, container,false);
+        View view = inflater.inflate(R.layout.fragment_user, container,false);
         setupViewPager(view);
 
         return view;
