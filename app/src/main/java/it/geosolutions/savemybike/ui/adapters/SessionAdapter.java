@@ -51,7 +51,7 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
         if(convertView == null){
             view = new RelativeLayout(getContext());
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            li.inflate(resource, view,true);git
+            li.inflate(resource, view,true);
         }else{
             view = (RelativeLayout) convertView;
         }
