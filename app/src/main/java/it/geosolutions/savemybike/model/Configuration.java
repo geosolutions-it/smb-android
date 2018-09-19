@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.geosolutions.savemybike.data.Constants;
+import it.geosolutions.savemybike.model.user.User;
 
 /**
  * Created by Robert Oehler on 26.10.17.
@@ -139,6 +140,39 @@ public class Configuration implements Serializable {
             return null;
         }
         return json;
+    }
+
+    /**
+     * saves the config @param configuration as json to the preferences of context @param context
+     * @param context a context
+     * @param user the user to store
+     */
+    public static void saveUserProfile(final Context context, @NonNull final User user){
+
+        String json = new Gson().toJson(user);
+
+        if(json != null) {
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString(Constants.USER_PROFILE, json).apply();
+        }
+
+    }
+    /**
+     * If a list of bikes was received and saved it is loaded from preferences and returned
+     * @param context a context
+     * @return a list of Bike
+     */
+    public static User getUserProfile(final Context context){
+
+        final String userString = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.USER_PROFILE, null);
+
+        if(userString != null){
+
+            Type userType = new TypeToken<User>(){}.getType();
+            User user = new Gson().fromJson(userString, userType);
+            return user;
+        }
+    return null;
+
     }
 
 }

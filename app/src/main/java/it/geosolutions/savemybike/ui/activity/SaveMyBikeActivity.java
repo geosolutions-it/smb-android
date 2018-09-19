@@ -51,11 +51,13 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
+import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
@@ -64,6 +66,9 @@ import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -104,7 +109,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
-    // private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private ExecutorService mExecutor;
 
     @Override
@@ -227,7 +231,22 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         });
     }
     void updateUser() {
+        RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
+        SMBRemoteServices portalServices = client.getPortalServices();
+        portalServices.getUser().enqueue(new Callback<User>() {
 
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+                Configuration.saveUserProfile(getBaseContext(), user );
+                setupUserView(user);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e(TAG, "Can not retrieve user profile", t);
+            }
+        });
     }
     void setupUserView(User user) {
         TextView uname = findViewById(R.id.userName);
