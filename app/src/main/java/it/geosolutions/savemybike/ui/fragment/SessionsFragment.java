@@ -107,7 +107,7 @@ public class SessionsFragment extends Fragment {
     /**
      * loads the locally available sessions from the database and invalidates the UI
      */
-    private void invalidateSessions() {
+    public void invalidateSessions() {
 
         new InvalidateSessionsTask(getActivity(), new InvalidateSessionsTask.InvalidateSessionsCallback() {
             @Override

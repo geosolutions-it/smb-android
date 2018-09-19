@@ -57,11 +57,10 @@ import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
-import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
-import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
+import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.UserFragment;
@@ -329,8 +328,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
      */
     private void invalidateRecordingUI() {
         Fragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
-            ((RecordCallbacks) currentFragment).invalidateUI(currentVehicle);
+        if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+            ((RecordingEventListener) currentFragment).invalidateUI(currentVehicle);
         }
     }
 
@@ -374,6 +373,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         mService = null;
 
         invalidateOptionsMenu();
+        Fragment currentFragment = getCurrentFragment();
+        // update view on stop - helps to reload session list with the new track
+        if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+            ((RecordingEventListener) currentFragment).stopRecording();
+        }
     }
 
     /**
@@ -402,11 +406,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 if (applyServiceVehicle) {
 
                     Fragment currentFragment = getCurrentFragment();
-                    if (currentFragment != null && currentFragment instanceof RecordCallbacks && mService.getSessionLogic() != null && mService.getSessionLogic().getVehicle() != null) {
+                    if (currentFragment != null && currentFragment instanceof RecordingEventListener && mService.getSessionLogic() != null && mService.getSessionLogic().getVehicle() != null) {
                         if (BuildConfig.DEBUG) {
                             Log.d(TAG, "rebound to service, applying vehicle " + mService.getSessionLogic().getVehicle().toString());
                         }
-                        ((RecordCallbacks) currentFragment).invalidateUI(mService.getSessionLogic().getVehicle());
+                        ((RecordingEventListener) currentFragment).invalidateUI(mService.getSessionLogic().getVehicle());
                     }
 
                     applyServiceVehicle = false;
@@ -496,8 +500,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 vehicle.setSelected(true);
                 Fragment currentFragment = getCurrentFragment();
 
-                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
-                    ((RecordCallbacks) currentFragment).selectVehicle(vehicle);
+                if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+                    ((RecordingEventListener) currentFragment).selectVehicle(vehicle);
                 }
                 currentVehicle = vehicle;
 
@@ -534,8 +538,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
                 simulate = !simulate;
                 Fragment currentFragment = getCurrentFragment();
-                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
-                    ((RecordCallbacks) currentFragment).applySimulate(simulate);
+                if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+                    ((RecordingEventListener) currentFragment).applySimulate(simulate);
                 }
                 invalidateOptionsMenu();
                 return true;
@@ -570,9 +574,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         public void run() {
 
             Fragment currentFragment = getCurrentFragment();
-            if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+            if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
                 Session session = getCurrentSession();
-                ((RecordCallbacks) currentFragment).invalidateSessionStats(session);
+                ((RecordingEventListener) currentFragment).invalidateSessionStats(session);
             }
 
             getHandler().postDelayed(this, UI_UPDATE_INTERVAL);
@@ -601,8 +605,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 invalidateOptionsMenu();
 
                 Fragment currentFragment = getCurrentFragment();
-                if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
-                    ((RecordCallbacks) currentFragment).applySessionState(Session.SessionState.STOPPED);
+                if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+                    ((RecordingEventListener) currentFragment).applySessionState(Session.SessionState.STOPPED);
                 }
             } else if (intent.getAction().equals(Constants.INTENT_VEHICLE_UPDATE)) {
                 // Here we are reacting to the notification vehicle change
@@ -721,9 +725,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     public void updateResults(String results) {
 
         Fragment currentFragment = getCurrentFragment();
-        if (currentFragment != null && currentFragment instanceof RecordCallbacks) {
+        if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
             Session session = getCurrentSession();
-            ((RecordCallbacks) currentFragment).invalidateSessionStats(session);
+            ((RecordingEventListener) currentFragment).invalidateSessionStats(session);
         }
     }
 

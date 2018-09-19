@@ -19,7 +19,7 @@ import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
  */
 
 public class StatsFragment extends Fragment {
-
+    private ViewPager viewPager;
     /**
      * inflate and setup the view of this fragment
      */
@@ -34,7 +34,7 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupViewPager(View view) {
-        ViewPager viewPager = view.findViewById(R.id.viewpager);
+        viewPager = view.findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         // Add Fragments to adapter one by one
@@ -44,6 +44,13 @@ public class StatsFragment extends Fragment {
 
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+    }
+    // TODO: improve this interface
+    public void refreshSessions() {
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        SessionsFragment f = (SessionsFragment) adapter.getItem(1);
+        f.invalidateSessions();
+
     }
 
 }

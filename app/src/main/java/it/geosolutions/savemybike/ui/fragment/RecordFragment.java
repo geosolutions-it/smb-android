@@ -28,7 +28,7 @@ import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
-import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
+import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -36,7 +36,7 @@ import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
  * A fragment containing the UI to switch between vehicles, start/stop a session and to show some session stats
  */
 
-public class RecordFragment extends Fragment implements RecordCallbacks{
+public class RecordFragment extends Fragment implements RecordingEventListener {
 
     private final static String TAG = "RecordFragment";
 
@@ -113,6 +113,11 @@ public class RecordFragment extends Fragment implements RecordCallbacks{
                 recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_record_play_pause));
                 break;
         }
+    }
+
+    @Override
+    public void stopRecording() {
+
     }
 
     /***

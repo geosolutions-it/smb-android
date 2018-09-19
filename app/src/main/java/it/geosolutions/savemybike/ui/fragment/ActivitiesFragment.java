@@ -3,7 +3,6 @@ package it.geosolutions.savemybike.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
-import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
+import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 
 /**
  * Created by Robert Oehler on 25.10.17.
@@ -24,7 +23,7 @@ import it.geosolutions.savemybike.ui.callback.RecordCallbacks;
  * A fragment showing the record image and the current tracks
  */
 
-public class ActivitiesFragment extends Fragment implements RecordCallbacks {
+public class ActivitiesFragment extends Fragment implements RecordingEventListener {
     private int initialItem = R.id.navigation_record;
     @BindView(R.id.navigation) BottomNavigationView navigation;
     @BindView(R.id.activities_content) ViewPager viewPager;
@@ -89,8 +88,8 @@ public class ActivitiesFragment extends Fragment implements RecordCallbacks {
     public void invalidateSessionStats(final Session session) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordCallbacks) {
-            ((RecordCallbacks) f).invalidateSessionStats(session);
+        if(f instanceof RecordingEventListener) {
+            ((RecordingEventListener) f).invalidateSessionStats(session);
 
         }
     };
@@ -98,8 +97,8 @@ public class ActivitiesFragment extends Fragment implements RecordCallbacks {
     public void selectVehicle(Vehicle vehicle) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordCallbacks) {
-            ((RecordCallbacks) f).selectVehicle(vehicle);
+        if(f instanceof RecordingEventListener) {
+            ((RecordingEventListener) f).selectVehicle(vehicle);
 
         }
     }
@@ -107,8 +106,8 @@ public class ActivitiesFragment extends Fragment implements RecordCallbacks {
     public void invalidateUI(Vehicle currentVehicle) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordCallbacks) {
-            ((RecordCallbacks) f).invalidateUI(currentVehicle);
+        if(f instanceof RecordingEventListener) {
+            ((RecordingEventListener) f).invalidateUI(currentVehicle);
 
         }
     }
@@ -116,19 +115,29 @@ public class ActivitiesFragment extends Fragment implements RecordCallbacks {
     public void applySimulate(boolean simulate) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordCallbacks) {
-            ((RecordCallbacks) f).applySimulate(simulate);
+        if(f instanceof RecordingEventListener) {
+            ((RecordingEventListener) f).applySimulate(simulate);
 
         }
     }
 
     @Override
     public void applySessionState(Session.SessionState stopped) {
+        // refresh sessions view due to a record ending
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordCallbacks) {
-            ((RecordCallbacks) f).applySessionState(stopped);
-
+        if(f instanceof RecordingEventListener) {
+            ((RecordingEventListener) f).applySessionState(stopped);
         }
+    }
+
+    @Override
+    public void stopRecording() {
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        if(adapter.getItem(1) instanceof StatsFragment) {
+            StatsFragment frag = (StatsFragment) adapter.getItem(1);
+            frag.refreshSessions();
+        }
+
     }
 }
