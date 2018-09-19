@@ -15,6 +15,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/white"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:navigationIcon="@drawable/ic_drawer_menu"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageView
@@ -30,22 +31,11 @@
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
 
-
-    <FrameLayout
-        android:id="@+id/content"
+    <LinearLayout
+        android:id="@+id/main_content_frame"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </FrameLayout>
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="?android:attr/windowBackground"
-        app:elevation="8dp"
-        app:menu="@menu/navigation"/>
-
+        android:layout_height="match_parent"
+        />
 </LinearLayout>

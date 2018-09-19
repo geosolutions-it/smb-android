@@ -18,8 +18,8 @@ import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
  * A fragment showing the stats of the session of the local database
  */
 
-public class StatsFragment extends Fragment {
-    private ViewPager viewPager;
+public class UserFragment extends Fragment {
+
     /**
      * inflate and setup the view of this fragment
      */
@@ -27,30 +27,30 @@ public class StatsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_stats, container,false);
+        View view = inflater.inflate(R.layout.fragment_user, container,false);
         setupViewPager(view);
 
         return view;
     }
-
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // refresh the fragments on selection
+            getChildFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
+    }
     private void setupViewPager(View view) {
-        viewPager = view.findViewById(R.id.viewpager);
+        ViewPager viewPager = view.findViewById(R.id.viewpager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         // Add Fragments to adapter one by one
-        adapter.addFragment(new TracksFragment(), getResources().getString(R.string.tracks));
-        adapter.addFragment(new SessionsFragment(), getResources().getString(R.string.sessions));
+        // adapter.addFragment(new ProfileFragment(), "Profile");
+
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-    }
-    // TODO: improve this interface
-    public void refreshSessions() {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        SessionsFragment f = (SessionsFragment) adapter.getItem(1);
-        f.invalidateSessions();
-
     }
 
 }

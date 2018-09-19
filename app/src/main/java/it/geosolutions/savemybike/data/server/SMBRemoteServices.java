@@ -8,6 +8,7 @@ import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
+import it.geosolutions.savemybike.model.user.User;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,5 +49,8 @@ public interface SMBRemoteServices {
 
     @GET("api/my-tracks/{id}?format=json")
     Call <Track> getTrack(@Path("id") long id);
+
+    @GET("api/my-user")
+    Call<User> getUser();
 
 }
