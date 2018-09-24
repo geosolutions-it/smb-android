@@ -12,4 +12,6 @@
     <color name="train_color">#087b00</color>
     <color name="default_track_color">#00ffff</color>
     <color name="delete">#FF0000</color>
+    <color name="badge_background">#BDB76B</color>
+    <color name="badge_not_acquired">#8e8e8e</color>
 </resources>

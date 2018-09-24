@@ -52,7 +52,7 @@ public class Constants {
     public static final String PREF_CONFIG_IDTOKEN           = "it.geosolutions.savemybike.pref.config.idToken";
     public static final String PREF_CONFIG_REFRESHTOKEN      = "it.geosolutions.savemybike.pref.config.refreshToken";
     public static final String PREF_BIKES                    = "it.geosolutions.savemybike.pref.bikes";
-
+    public final static String USER_PROFILE                  = "it.geosolutions.savemybike.pref.user";
     public final static String UNIT_KMH = "km/h";
     public final static String UNIT_MPH = "mph";
     public final static String UNIT_KM = "km";
@@ -62,5 +62,6 @@ public class Constants {
 
     public final static float KM_TO_MILES = 0.621371192f;
     public final static float METER_TO_FEET = 3.2808399f;
+
 
 }

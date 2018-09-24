@@ -58,4 +58,106 @@
     <string name="no_bikes_title">Nessuna Bici</string>
     <string name="server_took_too_long_to_respond" >Il server ha impiegato troppo tempo a rispondere</string>
     <string name="user_profile">User Profile</string>
+    <string name="profile">Profilo</string>
+    <string name="first_name">First Name</string>
+    <string name="submit">Submit</string>
+    <string name="last_name">Last  Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="bio">Bio</string>
+    <!-- ================== -->
+    <!-- ======Badges====== -->
+    <!-- ================== -->
+    <!-- titles -->
+    <string name="badge_title_new_user">Nuovo Utente!! </string>
+    <string name="badge_title_data_collector_level0">Rilevatore in erba!!</string>
+    <string name="badge_title_data_collector_level1">Rilevatore – 1 stella!!</string>
+    <string name="badge_title_data_collector_level2">Rilevatore – 2 stelle!!</string>
+    <string name="badge_title_data_collector_level3">Rilevatore – 3 stelle!!</string>
+    <string name="badge_title_biker_level1">Biker - 1 stella!!</string>
+    <string name="badge_title_biker_level2">Biker - 2 stelle!!</string>
+    <string name="badge_title_biker_level3">Biker - 3 stelle!!</string>
+    <string name="badge_title_public_mobility_level1">Mobilità Collettiva – 1 stella!!</string>
+    <string name="badge_title_public_mobility_level2">Mobilità Collettiva – 2 stelle!!</string>
+    <string name="badge_title_public_mobility_level3">Mobilità Collettiva – 3 stelle!!</string>
+    <string name="badge_title_bike_surfer_level1">Bike Surfer – 1 stella!!</string>
+    <string name="badge_title_bike_surfer_level2">Bike Surfer – 2 stelle!!</string>
+    <string name="badge_title_bike_surfer_level3">Bike Surfer – 3 stelle!!</string>
+    <string name="badge_title_tpl_surfer_level1">TPL Surfer – 1 stella!!</string>
+    <string name="badge_title_tpl_surfer_level2">TPL Surfer – 2 stelle!!</string>
+    <string name="badge_title_tpl_surfer_level3">TPL Surfer – 3 stelle!!</string>
+    <string name="badge_title_multi_surfer_level1">Multi Surfer – 1 stella!!</string>
+    <string name="badge_title_multi_surfer_level2">Multi Surfer – 2 stelle!!</string>
+    <string name="badge_title_multi_surfer_level3">Multi Surfer – 3 stelle!!</string>
+    <string name="badge_title_ecologist_level1">Ecologista – 1 stella!!</string>
+    <string name="badge_title_ecologist_level2">Ecologista – 2 stelle!!</string>
+    <string name="badge_title_ecologist_level3">Ecologista – 3 stelle!!</string>
+    <string name="badge_title_healthy_level1">Salutista – 1 stella!!</string>
+    <string name="badge_title_healthy_level2">Salutista – 2 stelle!!</string>
+    <string name="badge_title_healthy_level3">Salutista – 3 stelle!!</string>
+    <string name="badge_title_money_saver_level1">Risparmiatore – 1 stella!!</string>
+    <string name="badge_title_money_saver_level2">Risparmiatore – 2 stelle!!</string>
+    <string name="badge_title_money_saver_level3">Risparmiatore – 3 stelle!!</string>
+    <!-- before -->
+    <string name="badge_before_new_user">Appena ti iscrivi ed installi l’APP guadagni questo badge</string>
+    <string name="badge_before_data_collector_level0">Quando inizi ad inserire i dati di rilevamento dei tuoi modi di trasporto, ottieni questo badge</string>
+    <string name="badge_before_data_collector_level1">Quando hai registrato attività in una settimana per ogni giorno, otterrai questo badge.</string>
+    <string name="badge_before_data_collector_level2">Quando hai registrato attività in due settimane per ogni giorno, otterrai questo badge.</string>
+    <string name="badge_before_data_collector_level3">Quando hai registrato attività in un mese per ogni giorno, otterrai questo badge.</string>
+    <string name="badge_before_biker_level1">Inizia ad utilizzare la tua bici in città!! Usa la bici tre volte in una settimana ed otterrai questo badge.</string>
+    <string name="badge_before_biker_level2">Riutilizza la bici altre tre volte in città nella prossima settimana ed otterrai questo badge.</string>
+    <string name="badge_before_biker_level3">Riutilizza la bici in città altre sei volte nelle prossime due settimane ed otterrai questo badge!!</string>
+    <string name="badge_before_public_mobility_level1">Blocca la tua auto ed utilizza il trasporto pubblico urbano(tramvia, bus, metro)! Al primo utilizzo del trasporto pubblico otterrai questo badge.</string>
+    <string name="badge_before_public_mobility_level2">Blocca la tua auto ed utilizza il trasporto pubblico urbano(tramvia, bus, metro)! Al quinto utilizzo del trasporto pubblico otterrai questo badge.</string>
+    <string name="badge_before_public_mobility_level3">Blocca la tua auto ed utilizza il trasporto pubblico urbano(tramvia, bus, metro)! Al decimo utilizzo del trasporto pubblico otterrai questo badge.</string>
+    <string name="badge_before_bike_surfer_level1">Utilizza la bici per almeno 10 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_bike_surfer_level2">Utilizza la bici per almeno 50 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_bike_surfer_level3">Utilizza la bici per almeno 100 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_tpl_surfer_level1">Utilizza l’autobus per almeno 25 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_tpl_surfer_level2">Utilizza l’autobus per almeno 100 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_tpl_surfer_level3">Utilizza l’autobus per almeno 200 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_multi_surfer_level1">Utilizza mezzi sostenibili per almeno 100 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_multi_surfer_level2">Utilizza mezzi sostenibili per almeno 250 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_multi_surfer_level3">Utilizza mezzi sostenibili per almeno 500 km in ambito urbano ed otterrai questo badges! Hai dato un grande apporto alla mobilità sostenibile nella tua città!</string>
+    <string name="badge_before_ecologist_level1">Evita le emissioni per 25 kg di CO2 in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_ecologist_level2">Evita le emissioni per 50 kg di CO2 in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_ecologist_level3">Evita le emissioni per 100 kg di CO2 in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_healthy_level1">Consuma un totale di 750 calorie grazie ai tuoi spostamenti “attivi” in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_healthy_level2">Consuma un totale di 2.250 calorie grazie ai tuoi spostamenti “attivi” in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_healthy_level3">Consuma un totale di 4.500 calorie grazie ai tuoi spostamenti “attivi” in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_money_saver_level1">Risparmia un totale di 6 € grazie ai tuoi spostamenti sostenibili in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_money_saver_level2">Risparmia un totale di 12 € grazie ai tuoi spostamenti sostenibili in ambito urbano ed otterrai questo badges! </string>
+    <string name="badge_before_money_saver_level3">Risparmia un totale di 24 € grazie ai tuoi spostamenti sostenibili in ambito urbano ed otterrai questo badges! </string>
+    <!-- after -->
+    <string name="badge_after_new_user">Benvenuto e pronto a partire con una mobilità più sostenibile ed ecologica!! Condividi i tuoi risultati con tuoi amici e sfidali in competizioni personali!</string>
+    <string name="badge_after_data_collector_level0">Ottimo!! Hai iniziato a registrare i tuoi percorsi, così potrai collezionare nuovi badges e crescere il tuo punteggio!! Continua così! Le statistiche che ti forniamo ti mostreranno come puoi risparmiare tempo, soldi e salute, muovendoti in modo sostenibile!!</string>
+    <string name="badge_after_data_collector_level1">Ottimo!! Hai registrato i tuoi percorsi in una settimana intera, così potrai collezionare nuovi badges e crescere il tuo punteggio!! Continua così! Le statistiche che ti forniamo ti mostreranno come puoi risparmiare tempo, soldi e salute, muovendoti in modo sostenibile!!</string>
+    <string name="badge_after_data_collector_level2">Ottimo!! Hai registrato i tuoi percorsi in due intere settimane, così potrai collezionare nuovi badges e crescere il tuo punteggio!! Continua così! Le statistiche che ti forniamo ti mostreranno come puoi risparmiare tempo, soldi e salute, muovendoti in modo sostenibile!!</string>
+    <string name="badge_after_data_collector_level3">Ottimo!! Hai registrato i tuoi percorsi in un intero mese, così potrai collezionare nuovi badges e crescere il tuo punteggio!! Continua così! Le statistiche che ti forniamo ti mostreranno come puoi risparmiare tempo, soldi e salute, muovendoti in modo sostenibile!!</string>
+    <string name="badge_after_biker_level1">Ottimo! Con i tuoi spostamenti cittadini in bici sei entrato nel gruppo dei bikers!!</string>
+    <string name="badge_after_biker_level2">Bene! Sei riuscito ad utilizzare la bici in città sei volte in due settimane!! Aria fresca e movimento!!</string>
+    <string name="badge_after_biker_level3">Bene! Sei riuscito ad utilizzare la bici dodici volte in quattro settimane dentro la tua città!! Aria fresca e movimento!!</string>
+    <string name="badge_after_public_mobility_level1">Grande! Hai utilizzato per la prima volta il trasporto pubblico! Sei più sostenibile risparmiando soldi e tempo!  </string>
+    <string name="badge_after_public_mobility_level2">Grande! Hai utilizzato per sei volte il trasporto pubblico! Sei più sostenibile risparmiando soldi e tempo!</string>
+    <string name="badge_after_public_mobility_level3">Grande! Hai utilizzato per dieci volte il trasporto pubblico! Sei più sostenibile risparmiando soldi e tempo!</string>
+    <string name="badge_after_bike_surfer_level1">Grande! Hai percorso 10 km in bici all’interno della tua città. </string>
+    <string name="badge_after_bike_surfer_level2">Grande! Hai percorso 50 km in bici all’interno della tua città. </string>
+    <string name="badge_after_bike_surfer_level3">Grande! Hai percorso 100 km in bici all’interno della tua città. </string>
+    <string name="badge_after_tpl_surfer_level1">Grande! Hai percorso 25 km in autobus all’interno della tua città. </string>
+    <string name="badge_after_tpl_surfer_level2">Grande! Hai percorso 100 km in autobus all’interno della tua città. </string>
+    <string name="badge_after_tpl_surfer_level3">Grande! Hai percorso 200 km in autobus all’interno della tua città. </string>
+    <string name="badge_after_multi_surfer_level1">Grande! Hai percorso 100 km con più mezzi sostenibili!! Stai dando un grande aiuto alla collettività!!</string>
+    <string name="badge_after_multi_surfer_level2">Grande! Hai percorso 250 km con più mezzi sostenibili!! Stai dando un grande aiuto alla collettività!!</string>
+    <string name="badge_after_multi_surfer_level3">Grande! Hai percorso 500 km con più mezzi sostenibili!! Stai dando un grande aiuto alla collettività!!</string>
+    <string name="badge_after_ecologist_level1">Grande! Hai evitato di emettere 25 kg di CO2 all’interno della tua città.Hai dato un grande apporto al mantenimento della qualità dell’aria nella tua città!</string>
+    <string name="badge_after_ecologist_level2">Grande! Hai evitato di emettere 50 kg di CO2 all’interno della tua città.Hai dato un grande apporto al mantenimento della qualità dell’aria nella tua città!</string>
+    <string name="badge_after_ecologist_level3">Grande! Hai evitato di emettere 100 kg di CO2 all’interno della tua città.Hai dato un grande apporto al mantenimento della qualità dell’aria nella tua città!</string>
+    <string name="badge_after_healthy_level1">Grande! Hai consumato 750 calorie grazie ai tuoi spostamenti all’interno della tua città.Non inquinando ti stai tenendo in forma!!</string>
+    <string name="badge_after_healthy_level2">Grande! Hai consumato 2.250 calorie grazie ai tuoi spostamenti all’interno della tua città.Non inquinando ti stai tenendo in forma!!</string>
+    <string name="badge_after_healthy_level3">Grande! Hai consumato 4.500 calorie grazie ai tuoi spostamenti all’interno della tua città.Non inquinando ti stai tenendo in forma!!</string>
+    <string name="badge_after_money_saver_level1">Grande! Hai evitato una spesa totale di 6 € grazie ai tuoi spostamenti sostenibili all’interno della tua città.Risparmiando, hai dato un grande apporto alla mobilità sostenibile cittadina!</string>
+    <string name="badge_after_money_saver_level2">Grande! Hai evitato una spesa totale di 12 € grazie ai tuoi spostamenti sostenibili all’interno della tua città.Risparmiando, hai dato un grande apporto alla mobilità sostenibile cittadina!</string>
+    <string name="badge_after_money_saver_level3">Grande! Hai evitato una spesa totale di 24 € grazie ai tuoi spostamenti sostenibili all’interno della tua città.Risparmiando, hai dato un grande apporto alla mobilità sostenibile cittadina!</string>
+    <!-- ================== -->
+    <!-- ==End of badges == -->
+    <!-- ================== -->
 </resources>

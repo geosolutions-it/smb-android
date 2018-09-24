@@ -2,6 +2,11 @@ package it.geosolutions.savemybike.model.user;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.net.URL;
+
+/**
+ * Model of User for back-end API
+ */
 public class User {
     private String uuid;
     private String username;
@@ -12,6 +17,8 @@ public class User {
     private String nickname;
     private  String profile_type;
     private Profile profile;
+    private String avatar;
+
 
     public String getUuid() {
         return uuid;
@@ -67,5 +74,13 @@ public class User {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

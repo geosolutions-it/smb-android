@@ -34,11 +34,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
 import java.lang.ref.WeakReference;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -47,7 +53,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
+import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.SMBGlideModule;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -226,10 +234,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             setupUserView(user);
         }
         updateUser();
-        /*navView.getHeaderView(0).findViewById(R.id.userName).setOnClickListener((view) -> {
-            changeFragment(R.id.userName);
+        navView.getHeaderView(0).setOnClickListener((view) -> {
+            changeFragment(R.id.navigation_user_profile);
             drawerLayout.closeDrawer(GravityCompat.START);
-        });*/
+        });
+
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
                 changeFragment(menuItem.getItemId());
@@ -255,12 +264,42 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             }
         });
     }
+    public static final String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
     void setupUserView(User user) {
         View header = navView.getHeaderView(0);
         TextView uname = header.findViewById(R.id.userName);
         TextView email = header.findViewById(R.id.userEmail);
         ImageView avatar = header.findViewById(R.id.userAvatar);
-        avatar.setVisibility(View.GONE); // TODO Avatar
+        GlideApp.with(this)
+            .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
+            .override(120, 120)
+            .fitCenter() // scale to fit entire image within ImageView
+            .apply(RequestOptions.circleCropTransform())
+            .into(avatar);
+
         if(user != null) {
 
             if(uname != null) {
@@ -465,10 +504,21 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
                 break;
             }
-            case R.id.userName: {
-                if(currentFragment != null&& currentFragment instanceof UserFragment) {
-                    fragment = new UserFragment();
+            case R.id.navigation_user_profile: {
+                if(currentFragment != null && currentFragment instanceof UserFragment) {
+                    ((UserFragment) currentFragment).setNavigation(R.id.navigation_user_profile);
                 }
+                fragment = new UserFragment();
+                break;
+            }
+            case R.id.navigation_badges:{
+                if(currentFragment != null && currentFragment instanceof UserFragment) {
+                    ((UserFragment) currentFragment).setNavigation(R.id.navigation_badges);
+                }
+                UserFragment f = new UserFragment();
+                f.setInitialItem(R.id.navigation_badges);
+                fragment = f;
+                break;
             }
             case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {

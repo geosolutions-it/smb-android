@@ -15,5 +15,9 @@
             android:id="@+id/navigation_bikes"
             android:icon="@drawable/footer_bikes_off"
             android:title="@string/title_bikes" />
+        <item
+            android:id="@+id/navigation_badges"
+            android:icon="@drawable/ic_badge"
+            android:title="@string/badges" />
     </group>
 </menu>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/navigation_record"
         android:icon="@drawable/footer_record_off"
@@ -10,5 +9,4 @@
         android:id="@+id/navigation_stats"
         android:icon="@drawable/ic_footer_stats_off"
         android:title="@string/title_stats"/>
-
 </menu>

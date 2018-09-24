@@ -2,6 +2,7 @@ package it.geosolutions.savemybike.data.server;
 
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
+import it.geosolutions.savemybike.model.Badge;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
@@ -53,4 +54,6 @@ public interface SMBRemoteServices {
     @GET("api/my-user")
     Call<User> getUser();
 
+    @GET("api/my-badges")
+    Call<PaginatedResult<Badge>> getBadges();
 }
