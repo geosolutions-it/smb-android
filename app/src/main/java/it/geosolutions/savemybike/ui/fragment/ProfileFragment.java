@@ -65,13 +65,14 @@ public class ProfileFragment extends Fragment {
             Profile p = user.getProfile();
             phoneNumber.setText(p.getPhoneNumber());
             bio.setText(p.getBio());
+            GlideApp.with(this)
+                    .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
+                    .override(250, 250)
+                    .fitCenter() // scale to fit entire image within ImageView
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(avatar);
         }
-        GlideApp.with(this)
-                .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
-                .override(250, 250)
-                .fitCenter() // scale to fit entire image within ImageView
-                .apply(RequestOptions.circleCropTransform())
-                .into(avatar);
+
         return view;
     }
     protected void setModified(boolean modified) {

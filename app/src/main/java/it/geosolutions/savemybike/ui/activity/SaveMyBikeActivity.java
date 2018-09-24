@@ -293,14 +293,15 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         TextView uname = header.findViewById(R.id.userName);
         TextView email = header.findViewById(R.id.userEmail);
         ImageView avatar = header.findViewById(R.id.userAvatar);
-        GlideApp.with(this)
-            .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
-            .override(120, 120)
-            .fitCenter() // scale to fit entire image within ImageView
-            .apply(RequestOptions.circleCropTransform())
-            .into(avatar);
+
 
         if(user != null) {
+            GlideApp.with(this)
+                    .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
+                    .override(120, 120)
+                    .fitCenter() // scale to fit entire image within ImageView
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(avatar);
 
             if(uname != null) {
                 String f = user.getFirstName();
