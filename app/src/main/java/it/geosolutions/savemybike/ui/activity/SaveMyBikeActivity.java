@@ -67,6 +67,7 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.model.user.User;
+import it.geosolutions.savemybike.ui.callback.IOnBackPressed;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
@@ -164,6 +165,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
 
         changeFragment(R.id.navigation_record);
+        //load the configuration and select the current vehicle
+        this.currentVehicle = getCurrentVehicleFromConfig();
         loadConfiguration();
         // TODO: Initialize MapView to speedup first activity load.
 
@@ -176,9 +179,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     }
 
-    private void loadConfiguration() {
-        //load the configuration and select the current vehicle
-        this.currentVehicle = getCurrentVehicleFromConfig();
+    public void loadConfiguration() {
+
         //when online, update the config from remote
         if (Util.isOnline(getBaseContext())) {
 
@@ -528,7 +530,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new BikeListFragment();
                 break;
 
-
             default:
                 break;
         }
@@ -537,7 +538,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
 
     }
-
+    public void changeFragment(Fragment fragment) {
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();
+        }
+    }
     /**
      * changes the current vehicle in the configuration and updates the UI if the record fragment is currently visible
      *
@@ -821,6 +826,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         drawerLayout.openDrawer(GravityCompat.START);
         return true;
+    }
+    @Override public void onBackPressed() {
+        Fragment fragment = getCurrentFragment();
+        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
+            super.onBackPressed();
+        }
     }
 
     @Override

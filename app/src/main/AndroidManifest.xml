@@ -44,7 +44,14 @@
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan">
+            <!--
+                NOTE: android:windowSoftInputMode="adjustPan" is required to allow the user to see the text when editing "bike lost" message.
+                Without it, the keyboard appears above the input and you can not see what you're writing.
+                TODO: find out a better solution for this
+            -->
+        </activity>
 
         <service
             android:name=".data.service.SaveMyBikeService"

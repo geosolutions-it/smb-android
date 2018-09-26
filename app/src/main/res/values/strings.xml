@@ -50,7 +50,7 @@
     <string name="logout_message">Do you really want to logout?</string>
     <string name="logout_OK">LOGOUT</string>
     <string name="cancel">Cancel</string>
-    <string name="type_your_message">Type Your Message :</string>
+    <string name="type_your_message">Some additional details (optional):</string>
     <string name="exchanging_authorization_code">Exchanging authorization code</string>
     <string name="found_bike_message">Looks like you found your bike! Do you want to mark this bike as \"found\"?</string>
     <string name="lost_bike_message">You are about to report your bike as \"lost\", please add some details:</string>
@@ -192,5 +192,11 @@
     <!-- ================== -->
     <!-- ==End of badges == -->
     <!-- ================== -->
+    <string name="search_for_location">Search for location</string>
+    <string name="bike_lost_location_hint">Tap on the map or search for a location to indicate where you\'ve seen the bike the last time</string>
+    <string name="confirm_bike_lost">Do you confirm you have lost this bike?</string>
+    <string name="confirm">Confirm</string>
+    <string name="error_saving_bike_status">There was an error trying to save the bike status. Please try again later</string>
+    <string name="confirm_bike_found">Do you confirm you have found this bike?</string>
 
 </resources>

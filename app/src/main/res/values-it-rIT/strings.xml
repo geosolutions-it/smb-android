@@ -22,7 +22,7 @@
     <string name="logout_OK">DISCONNETTI</string>
     <string name="cancel">Annulla</string>
     <string name="logout_menu_text">Disconnetti</string>
-    <string name="type_your_message">Scrivi qui il messaggio :</string>
+    <string name="type_your_message">Ulteriori Dettagli (opzionali) :</string>
     <string name="not_authorized">Pronto per iniziare?</string>
     <string name="exchanging_authorization_code">Accesso in corso…</string>
     <string name="found_bike_message">Sembra che tu abbia ritrovato la tua bici! Confermi?</string>
@@ -160,4 +160,10 @@
     <!-- ================== -->
     <!-- ==End of badges == -->
     <!-- ================== -->
+    <string name="search_for_location">Cerca un luogo</string>
+    <string name="bike_lost_location_hint">Tocca la mappa o cerca un indirizzo per indicare dove hai visto la bici l\'ultima volta</string>
+    <string name="confirm_bike_lost">Confermi di aver perso questa bici?</string>
+    <string name="confirm">Confermo</string>
+    <string name="error_saving_bike_status">C\'è stato un errore mentre si tentava di salvare lo stato della bici. Ritentare più tardi</string>
+    <string name="confirm_bike_found">Confermi di aver ritrovato questa bici?</string>
 </resources>

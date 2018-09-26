@@ -41,7 +41,7 @@
         app:backgroundTint="@android:color/white"
         android:layout_above="@+id/bike_title"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"/><!-- Hidden until working -->
+        />
 
 
 

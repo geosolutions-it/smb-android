@@ -1,5 +1,7 @@
 package it.geosolutions.savemybike.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
@@ -48,7 +51,12 @@ public class BikeListFragment extends Fragment {
 
         // setup adapter
         List<Bike> bikes = activity.getConfiguration().getBikes(activity);
-        bikeAdapter = new BikeAdapter(activity, R.layout.item_bike, activity.getConfiguration().getBikes(activity));
+        bikeAdapter = new BikeAdapter(activity, R.layout.item_bike, activity.getConfiguration().getBikes(activity)) {
+            @Override
+            public void updateStatus(Bike bike, String details) {
+                updateBikeStatus(bike, details);
+            }
+        };
         listView.setAdapter(bikeAdapter);
 
         // set up empty view
@@ -61,7 +69,7 @@ public class BikeListFragment extends Fragment {
         return view;
     }
 
-    /* TODO: allow to add bikes
+
     @OnClick(R.id.add_bike_button)
     public void onClick() {
 
@@ -70,7 +78,7 @@ public class BikeListFragment extends Fragment {
 
         // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
     }
-    */
+
     /**
      * Call the API to update a bike's status
      */
@@ -84,7 +92,7 @@ public class BikeListFragment extends Fragment {
         SMBRemoteServices smbserv = rclient.getPortalServices();
 
         CurrentStatus newStatus = new CurrentStatus();
-        newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/bikes/"+bike.getShort_uuid()+"/");
+        newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/my-bikes/"+bike.getShort_uuid()+"/");
         newStatus.setDetails(details);
         newStatus.setLost(!bike.getCurrentStatus().getLost());
         Call<Object> call = smbserv.sendNewBikeStatus(newStatus);

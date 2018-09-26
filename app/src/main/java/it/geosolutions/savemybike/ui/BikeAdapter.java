@@ -1,10 +1,12 @@
 package it.geosolutions.savemybike.ui;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +26,12 @@ import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.fragment.BikeLostNotificationFragment;
 
 /**
  * adapter for bikes
  */
-public class BikeAdapter extends ArrayAdapter<Bike> {
+public abstract class BikeAdapter extends ArrayAdapter<Bike> {
 
     private SaveMyBikeActivity smbActivity;
     private int resource;
@@ -78,39 +81,28 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
 
             final FloatingActionButton alarmButton = view.findViewById(R.id.bike_alarm);
             alarmButton.setOnClickListener(view1 -> {
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                builder.setTitle(R.string.lost_bike_report_title);
                 if(bike.getCurrentStatus().getLost()) {
-                    builder.setMessage(R.string.found_bike_message);
-                    builder.setPositiveButton(R.string.send, (dialog, which) -> {
-                        // smbActivity.updateBikeStatus(bike, "");
-                        dialog.dismiss();
-                    });
-                }else {
-                    LayoutInflater li = LayoutInflater.from(getContext());
-                    View promptsView = li.inflate(R.layout.prompt, null);
-                    builder.setView(promptsView);
-                    final EditText userInput = promptsView.findViewById(R.id.editTextDialogUserInput);
+                    new AlertDialog.Builder(getContext())
+                            .setMessage(R.string.confirm_bike_found)
+                            .setPositiveButton(R.string.confirm, ( dialog,  id) -> {
+                                updateStatus(bike, null);
+                            })
+                            .setNegativeButton(R.string.cancel, ( dialog,  id) -> {
+                                // TODO: close
+                            }).show();
 
-                    SupportMapFragment mapFragment = (SupportMapFragment) smbActivity.getSupportFragmentManager()
-                            .findFragmentById(R.id.map);
-                    mapFragment.getMapAsync(new MapCallback(smbActivity));
-
-
-                    builder.setMessage(R.string.lost_bike_message);
-                    builder.setPositiveButton(R.string.send, (dialog, which) -> {
-                        // smbActivity.updateBikeStatus(bike, userInput.getText().toString());
-                        dialog.dismiss();
-                    });
+                } else {
+                    // show bike lost notification form
+                    Fragment f = new BikeLostNotificationFragment();
+                    Bundle b = new Bundle();
+                    b.putSerializable(BikeLostNotificationFragment.BIKE_ARGUMENT, bike);
+                    f.setArguments(b);
+                    smbActivity.changeFragment(f);
                 }
 
-                builder.setNegativeButton(R.string.cancel, null);
-                builder.show();
+
 
             });
-
             if (bike.getCurrentStatus() != null && bike.getCurrentStatus().getLost()) {
                 alarmButton.setImageResource(R.drawable.ic_lock_open_red_24dp);
             } else {
@@ -119,4 +111,5 @@ public class BikeAdapter extends ArrayAdapter<Bike> {
         }
         return view;
     }
+    public abstract void updateStatus(Bike bike, String details);
 }

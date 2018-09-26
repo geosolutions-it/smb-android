@@ -19,6 +19,17 @@ public class CurrentStatus {
     @Expose
     private String details;
 
+    /**
+     * This is the bike url, needed to upload a new bike status
+     */
+    @SerializedName("bike")
+    @Expose
+    private String bike;
+
+
+    @Expose
+    private String position;
+
     public String getDetails() {
         return details;
     }
@@ -51,11 +62,12 @@ public class CurrentStatus {
         this.bike = bike;
     }
 
-    /**
-     * This is the bike url, needed to upload a new bike status
-     */
-    @SerializedName("bike")
-    @Expose
-    private String bike;
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
 }
