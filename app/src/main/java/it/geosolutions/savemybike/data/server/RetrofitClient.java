@@ -177,15 +177,26 @@ public class RetrofitClient {
         return portalRetrofit;
     }
 
+    /**
+     * Compose a Retrofit instance for Retrofit (setting up configuration).
+     * TODO: avoid unnecessary interceptors and configuratons
+     * @return the Retrofit instance to build the auth client
+     */
+    public Retrofit getAuthRetrofit() {
+        return new Retrofit.Builder()
+                .client(getPortalClient())
+                .baseUrl(Constants.PORTAL_ENDPOINT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
     private OkHttpClient getPortalClient(){
 
         if(portalClient == null) {
-            AuthState state = AuthStateManager.getInstance(context).getCurrent();
-            String accessToken = state.getAccessToken();
-            Log.i(TAG, "Using ACCESS token: "+accessToken);
+
 
             portalClient  = new OkHttpClient.Builder()
-                    .addInterceptor(new TokenInterceptor("Bearer "+accessToken))
+                    .addInterceptor(new TokenInterceptor(context))
                     .addInterceptor(new LoggingInterceptor())
                     .build();
         }
@@ -197,26 +208,30 @@ public class RetrofitClient {
      */
     private static class TokenInterceptor implements Interceptor {
 
-        private String token;
+        private Context context;
 
-        TokenInterceptor(String token) {
-            this.token = token;
+        TokenInterceptor(Context context) {
+            this.context = context;
         }
 
         @Override
         public Response intercept(@NonNull Chain chain) throws IOException {
 
             // TODO: inject authentication token
-            Log.d(TAG, "TOKEN IS: "+token);
+
             Request request = chain.request();
+            AuthState state = AuthStateManager.getInstance(context).getCurrent();
+            String token = state.getAccessToken();
+
             if (token != null){
-                Request authenticatedRequest = request.newBuilder().header("Authorization", token).build();
+                Request authenticatedRequest = request.newBuilder().header("Authorization", "Bearer " + token).build();
                 return chain.proceed(authenticatedRequest);
             }
             return chain.proceed(request);
 
         }
     }
+
 
     /**
      * used to log communication
@@ -271,6 +286,15 @@ public class RetrofitClient {
         return getRetrofit().create(SMBRemoteServices.class);
 
     }
+
+    /**
+     * Returns an auth client for retrofit.
+     * @return
+     */
+    public AuthClient getAuthClient() {
+        return getAuthRetrofit().create(AuthClient.class);
+    }
+
 
     public SMBRemoteServices getPortalServices(){
 

@@ -19,6 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryName;
 
 /**
  * Created by Lorenzo Pini on 23/03/2018.
@@ -56,4 +57,5 @@ public interface SMBRemoteServices {
 
     @GET("api/my-badges")
     Call<PaginatedResult<Badge>> getBadges();
+
 }

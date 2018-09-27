@@ -41,6 +41,8 @@ import com.bumptech.glide.request.target.Target;
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.AuthorizationServiceDiscovery;
 
 import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
@@ -58,6 +60,7 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.SMBGlideModule;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
+import it.geosolutions.savemybike.data.server.AuthClient;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
@@ -75,6 +78,8 @@ import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
+import it.geosolutions.savemybike.ui.utils.AuthUtils;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -136,7 +141,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         if (config.hasConfigurationChanged()) {
             Log.w(TAG, "hasConfigurationChanged() == true");
 
-            signOut();
+            signOut(false);
             return;
         }
 
@@ -251,6 +256,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     void updateUser() {
         RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
         SMBRemoteServices portalServices = client.getPortalServices();
+
         portalServices.getUser().enqueue(new Callback<User>() {
 
             @Override
@@ -611,7 +617,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 builder.setTitle(R.string.logout_title);
                 builder.setMessage(R.string.logout_message);
                 builder.setPositiveButton(R.string.logout_OK, (dialog, which) -> {
-                    signOut();
+                    signOut(true);
                     dialog.dismiss();
                 });
                 builder.setNegativeButton(R.string.cancel, null);
@@ -788,21 +794,68 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     }
 
     @MainThread
-    public void signOut() {
+    public void signOut(boolean logout) {
         // discard the authorization and token state, but retain the configuration and
         // dynamic client registration (if applicable), to save from retrieving them again.
+
+
+        if(logout) {
+            logout();
+        } else  {
+            clearAuthState();
+            backToLogin();
+        }
+
+    }
+
+    private void clearAuthState() {
         AuthState currentState = mStateManager.getCurrent();
         AuthState clearedState =
                 new AuthState(currentState.getAuthorizationServiceConfiguration());
+
         if (currentState.getLastRegistrationResponse() != null) {
             clearedState.update(currentState.getLastRegistrationResponse());
         }
         mStateManager.replace(clearedState);
+    }
 
+    private void backToLogin() {
         Intent mainIntent = new Intent(this, LoginActivity.class);
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(mainIntent);
         finish();
+    }
+
+    private void logout() {
+        AuthState mAuthState = mStateManager.getCurrent();
+        String accessToken = mAuthState.getAccessToken();
+        RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
+        AuthClient authClient = client.getAuthClient();
+        AuthorizationServiceConfiguration asc = mAuthState.getAuthorizationServiceConfiguration();
+        AuthorizationServiceDiscovery discoveryDoc = asc.discoveryDoc;
+        if (discoveryDoc == null) {
+            throw new IllegalStateException("no available discovery doc");
+        }
+
+        Uri endSessionEndpoint = AuthUtils.getEndSessionEndpoint(discoveryDoc);
+        authClient
+            .logout(
+                    endSessionEndpoint.toString(),
+                    it.geosolutions.savemybike.Configuration.getInstance(getBaseContext()).getRedirectUri().toString()
+                    ,accessToken)
+            .enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    clearAuthState();
+                    backToLogin();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "Error doing logout", t);
+                    backToLogin();
+                }
+        });
     }
 
     @Override
