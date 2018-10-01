@@ -44,7 +44,7 @@ public class RetrofitClient {
 
     private Retrofit retrofit;
     private Retrofit portalRetrofit;
-    private OkHttpClient client;
+
     private OkHttpClient portalClient;
 
     private Context context;
@@ -140,17 +140,20 @@ public class RetrofitClient {
     private void fetchBikes(@NonNull final GetBikesCallback callback){
 
         //do the (retrofit) get call
-        final Call<PaginatedResult<Bike>> call = getPortalServices().getMyBikes();
+        getPortalServices().getMyBikes().enqueue(new Callback<PaginatedResult<Bike>>() {
+            @Override
+            public void onResponse(Call<PaginatedResult<Bike>> call, retrofit2.Response<PaginatedResult<Bike>> response) {
+                final PaginatedResult<Bike> bikesList = response.body();
+                callback.gotBikes(bikesList);
+            }
 
-        try {
-            final PaginatedResult<Bike> bikesList = call.execute().body();
+            @Override
+            public void onFailure(Call<PaginatedResult<Bike>> call, Throwable t) {
+                callback.error("io-error executing fetchBikes");
+            }
+        });
 
-            callback.gotBikes(bikesList);
 
-        } catch (IOException e) {
-            Log.e(TAG, "error executing fetchBikes", e);
-            callback.error("io-error executing fetchBikes");
-        }
     }
 
     private Retrofit getRetrofit(){

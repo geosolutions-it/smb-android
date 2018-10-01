@@ -198,5 +198,6 @@
     <string name="confirm">Confirm</string>
     <string name="error_saving_bike_status">There was an error trying to save the bike status. Please try again later</string>
     <string name="confirm_bike_found">Do you confirm you have found this bike?</string>
+    <string name="network_error">Network error. Please try again later</string>
 
 </resources>
