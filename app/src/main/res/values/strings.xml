@@ -199,5 +199,8 @@
     <string name="error_saving_bike_status">There was an error trying to save the bike status. Please try again later</string>
     <string name="confirm_bike_found">Do you confirm you have found this bike?</string>
     <string name="network_error">Network error. Please try again later</string>
+    <string name="press_back_again">Please click BACK again to exit</string>
+    <string name="quit">Quit</string>
+    <string name="confirm_exit">Are you sure you want to quit?</string>
 
 </resources>

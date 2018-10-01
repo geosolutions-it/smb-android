@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.annotation.GlideModule;
@@ -235,6 +236,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    /**
+     * Configures the DrawerMenuLayout to handle navigation
+     * binds events. Triggers also an updateUser to reload user data.
+     */
     private void configureNavigationDrawer() {
         User user = Configuration.getUserProfile(getBaseContext());
         if(user != null) {
@@ -248,11 +254,24 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
-                changeFragment(menuItem.getItemId());
+                if(menuItem.getItemId() == R.id.navigation_exit) {
+                    confirmExit();
+                } else {
+                    changeFragment(menuItem.getItemId());
+                }
+
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
         });
     }
+    private void confirmExit() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.confirm_exit)
+                .setPositiveButton(R.string.quit, ( dialog,  id) -> super.onBackPressed())
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     void updateUser() {
         RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
         SMBRemoteServices portalServices = client.getPortalServices();
@@ -272,30 +291,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             }
         });
     }
-    public static final String md5(final String s) {
-        final String MD5 = "MD5";
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
 
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String h = Integer.toHexString(0xFF & aMessageDigest);
-                while (h.length() < 2)
-                    h = "0" + h;
-                hexString.append(h);
-            }
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
     void setupUserView(User user) {
         View header = navView.getHeaderView(0);
         TextView uname = header.findViewById(R.id.userName);
@@ -880,10 +876,23 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         drawerLayout.openDrawer(GravityCompat.START);
         return true;
     }
+
+    /**
+     * hold state for double back pressed button
+     */
+    boolean doubleBackToExitPressedOnce = false;
     @Override public void onBackPressed() {
         Fragment fragment = getCurrentFragment();
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+            // manage double back exit
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+
         }
     }
 

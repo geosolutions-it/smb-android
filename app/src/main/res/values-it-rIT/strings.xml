@@ -167,4 +167,7 @@
     <string name="error_saving_bike_status">C\'è stato un errore mentre si tentava di salvare lo stato della bici. Ritentare più tardi</string>
     <string name="confirm_bike_found">Confermi di aver ritrovato questa bici?</string>
     <string name="network_error">Errore di rete. Riprovare più tardi</string>
+    <string name="press_back_again">Clicca di nuovo su INDIETRO per uscire</string>
+    <string name="quit">Esci</string>
+    <string name="confirm_exit">Sei sicuro di voler uscire?</string>
 </resources>
