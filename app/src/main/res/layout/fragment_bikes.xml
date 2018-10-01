@@ -32,7 +32,8 @@
         app:borderWidth="2dp"
         app:elevation="8dp"
         app:srcCompat="@drawable/ic_add"
-        android:tint="@android:color/white"/>
+        android:tint="@android:color/white"
+        android:visibility="gone"/><!-- Hidden until an add bike is present in the app (see #30) -->
 
 
 </RelativeLayout>
