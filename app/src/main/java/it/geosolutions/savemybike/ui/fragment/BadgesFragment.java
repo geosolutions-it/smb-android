@@ -35,10 +35,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Robert Oehler on 26.10.17.
- *
- * A fragment showing a list of bikes
- * Update by Lorenzo Pini on 09.07.2018
+ * @author Lorenzo Natali, GeoSolutions S.a.s.
+ * Frabment for badges list
  */
 
 public class BadgesFragment extends Fragment {
@@ -57,7 +55,7 @@ public class BadgesFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_badges, container, false);
         ButterKnife.bind(this, view);
         SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
-        showEmpty(false);
+        showEmpty(false, false);
         // setup adapter
         ArrayList badges = new ArrayList<Badge>();
 
@@ -84,11 +82,11 @@ public class BadgesFragment extends Fragment {
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
-                    showEmpty(response.body().getResults().size() == 0);
+                    showEmpty(response.body().getResults().size() == 0, false);
                 } else {
                     adapter.clear();
                     adapter.addAll(new ArrayList<>());
-                    showEmpty(true);
+                    showEmpty(true, false);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -96,7 +94,7 @@ public class BadgesFragment extends Fragment {
             @Override
             public void onFailure(Call<PaginatedResult<Badge>> call, Throwable t) {
                 showProgress(false);
-                showEmpty(true);
+                showEmpty(true, true);
             }
         });
     }
@@ -135,11 +133,16 @@ public class BadgesFragment extends Fragment {
             mySwipeRefreshLayout.setRefreshing(show);
         }
     }
-    private void showEmpty(boolean show) {
+    private void showEmpty(boolean show, boolean noNetwork) {
         if(getActivity() != null) {
-            View v = getActivity().findViewById(R.id.empty_badges);
-            if (v != null) {
-                v.setVisibility(show ? View.VISIBLE : View.GONE);
+            View e = getActivity().findViewById(R.id.empty_badges);
+            View n = getActivity().findViewById(R.id.emptyNoNetwork);
+            if (e != null) {
+                boolean showEmpty = show && !noNetwork || show && n == null;
+                e.setVisibility(showEmpty ? View.VISIBLE : View.GONE);
+            }
+            if(n != null) {
+                n.setVisibility(show && noNetwork ? View.VISIBLE : View.GONE);
             }
         }
     }

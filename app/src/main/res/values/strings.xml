@@ -48,10 +48,14 @@
     <string name="bike_name">bike name</string>
     <string name="logout_title">LOGOUT</string>
     <string name="logout_message">Do you really want to logout?</string>
+    <string name="could_not_logout">Can not logout at the moment (Network connettivity is required). Please try again later.</string>
+    <string name="logout_generic_issue">Can not logout at the moment. Please try again later.</string>
     <string name="logout_OK">LOGOUT</string>
     <string name="cancel">Cancel</string>
     <string name="type_your_message">Some additional details (optional):</string>
     <string name="exchanging_authorization_code">Exchanging authorization code</string>
+    <string name="checking_user_data">Checking user data...</string>
+    <string name="could_not_verify_user">Could not check user data. Please try again later</string>
     <string name="found_bike_message">Looks like you found your bike! Do you want to mark this bike as \"found\"?</string>
     <string name="lost_bike_message">You are about to report your bike as \"lost\", please add some details:</string>
     <string name="send">Send</string>
@@ -79,6 +83,8 @@
     <string name="c_operation">Operation</string>
     <string name="total">Total</string>
     <string name="no_data">No Data</string>
+    <string name="no_network">No Newrork</string>
+    <string name="no_network_description">This functionality is not available offline. Please try again later</string>
     <string name="tracks">Tracks</string>
     <string name="sessions">Sessions</string>
     <string name="no_session_description">There is no session to send. If you want to create a new session use the \"Record\" tab</string>

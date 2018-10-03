@@ -23,6 +23,7 @@
     </LinearLayout>
 
     <include android:id="@+id/emptyTracks" layout="@layout/empty_tracks" />
+    <include android:id="@+id/emptyNoNetwork" layout="@layout/empty_no_network" />
 
     <LinearLayout
         android:id="@+id/content_layout"

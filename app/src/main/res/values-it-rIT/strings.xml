@@ -19,12 +19,16 @@
     <string name="bike_name">nome bici</string>
     <string name="logout_title">DISCONNESSIONE</string>
     <string name="logout_message">Disconnettersi? Sarà necessario rieffettuare l\'accesso.</string>
+    <string name="could_not_logout">Non è stato possibile effettuare il logout (la connettività di rete è necessaria). Riprovare in un secondo momento.</string>
+    <string name="logout_generic_issue">Non è stato possibile effettuare il logout. Riprovare in un secondo momento.</string>
     <string name="logout_OK">DISCONNETTI</string>
     <string name="cancel">Annulla</string>
     <string name="logout_menu_text">Disconnetti</string>
     <string name="type_your_message">Ulteriori Dettagli (opzionali) :</string>
     <string name="not_authorized">Pronto per iniziare?</string>
     <string name="exchanging_authorization_code">Accesso in corso…</string>
+    <string name="checking_user_data">Controllo dati utente...</string>
+    <string name="could_not_verify_user">È stato impossibile controllare i dati dell\'utente. Riprovare più tardi</string>
     <string name="found_bike_message">Sembra che tu abbia ritrovato la tua bici! Confermi?</string>
     <string name="lost_bike_message">Stai per segnalare questa bici come \"smarrita\".\nAggiungi qualche dettaglio.</string>
     <string name="send">Invia</string>
@@ -52,6 +56,8 @@
     <string name="sessions">Sessioni</string>
     <string name="tracks">Tracce</string>
     <string name="no_data">Nessun dato</string>
+    <string name="no_network">Connettività assente</string>
+    <string name="no_network_description">Questa funzionalità non è disponibile offline. Provare di nuovo più tardi</string>
     <string name="no__track_title">Nessuna traccia disponibile</string>
     <string name="no_track_description">Non hai ancora nessuna traccia. Per creare una nuova traccia, registra una sessione utlizzando la sezione \"Registra\". Alla fine della registrazione della sessione, apri il tab \"Session\" nella sezione \"Statistiche\" ed invia la sessione. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
     <string name="no_session_title">Nessuna sessione</string>

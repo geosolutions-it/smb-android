@@ -100,11 +100,11 @@ public class TracksFragment extends Fragment {
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
-                    showEmpty(response.body().getResults().size() == 0);
+                    showEmpty(response.body().getResults().size() == 0, false);
                 } else {
                     adapter.clear();
                     adapter.addAll(new ArrayList<>());
-                    showEmpty(true);
+                    showEmpty(true, false);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -112,7 +112,7 @@ public class TracksFragment extends Fragment {
             @Override
             public void onFailure(Call<PaginatedResult<TrackItem>> call, Throwable t) {
                 showProgress(false);
-                showEmpty(true);
+                showEmpty(true, true);
             }
         });
     }
@@ -152,12 +152,18 @@ public class TracksFragment extends Fragment {
             mySwipeRefreshLayout.setRefreshing(show);
         }
     }
-    private void showEmpty(boolean show) {
+    private void showEmpty(boolean show, boolean noNetwork) {
         if(getActivity() != null) {
-            View v = getActivity().findViewById(R.id.emptyTracks);
-            if (v != null) {
-                v.setVisibility(show ? View.VISIBLE : View.GONE);
+            View e = getActivity().findViewById(R.id.emptyTracks);
+            View n = getActivity().findViewById(R.id.emptyNoNetwork);
+            if (e != null) {
+                boolean showEmpty = show && !noNetwork || show && n == null;
+                e.setVisibility(showEmpty ? View.VISIBLE : View.GONE);
+            }
+            if(n != null) {
+                n.setVisibility(show && noNetwork ? View.VISIBLE : View.GONE);
             }
         }
     }
 }
+

@@ -19,6 +19,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <include layout="@layout/empty_badges" android:id="@+id/empty_badges"/>
+    <include layout="@layout/empty_no_network" android:id="@+id/emptyNoNetwork"/>
     <LinearLayout
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
