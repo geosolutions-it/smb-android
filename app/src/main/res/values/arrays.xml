@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ages">
+        <item>@string/age_younger_than_nineteen</item>
+        <item>@string/age_between_nineteen_and_thirty</item>
+        <item>@string/age_between_thirty_and_sixty_five</item>
+        <item>@string/age_older_than_sixty_five</item>
+    </string-array>
+    <string-array name="ages_values">
+        <item><![CDATA[< 19]]></item>
+        <item>19 - 30</item>
+        <item>30 - 65</item>
+        <item>65+</item>
+    </string-array>
+    <string-array name="occupation">
+        <item>@string/occupation_insurance_agent</item>
+        <item>@string/occupation_trading_agent</item>
+        <item>@string/occupation_freelancer</item>
+        <item>@string/occupation_architect</item>
+        <item>@string/occupation_craftsman</item>
+        <item>@string/occupation_artist</item>
+        <item>@string/occupation_lawyer</item>
+        <item>@string/occupation_housewife</item>
+        <item>@string/occupation_accountant</item>
+        <item>@string/occupation_dealer</item>
+        <item>@string/occupation_shop_assistant</item>
+        <item>@string/occupation_consultant</item>
+        <item>@string/occupation_public_agency_employee</item>
+        <item>@string/occupation_private_sector_employee</item>
+        <item>@string/occupation_manager</item>
+        <item>@string/occupation_public_agency_manager</item>
+        <item>@string/occupation_pharmacist</item>
+        <item>@string/occupation_surveyor</item>
+        <item>@string/occupation_journalist</item>
+        <item>@string/occupation_entrepreneur</item>
+        <item>@string/occupation_engineer</item>
+        <item>@string/occupation_teacher</item>
+        <item>@string/occupation_doctor</item>
+        <item>@string/occupation_unemployed</item>
+        <item>@string/occupation_notary</item>
+        <item>@string/occupation_worker</item>
+        <item>@string/occupation_retired</item>
+        <item>@string/occupation_politician</item>
+        <item>@string/occupation_university_professor</item>
+        <item>@string/occupation_trainee</item>
+        <item>@string/occupation_professional_athlete</item>
+        <item>@string/occupation_high_school_student</item>
+        <item>@string/occupation_college_student</item>
+    </string-array>
+    <string-array name="occupation_values">
+        <item>insurance_agent</item>
+        <item>trading_agent</item>
+        <item>freelancer</item>
+        <item>architect</item>
+        <item>craftsman</item>
+        <item>artist</item>
+        <item>lawyer</item>
+        <item>housewife</item>
+        <item>accountant</item>
+        <item>dealer</item>
+        <item>shop_assistant</item>
+        <item>consultant</item>
+        <item>public_agency_employee</item>
+        <item>private_sector_employee</item>
+        <item>manager</item>
+        <item>public_agency_manager</item>
+        <item>pharmacist</item>
+        <item>surveyor</item>
+        <item>journalist</item>
+        <item>entrepreneur</item>
+        <item>engineer</item>
+        <item>teacher</item>
+        <item>doctor</item>
+        <item>unemployed</item>
+        <item>notary</item>
+        <item>worker</item>
+        <item>retired</item>
+        <item>politician</item>
+        <item>university_professor</item>
+        <item>trainee</item>
+        <item>professional_athlete</item>
+        <item>high_school_student</item>
+        <item>college_student</item>
+    </string-array>
+    <string-array name="genders">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+</resources>

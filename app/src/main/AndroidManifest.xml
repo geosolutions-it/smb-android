@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -46,6 +45,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan">
+
             <!--
                 NOTE: android:windowSoftInputMode="adjustPan" is required to allow the user to see the text when editing "bike lost" message.
                 Without it, the keyboard appears above the input and you can not see what you're writing.
@@ -73,9 +73,12 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.TrackDetailsActivity" />
         <activity
-            android:name=".ui.activity.TrackDetailsActivity"
-            ></activity>
+            android:name=".ui.activity.CompleteProfile"
+            android:label="@string/title_activity_complete_profile"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

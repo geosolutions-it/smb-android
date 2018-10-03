@@ -65,11 +65,13 @@
     <string name="server_took_too_long_to_respond" >Il server ha impiegato troppo tempo a rispondere</string>
     <string name="user_profile">User Profile</string>
     <string name="profile">Profilo</string>
-    <string name="first_name">First Name</string>
-    <string name="submit">Submit</string>
-    <string name="last_name">Last  Name</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="first_name">Nome</string>
+    <string name="submit">Invia</string>
+    <string name="last_name">Cognome</string>
+    <string name="phone_number">Telefono</string>
+    <string name="phone_number_hint">Inserisci il numero di telefono</string>
     <string name="bio">Bio</string>
+    <string name="bio_hint">Scrivi qualcosa su di te...</string>
     <!-- ================== -->
     <!-- ======Badges====== -->
     <!-- ================== -->
@@ -176,4 +178,53 @@
     <string name="press_back_again">Clicca di nuovo su INDIETRO per uscire</string>
     <string name="quit">Esci</string>
     <string name="confirm_exit">Sei sicuro di voler uscire?</string>
+    <string name="complete_your_profile">Completa il tuo profilo utente per cominciare a utilizzare l\'app</string>
+    <string name="prev">Precedente</string>
+    <string name="next">Prossimo</string>
+    <string name="finish">Finito</string>
+    <string name="male">Maschio</string>
+    <string name="female">Femmina</string>
+    <string name="gender">Sesso</string>
+    <string name="age">Età</string>
+    <string name="age_younger_than_nineteen">&lt; 19</string>
+    <string name="age_between_nineteen_and_thirty">19 - 30</string>
+    <string name="age_between_thirty_and_sixty_five">30 - 65</string>
+    <string name="age_older_than_sixty_five">65+</string>
+    <string name="occupation">Occupazione</string>
+    <string name="occupation_insurance_agent">agente assicurativo</string>
+    <string name="occupation_trading_agent">agente di commercio</string>
+    <string name="occupation_freelancer">altra libera professione</string>
+    <string name="occupation_architect">architetto</string>
+    <string name="occupation_craftsman">artigiano</string>
+    <string name="occupation_artist">artista</string>
+    <string name="occupation_lawyer">avvocato</string>
+    <string name="occupation_housewife">casalinga</string>
+    <string name="occupation_accountant">commercialista</string>
+    <string name="occupation_dealer">commerciante</string>
+    <string name="occupation_shop_assistant">commesso</string>
+    <string name="occupation_consultant">consulente</string>
+    <string name="occupation_public_agency_employee">dipendente pubblica amministrazione</string>
+    <string name="occupation_private_sector_employee">dipendente di azienda privata</string>
+    <string name="occupation_manager">dirigente</string>
+    <string name="occupation_public_agency_manager">dirigente/funzionario p.a./ufficiale</string>
+    <string name="occupation_pharmacist">farmacista</string>
+    <string name="occupation_surveyor">geometra</string>
+    <string name="occupation_journalist">giornalista</string>
+    <string name="occupation_entrepreneur">imprenditore</string>
+    <string name="occupation_engineer">ingegnere</string>
+    <string name="occupation_teacher">insegnante</string>
+    <string name="occupation_doctor">medico</string>
+    <string name="occupation_unemployed">non occupato</string>
+    <string name="occupation_notary">notaio</string>
+    <string name="occupation_worker">operaio</string>
+    <string name="occupation_retired">pensionato</string>
+    <string name="occupation_politician">politico</string>
+    <string name="occupation_university_professor">professore universitario</string>
+    <string name="occupation_trainee">stagista/tirocinante</string>
+    <string name="occupation_professional_athlete">sportivo professionista</string>
+    <string name="occupation_high_school_student">studente scuola superiore</string>
+    <string name="occupation_college_student">studente universitario</string>
+    <string name="accept_terms_of_service"><p>Ho letto la <a href="https://savemybike.geo-solutions.it/it/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> e accesso il trattamento dei dati personali</p></string>
+    <string name="terms_of_service">Termini del Servizio</string>
+    <string name="please_select">Selezionare</string>
 </resources>

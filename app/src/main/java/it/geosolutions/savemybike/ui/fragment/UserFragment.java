@@ -12,10 +12,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.model.Session;
-import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
-import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 
 /**
  * Created by Lorenzo Natali
@@ -77,7 +74,7 @@ public class UserFragment extends Fragment{
     private void setupViewPager(View view) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         // Add Fragments to adapter one by one
-        adapter.addFragment(new ProfileFragment(), getResources().getString(R.string.profile));
+        adapter.addFragment(new BaseProfileFragment(), getResources().getString(R.string.profile));
         adapter.addFragment(new BadgesFragment(), getResources().getString(R.string.badges));
         viewPager.setAdapter(adapter);
         setNavigation(this.initialItem);

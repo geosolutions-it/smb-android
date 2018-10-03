@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
 
@@ -28,6 +29,7 @@ public class StatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_stats, container,false);
+        ButterKnife.bind(this, view);
         setupViewPager(view);
 
         return view;
@@ -52,5 +54,4 @@ public class StatsFragment extends Fragment {
         f.invalidateSessions();
 
     }
-
 }

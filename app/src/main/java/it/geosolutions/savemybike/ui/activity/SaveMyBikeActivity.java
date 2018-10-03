@@ -35,9 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -46,8 +44,7 @@ import net.openid.appauth.AuthorizationServiceConfiguration;
 import net.openid.appauth.AuthorizationServiceDiscovery;
 
 import java.lang.ref.WeakReference;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,7 +55,6 @@ import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.SMBGlideModule;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.AuthClient;
@@ -123,7 +119,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     @BindView(R.id.nav_view) NavigationView navView ;
 
     private AuthorizationService mAuthService;
-    private AuthStateManager mStateManager;
+
     private ExecutorService mExecutor;
 
     @Override
@@ -133,8 +129,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         //inflate
         setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
-
-        mStateManager = AuthStateManager.getInstance(this);
         mExecutor = Executors.newSingleThreadExecutor();
 
 
@@ -804,55 +798,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     }
 
-    private void clearAuthState() {
-        AuthState currentState = mStateManager.getCurrent();
-        AuthState clearedState =
-                new AuthState(currentState.getAuthorizationServiceConfiguration());
 
-        if (currentState.getLastRegistrationResponse() != null) {
-            clearedState.update(currentState.getLastRegistrationResponse());
-        }
-        mStateManager.replace(clearedState);
-    }
-
-    private void backToLogin() {
-        Intent mainIntent = new Intent(this, LoginActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mainIntent);
-        finish();
-    }
-
-    private void logout() {
-        AuthState mAuthState = mStateManager.getCurrent();
-        String accessToken = mAuthState.getAccessToken();
-        RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
-        AuthClient authClient = client.getAuthClient();
-        AuthorizationServiceConfiguration asc = mAuthState.getAuthorizationServiceConfiguration();
-        AuthorizationServiceDiscovery discoveryDoc = asc.discoveryDoc;
-        if (discoveryDoc == null) {
-            throw new IllegalStateException("no available discovery doc");
-        }
-
-        Uri endSessionEndpoint = AuthUtils.getEndSessionEndpoint(discoveryDoc);
-        authClient
-            .logout(
-                    endSessionEndpoint.toString(),
-                    it.geosolutions.savemybike.Configuration.getInstance(getBaseContext()).getRedirectUri().toString()
-                    ,accessToken)
-            .enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    clearAuthState();
-                    backToLogin();
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "Error doing logout", t);
-                    backToLogin();
-                }
-        });
-    }
 
     @Override
     protected void onDestroy() {

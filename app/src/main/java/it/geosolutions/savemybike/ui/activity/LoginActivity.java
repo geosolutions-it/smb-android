@@ -2,6 +2,7 @@ package it.geosolutions.savemybike.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,7 +63,12 @@ import butterknife.OnClick;
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.server.RetrofitClient;
+import it.geosolutions.savemybike.model.user.User;
 import okio.Okio;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Based on The AppAuth for Android Authors. Licensed under the Apache License, Version 2.0
@@ -207,7 +213,7 @@ public final class LoginActivity extends AppCompatActivity {
             } else if (ex != null) {
                 displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
             } else {
-                displayNotAuthorized("No authorization state retained - reauthorization required");
+                displayNotAuthorized("No authorization state retained - re-authorization required");
             }
         }
     }
@@ -251,12 +257,51 @@ public final class LoginActivity extends AppCompatActivity {
                 String template = getResources().getString(R.string.access_token_expires_at);
                 accessTokenInfoView.setText(String.format(template,
                         DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss ZZ").print(expiresAt)));
+                User localUser = it.geosolutions.savemybike.model.Configuration.getUserProfile(this);
 
+                if(localUser == null // first login
+                    || localUser.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
+                    || localUser.getAcceptedTermsOfService() == false // terms of service unchecked.
+                    //  TODO: find out check if different credentials are used
+                        ) {
+                    displayLoading(/*getResources().getString(R.string.checking_user_data)*/ "Checking user data");
+                    //TODO: retrieve user info and prompt profile completion.
+                    // TODO: the following block have to be moved after async check to display CompleteProfile wizard
+                    final Context context = this;
+                    RetrofitClient.getInstance(this).getPortalServices().getUser().enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            User user = response.body();
+                            if(user == null // first login
+                                    || user.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
+                                    || user.getAcceptedTermsOfService() == false )
+                                {
+                                    Intent intent = new Intent(context, CompleteProfile.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Intent intent = new Intent(context, SaveMyBikeActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
 
-                Intent intent = new Intent(this, SaveMyBikeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            displayNotAuthorized(getResources().getString(R.string.could_not_verify_user));
+                        }
+                    });
+
+                } else {
+                    Intent intent = new Intent(this, SaveMyBikeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+
                 return;
             }
         }

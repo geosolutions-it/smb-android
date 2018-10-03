@@ -14,4 +14,7 @@
     <color name="delete">#FF0000</color>
     <color name="badge_background">#BDB76B</color>
     <color name="badge_not_acquired">#8e8e8e</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
+    <color name="card_text_color">@color/colorAccent</color>
+    <color name="card_title">#FFF</color>
 </resources>

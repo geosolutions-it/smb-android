@@ -92,7 +92,7 @@
     <string name="no_track_description">You don\'t have any track recorded. To create track, record a session using the \"Record\" tab first. At the end of the recording session, open the \"Sessions\" tab in the \"Stats\" section and upload your session. When the data has been processed, you will see the new track here</string>
     <string name="no_session_title">No Session</string>
     <string name="no_bikes_title">No bikes</string>
-    <string name="server_took_too_long_to_respond" >Server took to much to respond</string>
+    <string name="server_took_too_long_to_respond">Server took to much to respond</string>
     <string name="user_profile">User Profile</string>
     <string name="badges">Badges</string>
     <string name="profile">Profile</string>
@@ -101,7 +101,9 @@
     <string name="last_name">Last  Name</string>
     <string name="email">email</string>
     <string name="phone_number">Phone Number</string>
+    <string name="phone_number_hint">Type your telephone number</string>
     <string name="bio">Bio</string>
+    <string name="bio_hint">Write something about you...</string>
     <!-- ================== -->
     <!-- ======Badges====== -->
     <!-- ================== -->
@@ -208,5 +210,56 @@
     <string name="press_back_again">Please click BACK again to exit</string>
     <string name="quit">Quit</string>
     <string name="confirm_exit">Are you sure you want to quit?</string>
+    <string name="complete_your_profile">Complete your profile to start using the app...</string>
+    <string name="prev">Previous</string>
+    <string name="next">Next</string>
+    <string name="title_activity_complete_profile">CompleteProfile</string>
+    <string name="action_settings">Settings</string>
+    <string name="finish">Finish</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender">Gender</string>
+    <string name="age">Age</string>
+    <string name="age_younger_than_nineteen">&lt; 19</string>
+    <string name="age_between_nineteen_and_thirty">19 - 30</string>
+    <string name="age_between_thirty_and_sixty_five">30 - 65</string>
+    <string name="age_older_than_sixty_five">65+</string>
+    <string name="occupation">Occupation</string>
+    <string name="occupation_insurance_agent">insurance agent</string>
+    <string name="occupation_trading_agent">trading agent</string>
+    <string name="occupation_freelancer">freelancer</string>
+    <string name="occupation_architect">architect</string>
+    <string name="occupation_craftsman">craftsman</string>
+    <string name="occupation_artist">artist</string>
+    <string name="occupation_lawyer">lawyer</string>
+    <string name="occupation_housewife">housewife</string>
+    <string name="occupation_accountant">accountant</string>
+    <string name="occupation_dealer">dealer</string>
+    <string name="occupation_shop_assistant">shop_assistant</string>
+    <string name="occupation_consultant">consultant</string>
+    <string name="occupation_public_agency_employee">public agency employee</string>
+    <string name="occupation_private_sector_employee">private sector employee</string>
+    <string name="occupation_manager">manager</string>
+    <string name="occupation_public_agency_manager">public agency manager</string>
+    <string name="occupation_pharmacist">pharmacist</string>
+    <string name="occupation_surveyor">surveyor</string>
+    <string name="occupation_journalist">journalist</string>
+    <string name="occupation_entrepreneur">entrepreneur</string>
+    <string name="occupation_engineer">engineer</string>
+    <string name="occupation_teacher">teacher</string>
+    <string name="occupation_doctor">doctor</string>
+    <string name="occupation_unemployed">unemployed</string>
+    <string name="occupation_notary">notary</string>
+    <string name="occupation_worker">worker</string>
+    <string name="occupation_retired">retired</string>
+    <string name="occupation_politician">politician</string>
+    <string name="occupation_university_professor">university professor</string>
+    <string name="occupation_trainee">trainee</string>
+    <string name="occupation_professional_athlete">professional athlete</string>
+    <string name="occupation_high_school_student">high school student</string>
+    <string name="occupation_college_student">college student</string>
+    <string name="accept_terms_of_service"><p>I\'ve read the <a href="https://savemybike.geo-solutions.it/en/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> and I accept the processing of personal data</p></string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="please_select">Please select</string>
 
 </resources>

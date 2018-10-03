@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.net.URL;
 
 /**
+ * @author Lorenzo Natali, GeoSolutions S.a.s.
  * Model of User for back-end API
  */
 public class User {
@@ -18,6 +19,8 @@ public class User {
     private  String profile_type;
     private Profile profile;
     private String avatar;
+    @SerializedName("accepted_terms_of_service")
+    private Boolean acceptedTermsOfService;
 
 
     public String getUuid() {
@@ -82,5 +85,13 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Boolean getAcceptedTermsOfService() {
+        return acceptedTermsOfService;
+    }
+
+    public void setAcceptedTermsOfService(Boolean acceptedTermsOfService) {
+        this.acceptedTermsOfService = acceptedTermsOfService;
     }
 }
