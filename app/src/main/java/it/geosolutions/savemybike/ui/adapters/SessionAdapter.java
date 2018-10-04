@@ -1,12 +1,16 @@
 package it.geosolutions.savemybike.ui.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +21,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Session;
@@ -109,6 +114,27 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
                 SwipeRevealLayout l = (SwipeRevealLayout)convertView.findViewById(R.id.swipe_layout);
 
                 l.close(false);
+            });
+            View frontView = convertView.findViewById(R.id.front_layout);
+            frontView.setOnClickListener((view) -> {
+                String[] options = new String[]{
+                        getContext().getResources().getString(R.string.delete_session),
+                        getContext().getResources().getString(R.string.cancel)
+                };
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.session)
+                        .setIcon(R.drawable.ic_play)
+                        .setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which == 0) {
+                                    onDelete(item);
+                                    SwipeRevealLayout l = (SwipeRevealLayout) convertView.findViewById(R.id.swipe_layout);
+                                    l.close(false);
+                                }
+                            }
+                        }).show();
+
             });
         }
     }

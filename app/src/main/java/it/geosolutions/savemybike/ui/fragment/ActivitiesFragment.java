@@ -43,6 +43,16 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
                 viewPager.setCurrentItem(1);
                 alignMenu(1);
                 return true;
+            case R.id.sessions_list:
+                viewPager.setCurrentItem(1);
+                alignMenu(1);
+                switchToSubFragment(itemId);
+                return true;
+            case R.id.tracks_list:
+                viewPager.setCurrentItem(1);
+                alignMenu(1);
+                switchToSubFragment(itemId);
+                return true;
 
         }
         return false;
@@ -137,6 +147,14 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
         if(adapter.getItem(1) instanceof StatsFragment) {
             StatsFragment frag = (StatsFragment) adapter.getItem(1);
             frag.refreshSessions();
+        }
+
+    }
+    public void switchToSubFragment(int id) {
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        if(adapter.getItem(1) instanceof StatsFragment) {
+            StatsFragment frag = (StatsFragment) adapter.getItem(1);
+            frag.switchTo(id);
         }
 
     }

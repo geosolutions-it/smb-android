@@ -84,7 +84,7 @@ import retrofit2.Response;
 
 /**
  * Created by Robert Oehler on 25.10.17.
- * Edited by Lorenzo Pini on 2018.
+ * Edited by Lorenzo Pini, Lorenzo Natali on 2018.
  *
  * Main activity of the SaveMyBike app
  */
@@ -258,6 +258,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 return true;
         });
     }
+
+    /**
+     * Ask confirm before exit the application
+     */
     private void confirmExit() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.confirm_exit)
@@ -266,6 +270,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 .show();
     }
 
+    /**
+     * Updates user's information stored locally asking to the API
+     * At the end of the procedure, updates the UI
+     */
     void updateUser() {
         RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
         SMBRemoteServices portalServices = client.getPortalServices();
@@ -415,6 +423,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         // update view on stop - helps to reload session list with the new track
         if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
             ((RecordingEventListener) currentFragment).stopRecording();
+            changeFragment(R.id.sessions_list);
         }
     }
 
@@ -503,6 +512,17 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
                 break;
             }
+            case R.id.sessions_list:{
+                if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
+                    ((ActivitiesFragment) currentFragment).setNavigation(R.id.sessions_list);
+                    return;
+                }
+                ActivitiesFragment f = new ActivitiesFragment();
+                f.setInitialItem(R.id.sessions_list);
+                fragment = f;
+
+                break;
+            }
             case R.id.navigation_user_profile: {
                 if(currentFragment != null && currentFragment instanceof UserFragment) {
                     ((UserFragment) currentFragment).setNavigation(R.id.navigation_user_profile);
@@ -519,6 +539,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = f;
                 break;
             }
+
             case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {
                     return;

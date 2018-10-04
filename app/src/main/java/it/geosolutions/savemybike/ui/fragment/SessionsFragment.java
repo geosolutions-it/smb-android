@@ -3,11 +3,14 @@ package it.geosolutions.savemybike.ui.fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
+import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
 import it.geosolutions.savemybike.ui.tasks.DeleteSessionTask;
 import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
@@ -58,22 +62,7 @@ public class SessionsFragment extends Fragment {
         adapter = new SessionAdapter(getActivity(), R.layout.swipable_session_item, new ArrayList<>()) {
             @Override
             public void onDelete(Session s) {
-                new DeleteSessionTask(getContext(), new DeleteSessionTask.DeleteSessionCallback() {
-                    @Override
-                    public void showProgressView() {
-                        // TODO show progress delete
-                    }
-
-                    @Override
-                    public void hideProgressView() {
-                        // TODO hide progress delete
-                    }
-
-                    @Override
-                    public void done(Boolean res) {
-                        invalidateSessions();
-                    }
-                }, s).execute();
+                deleteSession(s);
             }
         };
         listView.setAdapter(adapter);
@@ -85,17 +74,7 @@ public class SessionsFragment extends Fragment {
         });
         mySwipeRefreshLayout.setOnRefreshListener(() -> invalidateSessions());
 
-        /* not clickable
-        listView.setOnItemClickListener((parent, itemView, position, id) -> {
 
-
-            Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
-
-            intent.putExtra(TrackDetailsActivity.TRACK_ID, (Long) itemView.getTag());
-
-            getActivity().startActivity(intent);
-        });
-        */
         // TODO: show also sessions, grayed out
         invalidateSessions();
 
@@ -198,6 +177,24 @@ public class SessionsFragment extends Fragment {
 
         }
 
+    }
+    public void deleteSession(Session s) {
+        new DeleteSessionTask(getContext(), new DeleteSessionTask.DeleteSessionCallback() {
+            @Override
+            public void showProgressView() {
+                // TODO show progress delete
+            }
+
+            @Override
+            public void hideProgressView() {
+                // TODO hide progress delete
+            }
+
+            @Override
+            public void done(Boolean res) {
+                invalidateSessions();
+            }
+        }, s).execute();
     }
     private void showEmpty(boolean show) {
         if(getActivity() != null) {

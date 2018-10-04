@@ -52,6 +52,15 @@ public class StatsFragment extends Fragment {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         SessionsFragment f = (SessionsFragment) adapter.getItem(1);
         f.invalidateSessions();
-
+    }
+    public void switchTo(int id) {
+        switch (id) {
+            case R.id.tracks_list:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.sessions_list:
+                viewPager.setCurrentItem(1);
+                break;
+        }
     }
 }
