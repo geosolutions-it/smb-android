@@ -37,7 +37,7 @@ public class ConfigTest {
         assertNotNull(configuration.vehicles);
 
         assertEquals(configuration.bikes.size(), 2);
-        assertEquals(configuration.vehicles.size(), 4);
+        assertEquals(configuration.vehicles.size(), 6);
 
         assertEquals(configuration.dataReadInterval, 1000);
         assertEquals(configuration.persistanceInterval, 15000);
