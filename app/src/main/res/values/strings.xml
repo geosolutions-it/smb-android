@@ -263,5 +263,15 @@
     <string name="accept_terms_of_service"><p>I\'ve read the <a href="https://savemybike.geo-solutions.it/en/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> and I accept the processing of personal data</p></string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="please_select">Please select</string>
+    <string name="my_prizes">My Prizes</string>
+    <string name="up_for_grabs">Up For Grabs</string>
+    <string name="prizes">Prizes</string>
+    <string name="validity">Valid from %s to %s</string>
+    <string name="congratulations_you_won">Congratulations!</string>
+    <string name="up_to_grab">Up to grab now</string>
+    <string name="no_competition_currently_active_title">No competition active</string>
+    <string name="no_competition_currently_active_description">There is not any competition active at the moment. Please check this page in the next days</string>
+    <string name="no_prize_title">You didn\'t win anything yet.</string>
+    <string name="no_prize_description">Compete in one of the available competitions to win a prize.</string>
 
 </resources>

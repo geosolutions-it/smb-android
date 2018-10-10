@@ -1,12 +1,12 @@
 package it.geosolutions.savemybike.data.server;
 
-import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Badge;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.model.user.User;
@@ -20,7 +20,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryName;
 
 /**
  * Created by Lorenzo Pini on 23/03/2018.
@@ -62,4 +61,9 @@ public interface SMBRemoteServices {
     @PATCH("api/my-user")
     Call<ResponseBody> updateUser(@Body  User user);
 
+    @GET("api/my-competitions-current")
+    Call<PaginatedResult<Competition>> getMyCompetitions();
+
+    @GET("api/my-competitions-won/")
+    Call<PaginatedResult<Competition>> getMyPrizes();
 }

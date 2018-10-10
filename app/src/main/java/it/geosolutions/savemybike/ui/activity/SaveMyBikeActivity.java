@@ -73,6 +73,7 @@ import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.UserFragment;
+import it.geosolutions.savemybike.ui.fragment.prizes.PrizesFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
 import it.geosolutions.savemybike.ui.utils.AuthUtils;
@@ -536,6 +537,15 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 }
                 UserFragment f = new UserFragment();
                 f.setInitialItem(R.id.navigation_badges);
+                fragment = f;
+                break;
+            }
+            case R.id.navigation_prizes:{
+                if(currentFragment != null && currentFragment instanceof PrizesFragment) {
+                    ((PrizesFragment) currentFragment).setNavigation(R.id.navigation_my_prizes);
+                }
+                PrizesFragment f = new PrizesFragment();
+                // f.PrizesFragment(R.id.navigation_badges);
                 fragment = f;
                 break;
             }
