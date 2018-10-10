@@ -49,6 +49,7 @@ public class SessionLogic implements IDataProvider {
     private boolean isSimulating;
     private long lastSessionPersistTime;
     private String databaseName;
+    private boolean scheduledPersist;
 
     public SessionLogic(Context context, Session session, Vehicle vehicle, Configuration configuration) {
 
@@ -222,7 +223,12 @@ public class SessionLogic implements IDataProvider {
                 if(success) {
                     lastSessionPersistTime = System.currentTimeMillis();
                 }
-                getHandler().postDelayed(persistanceTask, persistanceInterval);
+                if(!stopped) {
+                    scheduledPersist = true;
+                    getHandler().postDelayed(persistanceTask, persistanceInterval);
+                } else {
+                    scheduledPersist =false;
+                }
             }
         }).execute(session);
     }
@@ -304,7 +310,7 @@ public class SessionLogic implements IDataProvider {
         void done(boolean success);
     }
 
-    private Handler getHandler() {
+    public Handler getHandler() {
         if(handler == null){
             handler = new Handler();
         }
@@ -342,5 +348,9 @@ public class SessionLogic implements IDataProvider {
     @Override
     public String getName() {
         return "SessionLogic";
+    }
+
+    public boolean isScheduledPersist() {
+        return scheduledPersist;
     }
 }

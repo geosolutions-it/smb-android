@@ -118,6 +118,7 @@ public class SessionLogicTest {
         }
         //wait another moment for db sync
         Thread.sleep(50);
+        assertTrue(!logic.isScheduledPersist());
 
         //check that db reflects that result
 
