@@ -18,9 +18,9 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -34,30 +34,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.request.RequestOptions;
 
 import net.openid.appauth.AppAuthConfiguration;
-import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
-import net.openid.appauth.AuthorizationServiceConfiguration;
-import net.openid.appauth.AuthorizationServiceDiscovery;
 
 import java.lang.ref.WeakReference;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
-import it.geosolutions.savemybike.data.server.AuthClient;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.data.service.SaveMyBikeService;
@@ -72,12 +65,11 @@ import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
+import it.geosolutions.savemybike.ui.fragment.HomeFragment;
 import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.fragment.prizes.PrizesFragment;
-import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
-import it.geosolutions.savemybike.ui.utils.AuthUtils;
-import okhttp3.ResponseBody;
+import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -165,7 +157,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         this.uploadWithWifiOnly = preferences.getBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, Constants.DEFAULT_WIFI_ONLY);
 
 
-        changeFragment(R.id.navigation_record);
+        changeFragment(R.id.navigation_home);
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
         loadConfiguration();
@@ -485,12 +477,20 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
      *
      * @param position menu index
      */
+    @WorkerThread
     public void changeFragment(int position) {
 
         Fragment currentFragment = getCurrentFragment();
 
         Fragment fragment = null;
         switch (position) {
+            case R.id.navigation_home: {
+                if (currentFragment != null && currentFragment instanceof HomeFragment) {
+                    return;
+                }
+                fragment = new HomeFragment();
+                break;
+            }
             case R.id.navigation_record: {
                 getSupportActionBar().show();
                 if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
@@ -858,17 +858,28 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
      * hold state for double back pressed button
      */
     boolean doubleBackToExitPressedOnce = false;
+
+    /**
+     * Manages back press button of fragment, then falls to default behavior
+     */
     @Override public void onBackPressed() {
         Fragment fragment = getCurrentFragment();
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
+            // double back management (only for the home page
+            if(fragment instanceof HomeFragment) {
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+                // manage double back exit
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+            // default back effect is a back to the home page
+            } else {
+                changeFragment(R.id.navigation_home);
             }
-            // manage double back exit
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+
 
         }
     }

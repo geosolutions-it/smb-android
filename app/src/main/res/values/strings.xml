@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Good_Go</string>
+    <string name="title_home">Home</string>
     <string name="title_record">Record</string>
     <string name="title_stats">Stats</string>
     <string name="title_bikes">Bikes</string>
@@ -7,7 +8,6 @@
     <string name="state_started">Recording session</string>
 
     <string name="permission_location_required">The permission to acquire your location is required.</string>
-
     <!-- Notification actions -->
     <string name="mode">Change Mode</string>
     <string name="stop">Stop</string>
@@ -273,5 +273,11 @@
     <string name="no_competition_currently_active_description">There is not any competition active at the moment. Please check this page in the next days</string>
     <string name="no_prize_title">You didn\'t win anything yet.</string>
     <string name="no_prize_description">Compete in one of the available competitions to win a prize.</string>
+    <string name="prizes_home_description">Compete with the other users</string>
+    <string name="tracks_home_description">Check your tracks</string>
+    <string name="badges_home_description">See your badges</string>
+    <string name="bikes_home_description">Manage my bikes</string>
+    <string name="record_home_description">Record a new track</string>
+    <string name="home_header">Welcome</string>
 
 </resources>

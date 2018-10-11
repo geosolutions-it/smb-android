@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_home">Home</string>
     <string name="title_record">Registra</string>
     <string name="title_stats">Statistiche</string>
     <string name="title_bikes">Bici</string>
@@ -239,4 +240,10 @@
     <string name="no_competition_currently_active_description">Non c\'è nessuna competizione attiva o premio in palio al momento. Ricontrolla questa pagina un\'altro giorno</string>
     <string name="no_prize_title">Non hai vinto ancora nessun premio</string>
     <string name="no_prize_description">Misurati nelle varie competizioni per vincere i premi in palio.</string>
+    <string name="prizes_home_description">Gareggia con gli altri utenti</string>
+    <string name="tracks_home_description">Controlla i tuoi percorsi</string>
+    <string name="badges_home_description">Controlla i badges ottenuti</string>
+    <string name="bikes_home_description">Gestisci le mie biciclette</string>
+    <string name="record_home_description">Registra un nuovo tragitto</string>
+    <string name="home_header">Benvenuto</string>
 </resources>
