@@ -279,5 +279,7 @@
     <string name="bikes_home_description">Manage my bikes</string>
     <string name="record_home_description">Record a new track</string>
     <string name="home_header">Welcome</string>
+    <string name="co2_saved">Co2 Saved</string>
+    <string name="pm10_saved">Pm10 Saved</string>
 
 </resources>

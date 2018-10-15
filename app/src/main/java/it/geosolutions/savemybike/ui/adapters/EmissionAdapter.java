@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.utils.UOMUtils;
 
 public class EmissionAdapter extends ArrayAdapter<EmissionAdapter.EmissionEntry> {
     public static class EmissionEntry {
@@ -46,11 +47,11 @@ public class EmissionAdapter extends ArrayAdapter<EmissionAdapter.EmissionEntry>
         name.setText(e.name);
         if(e.value != null) {
             DecimalFormat df2 = new DecimalFormat();
-            value.setText(df2.format(e.value) + e.uom);
+            value.setText(UOMUtils.format(e.value, "###") + e.uom);
         }
         if(e.saved != null) {
-            DecimalFormat df2 = new DecimalFormat();
-            saved.setText(df2.format(e.saved) + e.uom);
+
+            saved.setText(UOMUtils.format(e.saved, "###") + e.uom);
         }
 
         return convertView;

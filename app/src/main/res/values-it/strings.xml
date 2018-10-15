@@ -246,4 +246,6 @@
     <string name="bikes_home_description">Gestisci le mie biciclette</string>
     <string name="record_home_description">Registra un nuovo tragitto</string>
     <string name="home_header">Benvenuto</string>
+    <string name="co2_saved">Co2 Risparmiata</string>
+    <string name="pm10_saved">Pm10 Risparmiati</string>
 </resources>
