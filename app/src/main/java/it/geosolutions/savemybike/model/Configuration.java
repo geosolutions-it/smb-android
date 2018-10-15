@@ -18,6 +18,7 @@ import java.util.List;
 
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.user.User;
+import it.geosolutions.savemybike.model.user.UserInfo;
 
 /**
  * Created by Robert Oehler on 26.10.17.
@@ -147,7 +148,7 @@ public class Configuration implements Serializable {
      * @param context a context
      * @param user the user to store
      */
-    public static void saveUserProfile(final Context context, @NonNull final User user){
+    public static void saveUserProfile(final Context context, @NonNull final UserInfo user){
 
         String json = new Gson().toJson(user);
 
@@ -161,14 +162,14 @@ public class Configuration implements Serializable {
      * @param context a context
      * @return a list of Bike
      */
-    public static User getUserProfile(final Context context){
+    public static UserInfo getUserProfile(final Context context){
 
         final String userString = PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.USER_PROFILE, null);
 
         if(userString != null){
 
-            Type userType = new TypeToken<User>(){}.getType();
-            User user = new Gson().fromJson(userString, userType);
+            Type userType = new TypeToken<UserInfo>(){}.getType();
+            UserInfo user = new Gson().fromJson(userString, userType);
             return user;
         }
     return null;

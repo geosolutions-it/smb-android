@@ -11,6 +11,7 @@ import java.net.URL;
 public class User {
     private String uuid;
     private String username;
+    private String email;
     @SerializedName("first_name")
     private String firstName;
     @SerializedName("last_name")
@@ -37,6 +38,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {

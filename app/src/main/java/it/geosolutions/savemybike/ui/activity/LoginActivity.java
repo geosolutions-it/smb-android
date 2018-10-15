@@ -65,6 +65,7 @@ import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.model.user.User;
+import it.geosolutions.savemybike.model.user.UserInfo;
 import okio.Okio;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -268,9 +269,9 @@ public final class LoginActivity extends AppCompatActivity {
                     //TODO: retrieve user info and prompt profile completion.
                     // TODO: the following block have to be moved after async check to display CompleteProfile wizard
                     final Context context = this;
-                    RetrofitClient.getInstance(this).getPortalServices().getUser().enqueue(new Callback<User>() {
+                    RetrofitClient.getInstance(this).getPortalServices().getUser().enqueue(new Callback<UserInfo>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
+                        public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                             User user = response.body();
                             if(user == null // first login
                                     || user.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
@@ -290,7 +291,7 @@ public final class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(Call<UserInfo> call, Throwable t) {
                             displayNotAuthorized(getResources().getString(R.string.could_not_verify_user));
                         }
                     });

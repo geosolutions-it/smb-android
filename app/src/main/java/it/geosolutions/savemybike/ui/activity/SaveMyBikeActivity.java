@@ -60,6 +60,7 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.model.user.User;
+import it.geosolutions.savemybike.model.user.UserInfo;
 import it.geosolutions.savemybike.ui.callback.IOnBackPressed;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
@@ -271,17 +272,17 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
         SMBRemoteServices portalServices = client.getPortalServices();
 
-        portalServices.getUser().enqueue(new Callback<User>() {
+        portalServices.getUser().enqueue(new Callback<UserInfo>() {
 
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                UserInfo user = response.body();
                 Configuration.saveUserProfile(getBaseContext(), user );
                 setupUserView(user);
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.e(TAG, "Can not retrieve user profile", t);
             }
         });

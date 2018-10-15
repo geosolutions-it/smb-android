@@ -248,4 +248,5 @@
     <string name="home_header">Benvenuto</string>
     <string name="co2_saved">Co2 Risparmiata</string>
     <string name="pm10_saved">Pm10 Risparmiati</string>
+    <string name="user_info">Informazioni utente</string>
 </resources>
