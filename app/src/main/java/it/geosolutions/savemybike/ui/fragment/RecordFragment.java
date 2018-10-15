@@ -159,9 +159,9 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
 
         if(session != null){
 
-            if(statsHidden){
+            if(statsRow != null){
+                // this refrence could be null due to close the application
                 statsRow.setVisibility(View.VISIBLE);
-                statsHidden = false;
             }
 
             final double dist = session.getDistance();
@@ -177,13 +177,7 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
             timeTV.setText(Util.longToTimeString(time));
 
         }
-        /*
-        else{
-            if(!statsHidden){
-                statsRow.setVisibility(View.INVISIBLE);
-                statsHidden = true;
-            }
-        }*/
+
     }
 
     /**

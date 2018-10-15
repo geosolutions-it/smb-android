@@ -63,6 +63,7 @@ public class SaveMyBikeService extends Service {
         if(BuildConfig.DEBUG) {
             Log.d(TAG, "onCreate");
         }
+
     }
 
     @Override
@@ -132,8 +133,10 @@ public class SaveMyBikeService extends Service {
         }
 
         //6.finally, show a notification
-        getNotificationManager().startNotification(getResources().getString(R.string.state_started), vehicle);
 
+
+
+        startForeground(1,  getNotificationManager().startNotification(getResources().getString(R.string.state_started), vehicle));
         return START_STICKY;
     }
 
