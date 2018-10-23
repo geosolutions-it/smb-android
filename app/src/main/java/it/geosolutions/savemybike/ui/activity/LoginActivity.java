@@ -273,15 +273,17 @@ public final class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                             User user = response.body();
-                            if(user == null // first login
+                            if(response.code() == 200 && (user == null // first login
                                     || user.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
-                                    || user.getAcceptedTermsOfService() == false )
+                                    || user.getAcceptedTermsOfService() == false) )
                                 {
                                     Intent intent = new Intent(context, CompleteProfile.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intent);
                                     finish();
-                                } else {
+                                } else if (response.code() >= 500 || response.code() == 404 ){
+                                displayError(getResources().getString(R.string.could_not_verify_user), true);
+                            }else {
                                     Intent intent = new Intent(context, SaveMyBikeActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intent);
@@ -292,7 +294,7 @@ public final class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserInfo> call, Throwable t) {
-                            displayNotAuthorized(getResources().getString(R.string.could_not_verify_user));
+                            displayError(getResources().getString(R.string.could_not_verify_user), true);
                         }
                     });
 
