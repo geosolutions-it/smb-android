@@ -63,6 +63,7 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
 
     private GoogleMap mMap;
     private Track track;
+    private boolean layoutDone = false;
     public static final String TRACK_ID = "TRACK_ID";
     View bottomSheet;
     BottomSheetBehavior bottomSheetBehaviour;
@@ -75,6 +76,10 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.track_details);
         View ev = findViewById(R.id.emptyView);
+        ev.getViewTreeObserver().addOnGlobalFocusChangeListener( (view, a2) -> {
+            layoutDone = true;
+            displayData();
+        });
         if(ev != null) {
             ev.setVisibility(View.GONE);
         }
@@ -193,7 +198,7 @@ public class TrackDetailsActivity extends SMBBaseActivity implements OnMapReadyC
             View view = findViewById(R.id.session_row);
             inflateTrackDataToRecordView(track, view);
             // update map
-            if(mMap != null) {
+            if(mMap != null && layoutDone) {
                 mMap.setPadding(0, 150, 0, 50);
                 GeoJsonLayer layer = new GeoJsonLayer(mMap, createGeoJsonObject(track.getSegments()) );
                 layer.addLayerToMap();
