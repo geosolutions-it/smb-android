@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -60,13 +60,12 @@ public class TracksFragment extends Fragment {
 
         mySwipeRefreshLayout.setOnRefreshListener(() -> getTracks());
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
+            TrackItem t = (TrackItem) listView.getAdapter().getItem(position);
+            if(t.isValid()) {
+                Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
 
-
-            Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
-
-            intent.putExtra(TrackDetailsActivity.TRACK_ID, (Long) itemView.getTag());
-
-            /* TODO: animation transition. Something like this...
+                intent.putExtra(TrackDetailsActivity.TRACK_ID, t.getId());
+                /* TODO: animation transition. Something like this...
             // Check if we're running on Android 5.0 or higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // create the transition animation - the images in the layouts
@@ -77,8 +76,20 @@ public class TracksFragment extends Fragment {
             } else {
                 getActivity().startActivity(intent);
             }*/
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            } else {
+                if(t.getValidationError() != null) {
+                    Toast.makeText(getContext(), R.string.track_invalid_message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), R.string.track_invalid_message, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+
+
+
         });
         // TODO: show also sessions, grayed out
         getTracks();

@@ -45,9 +45,6 @@ public interface SMBRemoteServices {
     );
 
     @GET("api/my-tracks/?format=json")
-    Call <PaginatedResult<Track>> getTracks(@Query("page") int page);
-
-    @GET("api/my-tracks/?format=json")
     Call<PaginatedResult<TrackItem>> getTracks();
 
     @GET("api/my-tracks/{id}?format=json")

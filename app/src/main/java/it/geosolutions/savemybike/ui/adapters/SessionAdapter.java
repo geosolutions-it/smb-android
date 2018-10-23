@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -81,9 +82,12 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
             durationTV.setText(DateTimeFormat.forPattern("HH:mm:ss").print(date.plus(duration)));
             view.setTag(session.getId());
             if(session.isUploaded()) {
-                view.findViewById(R.id.uploaded).setVisibility(View.VISIBLE);
+                ImageView iv = view.findViewById(R.id.status);
+                iv.setVisibility(View.VISIBLE);
+                iv.setImageResource(R.drawable.ic_circle_checked);
+                iv.setColorFilter(getContext().getResources().getColor(R.color.green));
             } else {
-                view.findViewById(R.id.uploaded).setVisibility(View.GONE);
+                view.findViewById(R.id.status).setVisibility(View.GONE);
             }
         }
 

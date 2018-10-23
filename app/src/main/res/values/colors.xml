@@ -20,7 +20,9 @@
     <color name="lightgray">#ededed</color>
     <color name="deeppurple">#7c4dff</color>
     <color name="yellow">#ffb300</color>
-    <color name="green">#00bfa5</color>
+    <color name="caribbean_green">#00bfa5</color>
+    <color name="green">#087b00</color>
     <color name="darkblue">#152b38</color>
     <color name="pink">#fe104d</color>
+    <color name="red">#ff0000</color>
 </resources>

@@ -92,6 +92,8 @@
     <string name="no_session_description">There is no recording to send. If you want to create a new recording use the \"Record\" tab</string>
     <string name="no__track_title">No Track Available</string>
     <string name="no_track_description">You don\'t have any track recorded. To create track, record using the \"Record\" tab first. At the end of the recording session, open the \"To Send\" tab in the \"Stats\" section and upload your data. You will see your data here after data processing end.</string>
+    <string name="track_invalid_message_short">Invalid track.</string>
+    <string name="track_invalid_message">This track has been identified as invalid. It will not be used in indexes count and assigning prizes</string>
     <string name="no_session_title">No Recording</string>
     <string name="no_bikes_title">No bikes</string>
     <string name="server_took_too_long_to_respond">Server took to much to respond</string>

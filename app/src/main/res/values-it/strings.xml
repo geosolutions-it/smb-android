@@ -63,6 +63,8 @@
     <string name="no_network_description">Questa funzionalità non è disponibile offline. Provare di nuovo più tardi</string>
     <string name="no__track_title">Nessuna traccia disponibile</string>
     <string name="no_track_description">Non hai ancora nessuna traccia. Per creare una nuova traccia, registra il tuo percorso utlizzando la sezione \"Registra\". Alla fine della registrazione, apri il tab \"Da inviare\" nella sezione \"Statistiche\" ed invia i dati. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
+    <string name="track_invalid_message_short">Traccia non valida.</string>
+    <string name="track_invalid_message">La traccia selezionata non è risultata valida. Non verrà quindi conteggiata nei calcoli e nell\'assegnazione dei premi.</string>
     <string name="no_session_title">Nessuna registrazione da inviare</string>
     <string name="no_bikes_title">Nessuna Bici</string>
     <string name="server_took_too_long_to_respond" >Il server ha impiegato troppo tempo a rispondere</string>
