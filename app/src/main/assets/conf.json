@@ -5,14 +5,14 @@
     {
       "id" : 0,
       "selected" : "false",
-      "gpsDist" : 0,
-      "gpsTime" : 1000
+      "gpsDist" : 5,
+      "gpsTime" : 2000
     },
     {
       "id" : 1,
       "selected" : "true",
       "gpsDist" : 10,
-      "gpsTime" : 1000
+      "gpsTime" : 5000
     },
     {
       "id" : 2,
@@ -24,18 +24,18 @@
       "id" : 3,
       "selected" : "false",
       "gpsDist" : 50,
-      "gpsTime" : 10000
+      "gpsTime" : 5000
     },
     {
       "id" : 4,
       "selected" : "false",
       "gpsDist" : 50,
-      "gpsTime" : 10000
+      "gpsTime" : 5000
     },
     {
       "id" : 5,
       "selected" : "false",
-      "gpsDist" : 50,
+      "gpsDist" : 100,
       "gpsTime" : 10000
     }
   ],
