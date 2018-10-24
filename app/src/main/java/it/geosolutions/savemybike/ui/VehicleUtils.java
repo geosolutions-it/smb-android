@@ -31,6 +31,25 @@ public class VehicleUtils {
         }
 
     }
+    public static int getDrawableForVeichle(Vehicle.VehicleType v) {
+        switch (v) {
+            case FOOT:
+                return R.drawable.ic_directions_walk;
+            case BIKE:
+                return R.drawable.ic_directions_bike;
+            case MOPED:
+                return R.drawable.ic_directions_motorcycle;
+            case CAR:
+                return R.drawable.ic_directions_car;
+            case BUS:
+                return R.drawable.ic_directions_bus;
+            case TRAIN:
+                return R.drawable.ic_directions_train;
+            default:
+                return R.drawable.ic_home; // TODO: some question mark.
+        }
+
+    }
 
     /**
      * Returns the resource id of the color assigned to a vehicle.

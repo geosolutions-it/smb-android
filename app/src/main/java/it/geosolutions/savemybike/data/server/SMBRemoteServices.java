@@ -6,15 +6,17 @@ import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
-import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
+import it.geosolutions.savemybike.model.competition.Competition;
+import it.geosolutions.savemybike.model.user.Device;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.model.user.UserInfo;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -57,11 +59,18 @@ public interface SMBRemoteServices {
     Call<PaginatedResult<Badge>> getBadges();
 
     @PATCH("api/my-user")
-    Call<ResponseBody> updateUser(@Body  User user);
+    Call<ResponseBody> updateUser(@Body User user);
 
     @GET("api/my-competitions-current")
     Call<PaginatedResult<Competition>> getMyCompetitions();
 
     @GET("api/my-competitions-won/")
     Call<PaginatedResult<Competition>> getMyPrizes();
+
+    @POST("api/my-devices/")
+    Call<ResponseBody> updateDevice(@Body Device token);
+
+    @DELETE("api/my-devices/{token}")
+    Call<ResponseBody> deleteDevice(@Path("token") String token);
+
 }

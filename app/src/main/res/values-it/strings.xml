@@ -251,4 +251,11 @@
     <string name="co2_saved">Co2 Risparmiata</string>
     <string name="pm10_saved">Pm10 Risparmiati</string>
     <string name="user_info">Informazioni utente</string>
+    <string name="validation_success_title">La traccia inviata ha passato i test di validazione</string>
+    <string name="validation_success_description">Una delle tracce inviate al server è stata validata correttamente.</string>
+    <string name="validation_error_title">Errore di validazione di una traccia inviata al server</string>
+    <string name="validation_error_description">Una delle tracce inviate al server non è risultata valida.</string>
+    <string name="validation_error_cause">Questa è la causa: %s</string>
+    <string name="badge_won_title">Hai ottenuto un nuovo badge</string>
+    <string name="prize_won_title">Hai vinto un premio !!!</string>
 </resources>

@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +22,7 @@ import net.openid.appauth.AuthorizationServiceDiscovery;
 
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.AuthClient;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.model.Configuration;
@@ -132,7 +134,50 @@ public abstract class SMBBaseActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Performs the logout operations:
+     *  - Unregister device (so you will not receive notifications anymore for the user)
+     *  - Invalidate session (so, on the next login attempt the cached browser session is not valid anymore)
+     *  - Redirect to login activity.
+     */
     public void logout() {
+        RetrofitClient c = RetrofitClient.getInstance(this);
+        String token = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_INSTANCE_ID, null);
+        String lastStoredToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_LAST_SAVED_ID, null);
+        Context ctx = this;
+        if(lastStoredToken != token && token != null) {
+            // invalidate firebase token, then session
+            c.getPortalServices().deleteDevice(token).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    // TODO check response code
+                    // remove last saved token id. This will force update on next login
+                    PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(Constants.FIREBASE_LAST_SAVED_ID, token);
+                    invalidateSession();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "Error doing logout", t);
+                    if(!isNetworkAvailable()) {
+                        Toast.makeText(getBaseContext(), R.string.could_not_logout, Toast.LENGTH_LONG);
+                    } else {
+                        Toast.makeText(getBaseContext(), R.string.logout_generic_issue, Toast.LENGTH_LONG);
+                    }
+                }
+            });
+        } else {
+             /*
+                if for some reason the current token is not the last registered token
+                (for instance if the application closes due to an error during registration)
+              */
+            // force next login to register the user again.
+            PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(Constants.FIREBASE_LAST_SAVED_ID, token);
+            // at least try to logout
+            invalidateSession();
+        }
+    }
+    public void invalidateSession() {
         AuthStateManager mStateManager = AuthStateManager.getInstance(this);
         AuthState mAuthState = mStateManager.getCurrent();
         String accessToken = mAuthState.getAccessToken();

@@ -20,3 +20,5 @@ Configure the application as following to setup to work with dev resources.
  discovery_uri": "https://dev.savemybike.geo-solutions.it/auth/realms/save-my-bike/.well-known/openid-configuration",
  ```
 
+  - app/google-services.json (download it from firebase console: setting --> General --> your applications)
+

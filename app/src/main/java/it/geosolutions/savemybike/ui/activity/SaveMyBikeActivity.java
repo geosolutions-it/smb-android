@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.Settings.Secure;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
@@ -35,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthorizationService;
@@ -43,12 +45,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.Analytics;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -59,6 +63,7 @@ import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
+import it.geosolutions.savemybike.model.user.Device;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.model.user.UserInfo;
 import it.geosolutions.savemybike.ui.callback.IOnBackPressed;
@@ -71,6 +76,7 @@ import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.fragment.prizes.PrizesFragment;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,6 +91,7 @@ import retrofit2.Response;
 public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInteractionListener {
 
     private final static String TAG = "SaveMyBikeActivity";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private final static int UI_UPDATE_INTERVAL = 1000;
 
@@ -119,7 +126,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         //inflate
         setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
@@ -276,9 +283,23 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                UserInfo user = response.body();
-                Configuration.saveUserProfile(getBaseContext(), user );
-                setupUserView(user);
+                if(response.code() < 400) {
+                    UserInfo user = response.body();
+                    Configuration.saveUserProfile(getBaseContext(), user );
+                    setupUserView(user);
+                    updateDevice();
+                    if(user != null) {
+                        mFirebaseAnalytics.setUserId(user.getUsername());
+                        mFirebaseAnalytics.setUserProperty(Analytics.UserProperties.EMAIL, user.getEmail());
+                        mFirebaseAnalytics.setUserProperty(Analytics.UserProperties.LAST_USER_UPDATE, String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())));
+                        Log.d("ANALYTICS", "user info updated:" + user.getUsername());
+
+                    }
+                } else {
+                    mFirebaseAnalytics.logEvent(Analytics.Events.UPDATE_ERROR, Analytics.createEventBundle(response));
+                    Log.e(TAG, "wrong response code with getUser:"+ response.code() );
+                }
+
             }
 
             @Override
@@ -286,6 +307,43 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 Log.e(TAG, "Can not retrieve user profile", t);
             }
         });
+    }
+
+    /**
+     * Sends firebase ID to the server
+     */
+    public void updateDevice() {
+        RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
+        SMBRemoteServices portalServices = client.getPortalServices();
+        String token = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_INSTANCE_ID, null);
+        String lastStoredToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_LAST_SAVED_ID, null);
+        Context ctx = this;
+        if(lastStoredToken != token && token != null) {
+            Device device = new Device();
+            String androidId = Secure.getString(ctx.getContentResolver(),Secure.ANDROID_ID);
+            device.setDeviceId(androidId);
+            device.setRegistrationId(token);
+            device.setType("android");
+            portalServices.updateDevice(device).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.code() < 400) {
+                        PreferenceManager.getDefaultSharedPreferences(ctx).edit().putString(Constants.FIREBASE_LAST_SAVED_ID, token);
+                        Log.e(TAG, "Device Registered");
+                    } else {
+                        Log.e(TAG, "Can not update firebase token for this Device. service responded with code" + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "Can not update firebase token for this Device", t);
+                }
+            });
+        } else {
+            Log.i(TAG,"Firebase token already registered:" + token);
+        }
+
     }
 
     void setupUserView(User user) {
@@ -393,7 +451,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             serviceIntent.putExtra(SaveMyBikeService.PARAM_VEHICLE, currentVehicle);
             serviceIntent.putExtra(SaveMyBikeService.PARAM_CONFIG, getConfiguration());
 
-            startService(serviceIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
+            } else {
+                startService(serviceIntent);
+            }
 
             bindToService(serviceIntent);
         }

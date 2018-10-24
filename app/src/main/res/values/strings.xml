@@ -284,4 +284,9 @@
     <string name="co2_saved">Co2 Saved</string>
     <string name="pm10_saved">Pm10 Saved</string>
     <string name="user_info">User info</string>
+    <string name="validation_error_title">Validation error of a sent track</string>
+    <string name="validation_error_description">One of the tracks that you uploaded was not valid.</string>
+    <string name="validation_error_cause">This is the cause: %s</string>
+    <string name="badge_won_title">You acquired a new badge</string>
+    <string name="prize_won_title">You won a prize</string>
 </resources>

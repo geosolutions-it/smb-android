@@ -9,24 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.format.DateTimeFormat;
-
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.model.Segment;
-import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
-import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
 /**

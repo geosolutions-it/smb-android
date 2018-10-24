@@ -37,7 +37,10 @@ public class Constants {
     public static final String DEFAULT_CONFIGURATION_FILE  = "conf.json";
     public static final String DEFAULT_SESSION_NAME = "Session";
 
+
     public static final String SERVICE_NAME = "it.geosolutions.savemybike.data.service.SaveMyBikeService";
+    public static final String FIREBASE_INSTANCE_ID = "it.geosolutions.savemybike.data.service.firebase.instance.id";
+    public static final String FIREBASE_LAST_SAVED_ID = "it.geosolutions.savemybike.data.service.firebase.instance.laststoredid";
 
     public static final String NOTIFICATION_UPDATE_MODE = "it.geosolutions.savemybike.intent.mode";
     public static final String NOTIFICATION_UPDATE_STOP = "it.geosolutions.savemybike.intent.stop";
@@ -53,6 +56,7 @@ public class Constants {
     public static final String PREF_CONFIG_REFRESHTOKEN      = "it.geosolutions.savemybike.pref.config.refreshToken";
     public static final String PREF_BIKES                    = "it.geosolutions.savemybike.pref.bikes";
     public final static String USER_PROFILE                  = "it.geosolutions.savemybike.pref.user";
+
     public final static String UNIT_KMH = "km/h";
     public final static String UNIT_MPH = "mph";
     public final static String UNIT_KM = "km";
@@ -62,6 +66,19 @@ public class Constants {
 
     public final static float KM_TO_MILES = 0.621371192f;
     public final static float METER_TO_FEET = 3.2808399f;
+    public static final class Channels {
+        public static final String TRACKS_VALID_ID = "it.geosolutions.savemybike.tracks_channel_valid";
+        public static final String TRACKS_VALID_NAME = "Tracks validation success";
+
+        public static final String TRACK_INVALID_ID = "it.geosolutions.savemybike.tracks_channel_invalid";
+        public static final String TRACKS_INVALID_NAME = "Track validation errors";
+
+        public static final String PRIZES_WON_ID = "it.geosolutions.savemybike.prize.won";
+        public static final String PRIZES_WON_NAME = "Notification about won prizes";
+
+        public static final String BADGES_WON_ID = "it.geosolutions.savemybike.badges.won";
+        public static final String BADGES_WON_NAME = "Notification about won bades";
+    }
 
 
 }

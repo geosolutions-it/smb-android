@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -77,6 +78,7 @@ import retrofit2.Response;
  * Heavy changes in the login workflow to allow all the authentication happen in this activity
  */
 public final class LoginActivity extends AppCompatActivity {
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private static final String TAG = "LoginActivity";
     private static final String EXTRA_FAILED = "failed";
@@ -124,7 +126,7 @@ public final class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.fragment_login);
         ButterKnife.bind(this);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mExecutor = Executors.newSingleThreadExecutor();
         mAuthStateManager = AuthStateManager.getInstance(this);
         mConfiguration = Configuration.getInstance(this);
@@ -259,12 +261,15 @@ public final class LoginActivity extends AppCompatActivity {
                 accessTokenInfoView.setText(String.format(template,
                         DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss ZZ").print(expiresAt)));
                 User localUser = it.geosolutions.savemybike.model.Configuration.getUserProfile(this);
+                if(localUser != null) {
 
+                }
                 if(localUser == null // first login
                     || localUser.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
                     || localUser.getAcceptedTermsOfService() == false // terms of service unchecked.
                     //  TODO: find out check if different credentials are used
                         ) {
+
                     displayLoading(/*getResources().getString(R.string.checking_user_data)*/ "Checking user data");
                     //TODO: retrieve user info and prompt profile completion.
                     // TODO: the following block have to be moved after async check to display CompleteProfile wizard
@@ -277,13 +282,21 @@ public final class LoginActivity extends AppCompatActivity {
                                     || user.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
                                     || user.getAcceptedTermsOfService() == false) )
                                 {
+                                    if(user != null) {
+                                        mFirebaseAnalytics.setUserId(user.getUsername());
+                                        Log.d("ANALYTICS", "username set as:" + user.getUsername());
+                                    }
                                     Intent intent = new Intent(context, CompleteProfile.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intent);
                                     finish();
                                 } else if (response.code() >= 500 || response.code() == 404 ){
                                 displayError(getResources().getString(R.string.could_not_verify_user), true);
-                            }else {
+                            } else {
+                                    if(user != null) {
+                                        mFirebaseAnalytics.setUserId(user.getUsername());
+                                        Log.d("ANALYTICS", "username set as:" + user.getUsername());
+                                    }
                                     Intent intent = new Intent(context, SaveMyBikeActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                     startActivity(intent);

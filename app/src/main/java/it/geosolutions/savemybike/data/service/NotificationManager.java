@@ -15,6 +15,7 @@ import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Vehicle;
+import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 
 /**
@@ -100,55 +101,9 @@ public class NotificationManager extends BroadcastReceiver {
      * @param vehicle the vehicle to update
      */
     public void updateNotification(final String message, Vehicle vehicle) {
-
         this.mCurrentMessage = message;
         this.mVehicle = vehicle;
-
-        final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService, CHANNEL_ID);
-        int modeSrc = R.drawable.ic_directions_bike;
-
-
-        switch (mVehicle.getType()) {
-
-            case FOOT:
-                modeSrc = R.drawable.ic_directions_walk;
-                break;
-            case BIKE:
-                modeSrc = R.drawable.ic_directions_bike;
-                break;
-            case BUS:
-                modeSrc = R.drawable.ic_directions_bus;
-                break;
-            case CAR:
-                modeSrc = R.drawable.ic_directions_car;
-                break;
-            case MOPED:
-                modeSrc = R.drawable.ic_directions_motorcycle;
-                break;
-            case TRAIN:
-                modeSrc = R.drawable.ic_directions_train;
-                break;
-        }
-
-        NotificationCompat.Action modeAction = new NotificationCompat.Action.Builder(modeSrc, mService.getString(R.string.mode), mModeIntent).build();
-        NotificationCompat.Action stopAction = new NotificationCompat.Action.Builder(R.drawable.ic_stop, mService.getString(R.string.stop), mStopIntent).build();
-
-        notificationBuilder
-                .addAction(modeAction)
-                .addAction(stopAction)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setWhen(0)
-                .setStyle(new MediaStyle()
-                        .setShowActionsInCompactView(0,1))
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(createContentIntent())
-                .setContentTitle(mCurrentMessage)
-                .setContentText(mService.getSessionLogic().getVehicle().getType().name());
-
-        mNotificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-
+        mNotificationManager.notify(NOTIFICATION_ID, createNotification());
     }
 
 
@@ -225,22 +180,11 @@ public class NotificationManager extends BroadcastReceiver {
     private Notification createNotification(){
 
         final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mService, CHANNEL_ID);
-        int modeSrc = R.drawable.ic_directions_bike;
-        switch (mVehicle.getType()) {
-
-                case FOOT:
-                    modeSrc = R.drawable.ic_directions_walk;
-                    break;
-                case BIKE:
-                    modeSrc = R.drawable.ic_directions_bike;
-                    break;
-                case BUS:
-                    modeSrc = R.drawable.ic_directions_bus;
-                    break;
-                case CAR:
-                    modeSrc = R.drawable.ic_directions_car;
-                    break;
-            }
+        int modeSrc = VehicleUtils.getDrawableForVeichle(mVehicle.getType());
+        // not sure it is really needed, this is only a porting of the old behiviour corner case
+        if(modeSrc == R.drawable.ic_home) {
+            modeSrc = R.drawable.ic_directions_bike;
+        }
 
         NotificationCompat.Action modeAction = new NotificationCompat.Action.Builder(modeSrc, mService.getString(R.string.mode), mModeIntent).build();
         NotificationCompat.Action stopAction = new NotificationCompat.Action.Builder(R.drawable.ic_stop, mService.getString(R.string.stop), mStopIntent).build();
