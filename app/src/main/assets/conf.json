@@ -6,7 +6,7 @@
       "id" : 0,
       "selected" : "false",
       "gpsDist" : 5,
-      "gpsTime" : 2000
+      "gpsTime" : 5000
     },
     {
       "id" : 1,
@@ -17,7 +17,7 @@
     {
       "id" : 2,
       "selected" : "false",
-      "gpsDist" : 20,
+      "gpsDist" : 50,
       "gpsTime" : 5000
     },
     {
