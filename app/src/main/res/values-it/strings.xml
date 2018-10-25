@@ -258,4 +258,34 @@
     <string name="validation_error_cause">Questa è la causa: %s</string>
     <string name="badge_won_title">Hai ottenuto un nuovo badge</string>
     <string name="prize_won_title">Hai vinto un premio !!!</string>
+    <string name="powersaving_description"><![CDATA[
+        <p>GoodGo per tracciare i tuoi movimenti necessita di essere eseguita in background. Tuttavia alcuni dispositivi, per risparmiare batteria, terminano i processi in background arbitrariamente. Per evitare questo &egrave; necessario configurare il tuo dispositivo in maniera opportuna.</p>
+    ]]></string>
+    <string name="no_powersaving_instructions"><![CDATA[
+        <html><body>
+        <p>
+        <p>&Egrave; necessario aggiungere l\'applicazione alla lista delle "Applicazioni Protette" (Impostazioni).</p>
+            <ul>
+                <li>Clicca su "Vai a impostazioni"</li>
+                <li>cerca Good_Go e aggiungila alla lista delle applicazioni protette</li>
+            </ul>
+        </p>
+        </body></html>
+    ]]></string>
+    <string name="huauei_emui_powersaving_instructions"><![CDATA[
+    <html><body>
+    <p>
+        <ul>
+            <li>Clicca su \"Vai alle impostazioni\"</li>
+                <li>Seleziona \"Avvio\" per aprire la lista delle applicazioni</li>
+                <li>Trova Good_Go nella lista e verifica che l\'interruttore a fianco del nome dell\'applicazione sia spento</li>
+            <li>Verirfica che le impostazioni in \"Gestisci batch manualmente\" abbiano selezionate le opzioni \"Avvio Automatico\", \"Avvio secondario\" e \"Esegui in background\"</li>
+        </ul>
+    </p>
+    </body></html>
+    ]]></string>
+    <string name="protected_apps">Gestione Batteria</string>
+    <string name="go_to_settings">Vai alle impostazioni</string>
+    <string name="instructions_title">Istruzioni</string>
+    <string name="dont_show_this_again">Non mostrare più questo messaggio</string>
 </resources>

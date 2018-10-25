@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -76,6 +77,7 @@ import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.fragment.prizes.PrizesFragment;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
+import it.geosolutions.savemybike.ui.utils.PowerManager;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -177,7 +179,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             updateSessions();
 
         }
-
+        PowerManager.startPowerSaverIntent(this);
     }
 
     public void loadConfiguration() {

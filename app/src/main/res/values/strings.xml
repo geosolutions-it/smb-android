@@ -289,4 +289,34 @@
     <string name="validation_error_cause">This is the cause: %s</string>
     <string name="badge_won_title">You acquired a new badge</string>
     <string name="prize_won_title">You won a prize</string>
+    <string name="powersaving_description"><![CDATA[
+        <p>GoodGo needs to be executed in background to track your activities. Anyway some devices, to save power supply, stop the background processes. To avoid this you need to configure your application in the proper way</p>
+    ]]></string>
+    <string name="no_powersaving_instructions"><![CDATA[
+        <html><body>
+        <p>
+        <p>Add the application to the list of "Protected Apps"</p>
+            <ul>
+                <li>Click on o to settings</li>
+                <li>look for Good_Go and add it to the list of protected apps</li>
+            </ul>
+        </p>
+        </body></html>
+    ]]></string>
+    <string name="huauei_emui_powersaving_instructions"><![CDATA[
+    <html><body>
+    <p>
+        <ul>
+            <li>Click on "Go to Settings"</li>
+                <li>Select "Start" to open the list of the application</li>
+                <li>look for Good Go and make you sure yo de-selected it</li>
+            <li>Check in  \"Manually manage Batch Process\" and verify that  \"Automatic Startup\", \"Secondary startup\" e \"Execute in background\" are selected</li>
+        </ul>
+    </p>
+    </body></html>
+    ]]></string>
+    <string name="protected_apps">Protected apps</string>
+    <string name="go_to_settings">Go to settings</string>
+    <string name="instructions_title">Istruzioni</string>
+    <string name="dont_show_this_again">Don\'t show this message again</string>
 </resources>
