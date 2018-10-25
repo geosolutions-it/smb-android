@@ -31,5 +31,12 @@
         android:id="@+id/navigation_exit"
         android:icon="@drawable/ic_exit"
         android:title="@string/quit" />
+        <item
+            android:id="@+id/menu_logout"
+            android:title="@string/logout_menu_text"
+            android:icon="@drawable/ic_disconnect"
+            android:iconTint="@color/red"
+            android:visible="true"
+            />
     </group>
 </menu>

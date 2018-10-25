@@ -253,7 +253,17 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 Fragment f = null;
                 if(menuItem.getItemId() == R.id.navigation_exit) {
                     confirmExit();
-                } else {
+                } if( menuItem.getItemId() == R.id.menu_logout) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.logout_title);
+                    builder.setMessage(R.string.logout_message);
+                    builder.setPositiveButton(R.string.logout_OK, (dialog, which) -> {
+                        signOut(true);
+                        dialog.dismiss();
+                    });
+                    builder.setNegativeButton(R.string.cancel, null);
+                    builder.show();
+            } else {
                     changeFragment(menuItem.getItemId());
                 }
 
@@ -665,14 +675,15 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(BuildConfig.DEBUG) {
+            getMenuInflater().inflate(R.menu.menu_record, menu);
 
-        getMenuInflater().inflate(R.menu.menu_record, menu);
+            MenuItem mItem = menu.findItem(R.id.menu_simulate);
+            mItem.setChecked(simulate);
 
-        MenuItem mItem = menu.findItem(R.id.menu_simulate);
-        mItem.setChecked(simulate);
-
-        mItem = menu.findItem(R.id.menu_upload_wifi);
-        mItem.setChecked(uploadWithWifiOnly);
+            mItem = menu.findItem(R.id.menu_upload_wifi);
+            mItem.setChecked(uploadWithWifiOnly);
+        }
 
         return true;
     }

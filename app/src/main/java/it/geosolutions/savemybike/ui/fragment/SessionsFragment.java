@@ -151,7 +151,6 @@ public class SessionsFragment extends Fragment {
             }
 
         }
-
     }
     public void startUpload() {
 
