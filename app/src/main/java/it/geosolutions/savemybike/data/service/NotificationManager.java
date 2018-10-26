@@ -196,7 +196,7 @@ public class NotificationManager extends BroadcastReceiver {
                 .setWhen(0)
                 .setStyle(new MediaStyle()
                         .setShowActionsInCompactView(0,1))
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(createContentIntent())
