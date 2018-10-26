@@ -201,7 +201,11 @@ public class NotificationManager extends BroadcastReceiver {
                 .setOnlyAlertOnce(true)
                 .setContentIntent(createContentIntent())
                 .setContentTitle(mCurrentMessage)
-                .setContentText(mService.getSessionLogic().getVehicle().getType().name());
+                .setContentText(
+                        mService.getBaseContext().getResources().getString(
+                                VehicleUtils.getVehicleName(mService.getSessionLogic().getVehicle().getType())
+                        )
+                );
 
 
         return notificationBuilder.build();

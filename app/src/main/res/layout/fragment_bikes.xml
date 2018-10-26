@@ -6,20 +6,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/empty_bikes" android:id="@+id/empty_bikes"/>
-    <include layout="@layout/loading_container" android:id="@+id/bike_status_loading" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include layout="@layout/empty_bikes" android:id="@+id/empty_bikes"/>
         <ListView
             android:id="@+id/bikes_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/item_bike"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/loading_container" android:id="@+id/bike_status_loading" />
+    <include layout="@layout/empty_bikes" android:id="@+id/empty_bikes"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_bike_button"
         android:layout_width="wrap_content"

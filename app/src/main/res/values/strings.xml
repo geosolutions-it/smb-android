@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">Good_Go</string>
+    <string name="smb_site_url" translatable="false">https://www.savemybike.eu/</string>
+    <string name="geosolutions_site_url" translatable="false">https://www.geo-solutions.it</string>
+    <string name="version">Version</string>
+    <string name="about">About</string>
     <string name="title_home">Home</string>
     <string name="title_record">Record</string>
     <string name="title_stats">Stats</string>
@@ -69,6 +73,12 @@
     <string name="calories_consumed">Calories Consumed</string>
     <string name="calories_uom">cal</string>
     <string name="vehicles">Veichles</string>
+    <string name="vehicle_foot">foot</string>
+    <string name="vehicle_bike">bike</string>
+    <string name="vehicle_moped">moped</string>
+    <string name="vehicle_car">car</string>
+    <string name="vehicle_bus">bus</string>
+    <string name="vehicle_train">train</string>
     <string name="health_data">Health Data</string>
     <string name="loading">Loading...</string>
     <string name="start">Start</string>
@@ -96,6 +106,8 @@
     <string name="track_invalid_message">This track has been identified as invalid. It will not be used in indexes count and assigning prizes</string>
     <string name="no_session_title">No Recording</string>
     <string name="no_bikes_title">No bikes</string>
+    <string name="empty_bikes_description">You did not registered a bike yet. To register a bike access to your personal area of the portal.</string>
+    <string name="open_the_portal">Open the portal</string>
     <string name="server_took_too_long_to_respond">Server took to much to respond</string>
     <string name="user_profile">User Profile</string>
     <string name="badges">Badges</string>
@@ -319,4 +331,6 @@
     <string name="go_to_settings">Go to settings</string>
     <string name="instructions_title">Istruzioni</string>
     <string name="dont_show_this_again">Don\'t show this message again</string>
+    <string name="authors">Made by</string>
+    <string name="links">Links</string>
 </resources>

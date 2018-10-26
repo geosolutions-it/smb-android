@@ -67,7 +67,7 @@ public interface SMBRemoteServices {
     @GET("api/my-competitions-won/")
     Call<PaginatedResult<Competition>> getMyPrizes();
 
-    @POST("api/my-devices/")
+    @PUT("api/my-devices/")
     Call<ResponseBody> updateDevice(@Body Device token);
 
     @DELETE("api/my-devices/{token}")

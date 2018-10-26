@@ -75,4 +75,23 @@ public class VehicleUtils {
                 return R.color.default_track_color; // TODO: some question mark.
         }
     }
+
+    public static int getVehicleName(Vehicle.VehicleType type) {
+        switch (type) {
+            case FOOT:
+                return R.string.vehicle_foot;
+            case BIKE:
+                return R.string.vehicle_bike;
+            case MOPED:
+                return R.string.vehicle_moped;
+            case CAR:
+                return  R.string.vehicle_car;
+            case BUS:
+                return  R.string.vehicle_bus;
+            case TRAIN:
+                return  R.string.vehicle_train;
+            default:
+                return R.string.vehicle_foot;// TODO: some question mark.
+        }
+    }
 }

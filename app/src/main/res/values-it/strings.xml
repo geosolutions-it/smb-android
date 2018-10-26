@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="version">Versione</string>
+    <string name="about">About</string>
     <string name="title_home">Home</string>
     <string name="title_record">Registra</string>
     <string name="title_stats">Statistiche</string>
@@ -51,6 +53,12 @@
     <string name="total">Totale</string>
     <string name="track_details">Dettagli</string>
     <string name="vehicles">Veicoli</string>
+    <string name="vehicle_foot">a piedi</string>
+    <string name="vehicle_bike">in bici</string>
+    <string name="vehicle_moped">in moto</string>
+    <string name="vehicle_car">in auto</string>
+    <string name="vehicle_bus">in autobus</string>
+    <string name="vehicle_train">in treno</string>
     <string name="value">Valore</string>
     <string name="calories_uom">Cal</string>
     <string name="no_session_description">Non c\'è nessuna nuova registrazione da inviare. Per creare una nuova registrazione usa il tab \"Registra\"</string>
@@ -62,11 +70,13 @@
     <string name="no_network">Connettività assente</string>
     <string name="no_network_description">Questa funzionalità non è disponibile offline. Provare di nuovo più tardi</string>
     <string name="no__track_title">Nessuna traccia disponibile</string>
-    <string name="no_track_description">Non hai ancora nessuna traccia. Per creare una nuova traccia, registra il tuo percorso utlizzando la sezione \"Registra\". Alla fine della registrazione, apri il tab \"Da inviare\" nella sezione \"Statistiche\" ed invia i dati. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
+    <string name="no_track_description">Non ci sono ancora tracce elaborate. Assicurati di aver aggiornato la lista, trascinandola in basso col dito. Per creare una nuova traccia, registra il tuo percorso utlizzando la sezione \"Registra\". Alla fine della registrazione, apri il tab \"Da inviare\" nella sezione \"Statistiche\" ed invia i dati. Quando i dati saranno processati, vedrai la tua nuova traccia disponibile elencata qui</string>
     <string name="track_invalid_message_short">Traccia non valida.</string>
     <string name="track_invalid_message">La traccia selezionata non è risultata valida. Non verrà quindi conteggiata nei calcoli e nell\'assegnazione dei premi.</string>
     <string name="no_session_title">Nessuna registrazione da inviare</string>
     <string name="no_bikes_title">Nessuna Bici</string>
+    <string name="empty_bikes_description">Non hai ancora registrato nessuna bicicletta. Puoi inserire una bici utilizzando la tua area personale del portale SaveMyBike</string>
+    <string name="open_the_portal">Vai al portale</string>
     <string name="server_took_too_long_to_respond" >Il server ha impiegato troppo tempo a rispondere</string>
     <string name="user_profile">User Profile</string>
     <string name="profile">Profilo</string>
@@ -288,4 +298,6 @@
     <string name="go_to_settings">Vai alle impostazioni</string>
     <string name="instructions_title">Istruzioni</string>
     <string name="dont_show_this_again">Non mostrare più questo messaggio</string>
+    <string name="authors">Realizzato da</string>
+    <string name="links">Links</string>
 </resources>

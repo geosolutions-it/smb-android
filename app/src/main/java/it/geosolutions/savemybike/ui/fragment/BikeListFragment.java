@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -71,24 +72,22 @@ public class BikeListFragment extends Fragment {
         listView.setAdapter(bikeAdapter);
         // set up empty view
         View empty = view.findViewById(R.id.empty_bikes);
+
         if(empty != null && bikes != null && bikes.size() > 0) {
             empty.setVisibility(View.GONE);
         } else {
             empty.setVisibility(View.VISIBLE);
         }
+
+
         return view;
     }
-
-
-    @OnClick(R.id.add_bike_button)
-    public void onClick() {
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
-        startActivity(browserIntent);
-
-        // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.open_portal_button)
+    public void openPortal() {
+        Uri uriUrl = Uri.parse(Constants.PORTAL_ENDPOINT);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        startActivity(launchBrowser);
     }
-
     /**
      * Call the API to update a bike's status
      */
@@ -164,6 +163,11 @@ public class BikeListFragment extends Fragment {
                 showLoading(false);
             }
         }).execute();
+    }
+    @OnClick(R.id.add_bike_button)
+    public void onClick() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
+        startActivity(browserIntent);
     }
 
     @Override

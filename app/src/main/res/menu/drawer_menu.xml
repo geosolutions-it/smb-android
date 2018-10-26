@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <group android:checkableBehavior="single">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view" >
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_home"
             android:icon="@drawable/ic_home"
@@ -28,6 +32,14 @@
             android:icon="@drawable/ic_trophy"
             android:title="@string/prizes" />
         <item
+            android:id="@+id/navigation_about"
+            android:icon="@drawable/ic_about"
+            android:title="@string/about" />
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
         android:id="@+id/navigation_exit"
         android:icon="@drawable/ic_exit"
         android:title="@string/quit" />
@@ -35,8 +47,16 @@
             android:id="@+id/menu_logout"
             android:title="@string/logout_menu_text"
             android:icon="@drawable/ic_disconnect"
-            android:iconTint="@color/red"
             android:visible="true"
             />
+    </group>
+    <group
+        android:id="@+id/menu_footer"
+        android:checkableBehavior="none">
+    <item
+        android:id="@+id/menu_footer_version"
+        android:enabled="false"
+
+        android:title="@string/version" />
     </group>
 </menu>

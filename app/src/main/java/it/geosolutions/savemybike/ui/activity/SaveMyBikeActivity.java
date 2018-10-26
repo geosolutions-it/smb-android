@@ -70,6 +70,7 @@ import it.geosolutions.savemybike.model.user.UserInfo;
 import it.geosolutions.savemybike.ui.callback.IOnBackPressed;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
+import it.geosolutions.savemybike.ui.fragment.AboutFragment;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
 import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.HomeFragment;
@@ -270,6 +271,14 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
         });
+
+        // setup version name
+        Menu menu = navView.getMenu();
+
+        MenuItem version = menu.findItem(R.id.menu_footer_version);
+        if(version != null) {
+            version.setTitle(String.format("%s %s", getString(R.string.version), getString(R.string.app_version)));
+        }
     }
 
     /**
@@ -606,6 +615,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new UserFragment();
                 break;
             }
+
             case R.id.navigation_badges:{
                 if(currentFragment != null && currentFragment instanceof UserFragment) {
                     ((UserFragment) currentFragment).setNavigation(R.id.navigation_badges);
@@ -630,6 +640,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                     return;
                 }
                 fragment = new BikeListFragment();
+                break;
+            case R.id.navigation_about:
+                if (currentFragment != null && currentFragment instanceof AboutFragment) {
+                    return;
+                }
+                fragment = new AboutFragment();
                 break;
 
             default:
