@@ -333,4 +333,7 @@
     <string name="dont_show_this_again">Don\'t show this message again</string>
     <string name="authors">Made by</string>
     <string name="links">Links</string>
+    <string name="gps_disabled_title">GPS Disabled</string>
+    <string name="gps_disabled_description">Gps is disabled, in order to use the application properly you need to enable GPS of your device</string>
+    <string name="gps_enable">Enable GPS</string>
 </resources>

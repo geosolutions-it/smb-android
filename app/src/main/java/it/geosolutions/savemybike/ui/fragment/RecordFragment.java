@@ -1,5 +1,14 @@
 package it.geosolutions.savemybike.ui.fragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -8,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +49,8 @@ import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 public class RecordFragment extends Fragment implements RecordingEventListener {
 
     private final static String TAG = "RecordFragment";
+    private static final int GPS_ENABLE_REQUEST = 789;
+    LocationManager mLocationManager;
 
     @BindViews({
             R.id.mode_foot,
@@ -57,6 +69,17 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
     @BindView(R.id.stats_group) Group statsRow;
 
     private boolean statsHidden = true;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLocationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            return;
+        }
+    }
 
     /**
      * inflates the view of this fragment and initializes it
@@ -242,10 +265,14 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
 
             applySessionState(Session.SessionState.STOPPED);
         } else {
+            if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                ((SaveMyBikeActivity)getActivity()).startRecording();
 
-            ((SaveMyBikeActivity)getActivity()).startRecording();
+                applySessionState(Session.SessionState.ACTIVE);
+            } else {
+                showGPSDiabledDialog();
+            }
 
-            applySessionState(Session.SessionState.ACTIVE);
         }
     }
 
@@ -264,4 +291,50 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
         simulateTV.setVisibility(simulate ? View.VISIBLE : View.INVISIBLE);
     }
 
+
+
+    /**
+     * If GPS is disabled, show this dialog
+     */
+    public void showGPSDiabledDialog() {
+        if(getActivity() != null) { // this can be triggered when the user stopped gps. and the application is not present. In this case the activity doesn't exist anymore.
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.gps_disabled_title);
+            builder.setMessage(R.string.gps_disabled_description);
+            builder.setPositiveButton(R.string.gps_enable, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_ENABLE_REQUEST);
+                }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == GPS_ENABLE_REQUEST)
+        {
+            if (mLocationManager == null)
+            {
+                mLocationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
+            }
+
+            if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            {
+                showGPSDiabledDialog();
+            }
+        }
+        else
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

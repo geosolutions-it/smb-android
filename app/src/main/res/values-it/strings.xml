@@ -300,4 +300,7 @@
     <string name="dont_show_this_again">Non mostrare più questo messaggio</string>
     <string name="authors">Realizzato da</string>
     <string name="links">Links</string>
+    <string name="gps_disabled_title">GPS Disabilitato</string>
+    <string name="gps_disabled_description">Il Gps è disabilitato. Per registrare è necessario abilitare il GPS sul tuo dispositivo</string>
+    <string name="gps_enable">Abilita GPS</string>
 </resources>
