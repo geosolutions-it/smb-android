@@ -107,6 +107,15 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     private Handler handler;
     private MReceiver mReceiver;
 
+    // INTENTS EXTRAS
+    public static final String EXTRA_PAGE = "page";
+    public static final String EXTRA_PRIZES = "prizes";
+    public static final String EXTRA_MY_PRIZES = "my_prizes";
+    public static final String EXTRA_RECORD = "record";
+    public static final String EXTRA_BADGES = "badges";
+    public static final String EXTRA_TRACKS = "tracks";
+
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
@@ -168,7 +177,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         this.uploadWithWifiOnly = preferences.getBoolean(Constants.PREF_WIFI_ONLY_UPLOAD, Constants.DEFAULT_WIFI_ONLY);
 
 
-        changeFragment(R.id.navigation_home);
+        changeFragment(getIntentStartupPage(getIntent()));
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
         loadConfiguration();
@@ -181,6 +190,27 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         }
         PowerManager.startPowerSaverIntent(this);
+    }
+
+    /**
+     * Parses
+     * @return
+     */
+    private int getIntentStartupPage(Intent intent) {
+
+        String page = intent.getStringExtra(EXTRA_PAGE);
+        if(page != null) {
+            switch (page) {
+                case EXTRA_BADGES: return R.id.navigation_badges;
+                case EXTRA_PRIZES: return R.id.navigation_prizes;
+                case EXTRA_MY_PRIZES: return R.id.navigation_my_prizes;
+                case EXTRA_RECORD: return R.id.navigation_record;
+                case EXTRA_TRACKS: return R.id.navigation_stats;
+                default: return R.id.navigation_home;
+            }
+        }
+        return R.id.navigation_home;
+
     }
 
     public void loadConfiguration() {
@@ -345,7 +375,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             device.setDeviceId(androidId);
             device.setRegistrationId(token);
             device.setType("android");
-            portalServices.updateDevice(device).enqueue(new Callback<ResponseBody>() {
+            portalServices
+                    // .updateDevice(token, device) // --> PUT has problems
+                    .updateDevice(device) // POST version
+                    .enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if(response.code() < 400) {
@@ -625,12 +658,23 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = f;
                 break;
             }
-            case R.id.navigation_prizes:{
+            case R.id.navigation_prizes: {
                 if(currentFragment != null && currentFragment instanceof PrizesFragment) {
-                    ((PrizesFragment) currentFragment).setNavigation(R.id.navigation_my_prizes);
+                    ((PrizesFragment) currentFragment).setNavigation(R.id.navigation_prizes);
+                    return;
                 }
                 PrizesFragment f = new PrizesFragment();
-                // f.PrizesFragment(R.id.navigation_badges);
+                f.setInitialItem(R.id.navigation_prizes);
+                fragment = f;
+                break;
+            }
+            case R.id.navigation_my_prizes: {
+                if(currentFragment != null && currentFragment instanceof PrizesFragment) {
+                    ((PrizesFragment) currentFragment).setNavigation(R.id.navigation_my_prizes);
+                    return;
+                }
+                PrizesFragment f = new PrizesFragment();
+                f.setInitialItem(R.id.navigation_my_prizes);
                 fragment = f;
                 break;
             }
@@ -740,7 +784,14 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra(EXTRA_PAGE) != null) {
+            changeFragment(getIntentStartupPage(intent));
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
     /**
      * task to invalidate the UI, executes itself periodically every UI_UPDATE_INTERVAL
      */
@@ -958,7 +1009,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         Fragment fragment = getCurrentFragment();
         if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
             // double back management (only for the home page
-            if(fragment instanceof HomeFragment) {
+            if( drawerLayout.isDrawerOpen(GravityCompat.START) ) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else if(fragment instanceof HomeFragment) {
                 if (doubleBackToExitPressedOnce) {
                     super.onBackPressed();
                     return;

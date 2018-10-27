@@ -219,6 +219,7 @@ public class NotificationManager extends BroadcastReceiver {
     private PendingIntent createContentIntent() {
         Intent openUI = new Intent(mService, SaveMyBikeActivity.class);
         openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        openUI.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_RECORD);
 
         return PendingIntent.getActivity(mService, REQUEST_CODE, openUI, PendingIntent.FLAG_CANCEL_CURRENT);
     }

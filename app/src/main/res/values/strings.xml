@@ -296,6 +296,8 @@
     <string name="co2_saved">Co2 Saved</string>
     <string name="pm10_saved">Pm10 Saved</string>
     <string name="user_info">User info</string>
+    <string name="validation_success_title">One Track passed validation test</string>
+    <string name="validation_success_description">One of the sent tracks has been correctly updated.</string>
     <string name="validation_error_title">Validation error of a sent track</string>
     <string name="validation_error_description">One of the tracks that you uploaded was not valid.</string>
     <string name="validation_error_cause">This is the cause: %s</string>
