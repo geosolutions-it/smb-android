@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
@@ -28,6 +29,11 @@ public class UserNotificationManager {
     private static int TRACK_NOTIFICATION_ID = 42;
     private static int BADGE_NOTIFICATION_ID = 43;
     private static int PRIZE_NOTIFICATION_ID = 44;
+
+    private final static AtomicInteger c = new AtomicInteger(0);
+    public static int getID() {
+        return c.incrementAndGet();
+    }
 
     private UserNotificationManager(Context context) {
         mCtx = context;
@@ -78,7 +84,7 @@ public class UserNotificationManager {
         mBuilder.setContentIntent(pendingIntent);
 
         if (mNotificationManager != null) {
-            mNotificationManager.notify( TRACK_NOTIFICATION_ID , mBuilder.build());
+            mNotificationManager.notify( getID() , mBuilder.build());
         }
     }
     public void notifyTrackInvalid(String reason) {
@@ -99,7 +105,7 @@ public class UserNotificationManager {
         mBuilder.setContentIntent(pendingIntent);
 
         if (mNotificationManager != null) {
-            mNotificationManager.notify( TRACK_NOTIFICATION_ID , mBuilder.build());
+            mNotificationManager.notify( getID() , mBuilder.build());
         }
     }
 
@@ -118,7 +124,7 @@ public class UserNotificationManager {
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
-            mNotificationManager.notify( BADGE_NOTIFICATION_ID, mBuilder.build());
+            mNotificationManager.notify( getID(), mBuilder.build());
         }
     }
     private int getBadgeTitleByName(String badgeName) {
@@ -142,7 +148,7 @@ public class UserNotificationManager {
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
-            mNotificationManager.notify( PRIZE_NOTIFICATION_ID, mBuilder.build());
+            mNotificationManager.notify( getID(), mBuilder.build());
         }
     }
 
