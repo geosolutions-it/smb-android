@@ -29,7 +29,7 @@ android {
                     "${defaultConfig.versionName}${versionNameSuffix}"
         }
         beta {
-            versionNameSuffix ".debug"
+            versionNameSuffix ".beta"
             minifyEnabled false
             resValue "string", "app_version",
                     "${defaultConfig.versionName}${versionNameSuffix}"
