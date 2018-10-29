@@ -50,6 +50,7 @@ public class BikeListFragment extends Fragment {
     public static final String TAG = "BIKELIST";
     @BindView(R.id.bikes_list) ListView listView;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.empty_bikes) View emptyView;
     BikeAdapter bikeAdapter;
     List<Bike> bikes;
     @Nullable
@@ -71,14 +72,9 @@ public class BikeListFragment extends Fragment {
         refreshLayout.setOnRefreshListener(() -> getBikes());
         listView.setAdapter(bikeAdapter);
         // set up empty view
-        View empty = view.findViewById(R.id.empty_bikes);
 
-        if(empty != null && bikes != null && bikes.size() > 0) {
-            empty.setVisibility(View.GONE);
-        } else {
-            empty.setVisibility(View.VISIBLE);
-        }
 
+       updateEmptyView();
 
         return view;
     }
@@ -144,8 +140,8 @@ public class BikeListFragment extends Fragment {
                         bikeAdapter.clear();
                         bikeAdapter.addAll(bikesList.getResults());
                         bikeAdapter.notifyDataSetChanged();
-
-
+                        bikes = bikesList.getResults();
+                        updateEmptyView();
                     } else {
                         Log.w(TAG, "Wrong bikes response: server did not return a results array");
 
@@ -164,6 +160,17 @@ public class BikeListFragment extends Fragment {
             }
         }).execute();
     }
+
+    private void updateEmptyView() {
+        if(emptyView != null && bikes != null && bikes.size() > 0) {
+            emptyView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+        }
+    }
+
     @OnClick(R.id.add_bike_button)
     public void onClick() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
