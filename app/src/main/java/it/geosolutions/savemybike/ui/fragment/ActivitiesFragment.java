@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
@@ -97,37 +100,39 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
     // TODO: put in an upper class or refactor this interaction
     public void invalidateSessionStats(final Session session) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordingEventListener) {
-            ((RecordingEventListener) f).invalidateSessionStats(session);
-
+        for(Fragment f : getAllFragments(adapter)) {
+            if (f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).invalidateSessionStats(session);
+            }
         }
     };
     // TODO: put in an upper class or refactor this interaction
     public void selectVehicle(Vehicle vehicle) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordingEventListener) {
-            ((RecordingEventListener) f).selectVehicle(vehicle);
+        for(Fragment f : getAllFragments(adapter)) {
+            if (f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).selectVehicle(vehicle);
 
+            }
         }
     }
     // TODO: put in an upper class or refactor this interaction
     public void invalidateUI(Vehicle currentVehicle) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordingEventListener) {
-            ((RecordingEventListener) f).invalidateUI(currentVehicle);
-
+        for(Fragment f : getAllFragments(adapter)) {
+            if (f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).invalidateUI(currentVehicle);
+            }
         }
     }
 
     public void applySimulate(boolean simulate) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordingEventListener) {
-            ((RecordingEventListener) f).applySimulate(simulate);
+        for(Fragment f : getAllFragments(adapter)) {
+            if (f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).applySimulate(simulate);
 
+            }
         }
     }
 
@@ -135,20 +140,21 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
     public void applySessionState(Session.SessionState stopped) {
         // refresh sessions view due to a record ending
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        Fragment f = adapter.getItem(viewPager.getCurrentItem());
-        if(f instanceof RecordingEventListener) {
-            ((RecordingEventListener) f).applySessionState(stopped);
+        for(Fragment f : getAllFragments(adapter)) {
+            if (f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).applySessionState(stopped);
+            }
         }
     }
 
     @Override
     public void stopRecording() {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        if(adapter.getItem(1) instanceof StatsFragment) {
-            StatsFragment frag = (StatsFragment) adapter.getItem(1);
-            frag.refreshSessions();
+        for(Fragment f : getAllFragments(adapter)) {
+           if( f instanceof RecordingEventListener) {
+                ((RecordingEventListener) f).stopRecording();
+            }
         }
-
     }
     public void switchToSubFragment(int id) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
@@ -157,5 +163,13 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
             frag.switchTo(id);
         }
 
+    }
+    private  List<Fragment> getAllFragments(ViewPagerAdapter adapter) {
+        List<Fragment> allFragments = new LinkedList<>();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            Fragment f = adapter.getItem(i);
+            allFragments.add(f);
+        }
+        return allFragments;
     }
 }

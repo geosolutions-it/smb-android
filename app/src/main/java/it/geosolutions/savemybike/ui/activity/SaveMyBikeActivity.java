@@ -510,8 +510,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             } else {
                 startService(serviceIntent);
             }
-
             bindToService(serviceIntent);
+            // update recording status
+            Fragment currentFragment = getCurrentFragment();
+            if (currentFragment != null && currentFragment instanceof RecordingEventListener) {
+                ((RecordingEventListener) currentFragment).applySessionState(Session.SessionState.ACTIVE);
+            }
         }
     }
 

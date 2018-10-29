@@ -338,4 +338,8 @@
     <string name="gps_disabled_title">GPS Disabled</string>
     <string name="gps_disabled_description">Gps is disabled, in order to use the application properly you need to enable GPS of your device</string>
     <string name="gps_enable">Enable GPS</string>
+    <string name="uploading_sessions">Sending Tracks...</string>
+    <string name="uploading_sessions_description">Your tracks will be loaded into the system soon and you will see them in the tracks list. Make you sure to update the track list dragging down the list with the finger </string>
+    <string name="recording_sessions">Recording...</string>
+    <string name="recording_sessions_description">You can not see tracks to send during a recording session. Try again when the recording session is finished</string>
 </resources>

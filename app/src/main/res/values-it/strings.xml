@@ -303,4 +303,8 @@
     <string name="gps_disabled_title">GPS Disabilitato</string>
     <string name="gps_disabled_description">Il Gps è disabilitato. Per registrare è necessario abilitare il GPS sul tuo dispositivo</string>
     <string name="gps_enable">Abilita GPS</string>
+    <string name="uploading_sessions">Invio tracce in corso...</string>
+    <string name="uploading_sessions_description">Le tue registrazione stanno per essere prese in carico dal sistema. A breve le potrai vedere nella lista delle tracce. Assicurati di aggiornare la lista, trascinandola in basso col dito, per ricevere le nuove tracce elaborate</string>
+    <string name="recording_sessions">Registrazione in corso</string>
+    <string name="recording_sessions_description">Non è possibile visualizzare le tracce da inviare durante la registrazione. Riprovare a registrazione conclusa</string>
 </resources>

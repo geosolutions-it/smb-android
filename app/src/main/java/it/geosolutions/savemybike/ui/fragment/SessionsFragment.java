@@ -3,14 +3,12 @@ package it.geosolutions.savemybike.ui.fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +21,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
-import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
+import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
+import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.tasks.DeleteSessionTask;
 import it.geosolutions.savemybike.ui.tasks.InvalidateSessionsTask;
 import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
@@ -37,7 +38,7 @@ import it.geosolutions.savemybike.ui.tasks.UploadSessionTask;
  * A fragment showing the stats of the session of the local database
  */
 
-public class SessionsFragment extends Fragment {
+public class SessionsFragment extends Fragment implements RecordingEventListener {
 
     private final static String TAG = "SessionsFragment";
 
@@ -46,7 +47,7 @@ public class SessionsFragment extends Fragment {
     @BindView(R.id.progress_layout) LinearLayout progress;
     @BindView(R.id.content_layout) LinearLayout content;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout mySwipeRefreshLayout;
-
+    @BindView(R.id.upload_button)  FloatingActionButton sendButton;
     @BindView(R.id.sessions_list) ListView listView;
 
     /**
@@ -58,7 +59,6 @@ public class SessionsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_sessions, container,false);
         ButterKnife.bind(this, view);
-
         adapter = new SessionAdapter(getActivity(), R.layout.swipable_session_item, new ArrayList<>()) {
             @Override
             public void onDelete(Session s) {
@@ -73,6 +73,7 @@ public class SessionsFragment extends Fragment {
             }
         });
         mySwipeRefreshLayout.setOnRefreshListener(() -> invalidateSessions());
+        updateListStatus(null);
 
 
         // TODO: show also sessions, grayed out
@@ -112,6 +113,7 @@ public class SessionsFragment extends Fragment {
                 adapter.addAll(sessions);
                 showEmpty(sessions.size() == 0);
                 adapter.notifyDataSetChanged();
+                updateListStatus(null);
             }
         }).execute();
     }
@@ -170,7 +172,7 @@ public class SessionsFragment extends Fragment {
 
                 @Override
                 public void done(boolean success) {
-
+                    updateListStatus(null);
                 }
             }, false).execute();
 
@@ -202,5 +204,86 @@ public class SessionsFragment extends Fragment {
                 v.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         }
+    }
+
+    /**
+     * Hides the list and show a view when the items are uploading
+     * or when there is a recording session active
+     * @param state If present, it uses also this state to evaluate recording status
+     *               This because the current status is not uploaded correctly
+     *               TODO: improve this sistem to check the recording information once
+     */
+    private void updateListStatus(Session.SessionState state) {
+        boolean showList = !S3Manager.isUploading() && !isRecording(state);
+        // TODO: merge updateListStatus and showEmptyView
+        boolean showRecording = isRecording(state) && adapter.getCount() > 0; // check empty view is not shown.
+
+
+        boolean showUploading = S3Manager.isUploading() && !showRecording; // precedence to the recording view
+
+        if(getActivity() != null) {
+            View recordingView =  getActivity().findViewById(R.id.empty_sessions_recording);
+            if (recordingView != null) {
+                // show a page that explains this view is not available until recording session is ended
+                recordingView.setVisibility(showRecording ?View.VISIBLE : View.GONE);
+            }
+
+            View uploadingView =  getActivity().findViewById(R.id.empty_sessions_uploading);
+            if (uploadingView != null) {
+                // show a notification that explains this view is not available until upload is ended
+                uploadingView.setVisibility(showUploading ? View.VISIBLE : View.GONE);
+            }
+            // hide list and send button if needed
+            listView.setVisibility(showList ? View.VISIBLE : View.GONE);
+            // TODO: merge updateListStatus and showEmptyView
+            sendButton.setVisibility(showList && adapter.getCount() > 0 ? View.VISIBLE : View.GONE);
+        }
+
+    }
+
+    /**
+     * Checks if the session is actually recording
+     * @return
+     */
+    public boolean isRecording(Session.SessionState state) {
+        Session s = ((SaveMyBikeActivity)getActivity()).getCurrentSession();
+        return
+                 s != null
+                // state is not always available or updated.
+                    && s.getState() == Session.SessionState.ACTIVE
+                 // so if we have this value, it should be updated anyway
+                || state != null
+                    && state == Session.SessionState.ACTIVE;
+    }
+
+    @Override
+    public void invalidateSessionStats(Session session) {
+
+    }
+
+    @Override
+    public void selectVehicle(Vehicle vehicle) {
+
+    }
+
+    @Override
+    public void invalidateUI(Vehicle currentVehicle) {
+        updateListStatus(null);
+    }
+
+    @Override
+    public void applySimulate(boolean simulate) {
+    }
+
+    @Override
+    public void applySessionState(Session.SessionState state) {
+        updateListStatus(state);
+    }
+
+    @Override
+    public void stopRecording() {
+        // need to show tracks when recording sessions is stopped
+        updateListStatus(null);
+        invalidateSessions();
     }
 }

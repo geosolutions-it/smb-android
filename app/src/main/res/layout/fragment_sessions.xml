@@ -23,6 +23,8 @@
     </LinearLayout>
 
     <include android:id="@+id/empty_sessions" layout="@layout/empty_sessions" />
+    <include android:id="@+id/empty_sessions_uploading" layout="@layout/empty_sessions_uploading" />
+    <include android:id="@+id/empty_sessions_recording" layout="@layout/empty_sessions_recording" />
 
     <LinearLayout
         android:id="@+id/content_layout"

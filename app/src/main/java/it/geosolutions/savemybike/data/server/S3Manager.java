@@ -28,6 +28,7 @@ import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.db.SMBDatabase;
+import it.geosolutions.savemybike.data.service.UserNotificationManager;
 import it.geosolutions.savemybike.model.Session;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,6 +46,7 @@ public class S3Manager implements TransferListener{
 
     private Context context;
     private boolean wifiOnly;
+    private static int uploadCount = 0;
 
     // The TransferUtility is the primary class for managing transfer to S3
 //    private TransferUtility transferUtility;
@@ -129,7 +131,7 @@ public class S3Manager implements TransferListener{
         //create CSV
         CSVCreator csvCreator = new CSVCreator();
         RetrofitClient retrofitClient = RetrofitClient.getInstance(context);
-
+        uploadCount = sessionsToUpload.size();
         for(Session session : sessionsToUpload){
 
             //String sessionFilePath = csvCreator.createCSV(session);
@@ -178,16 +180,21 @@ public class S3Manager implements TransferListener{
                             Log.v("Upload", "failed");
                             S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.FAILED);
                         }
-
+                        uploadCount--;
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.e("Upload error:", t.getMessage());
                         S3Manager.this.onError(dirtyHackWaitingForARefactor, new Exception(t));
+                        uploadCount--;
                     }
                 });
         }
+    }
+
+    public static boolean isUploading() {
+        return uploadCount > 0;
     }
 
     @NonNull
