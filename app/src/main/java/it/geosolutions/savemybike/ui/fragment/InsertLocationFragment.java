@@ -154,7 +154,10 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
             crit.setAccuracy(Criteria.ACCURACY_FINE);
             crit.setPowerRequirement(Criteria.POWER_LOW);
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(crit, false));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            if(location != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+            }
+
 
         }else{
             Log.v(TAG, "NOT setting my location");
