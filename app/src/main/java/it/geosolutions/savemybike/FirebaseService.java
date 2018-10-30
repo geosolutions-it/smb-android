@@ -68,7 +68,8 @@ public class FirebaseService extends FirebaseMessagingService {
             String msgName = remoteMessage.getData().get(MESSAGE_NAME_KEY);
             switch (msgName) {
                 case MESSAGE_TYPES.TRACK_VALIDATED: {
-                    if("false".equals(remoteMessage.getData().get(VALIDATION_KEYS.IS_VALID))) {
+                    String validString = remoteMessage.getData().get(VALIDATION_KEYS.IS_VALID);
+                    if(validString != null && "false".equalsIgnoreCase(validString)) {
                         handleInvalid(remoteMessage.getData().get(VALIDATION_KEYS.VALIDATION_ERRORS));
                     } else {
                         handleValid();
