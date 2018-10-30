@@ -99,68 +99,82 @@ public class ActivitiesFragment extends Fragment implements RecordingEventListen
 
     // TODO: put in an upper class or refactor this interaction
     public void invalidateSessionStats(final Session session) {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        for(Fragment f : getAllFragments(adapter)) {
-            if (f instanceof RecordingEventListener) {
-                ((RecordingEventListener) f).invalidateSessionStats(session);
+        if(viewPager != null) {
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            for (Fragment f : getAllFragments(adapter)) {
+                if (f instanceof RecordingEventListener) {
+                    ((RecordingEventListener) f).invalidateSessionStats(session);
+                }
             }
         }
     };
     // TODO: put in an upper class or refactor this interaction
     public void selectVehicle(Vehicle vehicle) {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        for(Fragment f : getAllFragments(adapter)) {
-            if (f instanceof RecordingEventListener) {
-                ((RecordingEventListener) f).selectVehicle(vehicle);
+        if(viewPager != null) {
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            for (Fragment f : getAllFragments(adapter)) {
+                if (f instanceof RecordingEventListener) {
+                    ((RecordingEventListener) f).selectVehicle(vehicle);
 
+                }
             }
         }
     }
     // TODO: put in an upper class or refactor this interaction
     public void invalidateUI(Vehicle currentVehicle) {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        for(Fragment f : getAllFragments(adapter)) {
-            if (f instanceof RecordingEventListener) {
-                ((RecordingEventListener) f).invalidateUI(currentVehicle);
+        if(viewPager != null) {
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            for(Fragment f : getAllFragments(adapter)) {
+                if (f instanceof RecordingEventListener) {
+                    ((RecordingEventListener) f).invalidateUI(currentVehicle);
+                }
             }
         }
     }
 
     public void applySimulate(boolean simulate) {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        for(Fragment f : getAllFragments(adapter)) {
-            if (f instanceof RecordingEventListener) {
-                ((RecordingEventListener) f).applySimulate(simulate);
+        if(viewPager != null) {
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            for (Fragment f : getAllFragments(adapter)) {
+                if (f instanceof RecordingEventListener) {
+                    ((RecordingEventListener) f).applySimulate(simulate);
 
+                }
             }
         }
     }
 
     @Override
     public void applySessionState(Session.SessionState stopped) {
-        // refresh sessions view due to a record ending
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        for(Fragment f : getAllFragments(adapter)) {
-            if (f instanceof RecordingEventListener) {
-                ((RecordingEventListener) f).applySessionState(stopped);
+        if(viewPager != null) {
+            // refresh sessions view due to a record ending
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            for (Fragment f : getAllFragments(adapter)) {
+                if (f instanceof RecordingEventListener) {
+                    ((RecordingEventListener) f).applySessionState(stopped);
+                }
             }
         }
     }
 
     @Override
     public void stopRecording() {
+        if(viewPager != null) {
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         for(Fragment f : getAllFragments(adapter)) {
-           if( f instanceof RecordingEventListener) {
+            if (f instanceof RecordingEventListener) {
                 ((RecordingEventListener) f).stopRecording();
             }
         }
+        }
     }
     public void switchToSubFragment(int id) {
-        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-        if(adapter.getItem(1) instanceof StatsFragment) {
-            StatsFragment frag = (StatsFragment) adapter.getItem(1);
-            frag.switchTo(id);
+        if(viewPager != null) {
+            ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+            if (adapter.getItem(1) instanceof StatsFragment) {
+                StatsFragment frag = (StatsFragment) adapter.getItem(1);
+                frag.switchTo(id);
+            }
         }
 
     }

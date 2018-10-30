@@ -3,6 +3,10 @@ package it.geosolutions.savemybike.ui.fragment;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.internal.DebouncingOnClickListener;
+import it.geosolutions.savemybike.FirebaseService;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.model.Session;
@@ -285,5 +290,27 @@ public class SessionsFragment extends Fragment implements RecordingEventListener
         // need to show tracks when recording sessions is stopped
         updateListStatus(null);
         invalidateSessions();
+    }
+
+    // MANAGE NOTIFICATIONS
+    private BroadcastReceiver receiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateListStatus(null);
+                invalidateSessions();
+            }
+        };
+        getActivity().registerReceiver(receiver, new IntentFilter(FirebaseService.MESSAGE_TYPES.TRACK_VALIDATED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(receiver);
     }
 }

@@ -22,12 +22,11 @@ import it.geosolutions.savemybike.ui.activity.LoginActivity;
 public class FirebaseService extends FirebaseMessagingService {
     private static final String TAG = FirebaseService.class.getSimpleName();
     public static final String MESSAGE_NAME_KEY = "message_name";
+
     public static final class MESSAGE_TYPES {
         public static final String TRACK_VALIDATED = "track_validated";
         public static final String BADGE_WON = "badge_won";
         public static final String PRIZE_WON = "prize_won";
-
-
     }
     public static final class VALIDATION_KEYS {
         public static final String IS_VALID = "is_valid";
@@ -96,12 +95,21 @@ public class FirebaseService extends FirebaseMessagingService {
      */
     public void handleInvalid(String errors ) {
         getUserNotificationManager().notifyTrackInvalid(errors);
+        // send broadcast to update UI
+        Intent intent = new Intent();
+        intent.setAction(MESSAGE_TYPES.TRACK_VALIDATED);
+        sendBroadcast(intent);
     }
     /**
      * Handles a notification of an valid track
      */
     public void handleValid() {
         getUserNotificationManager().notifyTrackValid();
+
+        // send broadcast to update UI
+        Intent intent = new Intent();
+        intent.setAction(MESSAGE_TYPES.TRACK_VALIDATED);
+        sendBroadcast(intent);
     }
 
     public void handleBadgeWon(String badgeName) {

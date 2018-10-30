@@ -2,7 +2,10 @@ package it.geosolutions.savemybike.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import it.geosolutions.savemybike.FirebaseService;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
@@ -175,6 +179,25 @@ public class TracksFragment extends Fragment {
                 n.setVisibility(show && noNetwork ? View.VISIBLE : View.GONE);
             }
         }
+    }
+    private BroadcastReceiver receiver;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getTracks();
+            }
+        };
+        getActivity().registerReceiver(receiver, new IntentFilter(FirebaseService.MESSAGE_TYPES.TRACK_VALIDATED));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(receiver);
     }
 }
 
