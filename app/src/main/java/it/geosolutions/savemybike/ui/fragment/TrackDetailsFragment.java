@@ -132,8 +132,7 @@ public class TrackDetailsFragment extends Fragment {
             ArrayList<IconDataAdapter.IconEntry> entries = new ArrayList<>();
             entries.add(new IconDataAdapter.IconEntry(
                     R.drawable.ic_fire,
-                    getResources().getString(R.string.calories_consumed),
-                    getResources().getString(R.string.calories_uom),
+                    getResources().getString(R.string.calories_consumed), "",
                     data.getCaloriesConsumed()
             ));
             entries.add(new IconDataAdapter.IconEntry(
