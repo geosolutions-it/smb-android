@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +113,7 @@ public class TrackDetailsFragment extends Fragment {
             entries.add( new EmissionAdapter.EmissionEntry("SO2", "g",data.getSo2() / 1000, data.getSo2Saved() / 1000));
             entries.add( new EmissionAdapter.EmissionEntry("NOx", "g",data.getNox()/ 1000, data.getNoxSaved()/ 1000));
             entries.add( new EmissionAdapter.EmissionEntry("CO", "g",data.getCo()/ 1000, data.getCoSaved()/ 1000));
-            entries.add( new EmissionAdapter.EmissionEntry("CO2", "g",data.getC02(), data.getCo2Saved()));
+            entries.add( new EmissionAdapter.EmissionEntry("CO2", "g",data.getCo2(), data.getCo2Saved()));
             entries.add( new EmissionAdapter.EmissionEntry("PM10", "g",data.getPm10()/ 1000, data.getPm10Saved()/ 1000));
             v.setAdapter(new EmissionAdapter(getActivity(), R.layout.emission_entry, entries));
         }

@@ -46,12 +46,11 @@ public class EmissionAdapter extends ArrayAdapter<EmissionAdapter.EmissionEntry>
         EmissionAdapter.EmissionEntry e = getItem(position);
         name.setText(e.name);
         if(e.value != null) {
-            DecimalFormat df2 = new DecimalFormat();
-            value.setText(UOMUtils.format(e.value, "###") + e.uom);
+            value.setText(UOMUtils.format(e.value, "###.#") + e.uom);
         }
         if(e.saved != null) {
 
-            saved.setText(UOMUtils.format(e.saved, "###") + e.uom);
+            saved.setText(UOMUtils.format(e.saved, "###.#") + e.uom);
         }
 
         return convertView;

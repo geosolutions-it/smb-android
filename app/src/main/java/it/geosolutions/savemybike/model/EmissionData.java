@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class EmissionData {
     private double co;
-    private double c02;
+    private double co2;
     private double nox;
     private double so2;
     private double pm10;
@@ -35,12 +35,12 @@ public class EmissionData {
         this.co = co;
     }
 
-    public double getC02() {
-        return c02;
+    public double getCo2() {
+        return co2;
     }
 
-    public void setC02(double c02) {
-        this.c02 = c02;
+    public void setCo2(double co2) {
+        this.co2 = co2;
     }
 
     public double getNox() {
