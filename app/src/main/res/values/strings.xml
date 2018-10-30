@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Good_Go</string>
+    <string name="app_name" translatable="false">Good Go Livorno</string>
     <string name="smb_site_url" translatable="false">https://www.savemybike.eu/</string>
     <string name="geosolutions_site_url" translatable="false">https://www.geo-solutions.it</string>
     <string name="version">Version</string>
