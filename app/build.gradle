@@ -11,7 +11,7 @@ android {
         applicationId "it.geosolutions.savemybike"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 9
+        versionCode 10
         versionName "0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +47,11 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    android {
+        lintOptions {
+            abortOnError false
+        }
     }
 }
 

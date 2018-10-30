@@ -2,9 +2,17 @@
 SaveMyBike mobile app
 
 ## Setup of GOOGLE_API_KEY
+
+### Beta
+
+Replace in `app/src/beta/res/values/google_maps_api.xml` `YOUR_KEY_HERE` with the correct key (Starts with AIza...)
+
+### Debug
+
 Replace in `app/src/debug/res/values/google_maps_api.xml` `YOUR_KEY_HERE` with the correct key (Starts with AIza...)
 
 ## Development
+
 Configure the application as following to setup to work with dev resources.
 
  - `app/src/main/java/it/geosolutions/savemybike/data/Constants.java`: change PORTAL_ENDPOINT and UPLOAD_RESOURCE to related dev URLs:
