@@ -301,8 +301,8 @@ public class SessionsFragment extends Fragment implements RecordingEventListener
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                updateListStatus(null);
                 invalidateSessions();
+                updateListStatus(null);
             }
         };
         getActivity().registerReceiver(receiver, new IntentFilter(FirebaseService.MESSAGE_TYPES.TRACK_VALIDATED));

@@ -171,7 +171,7 @@ public class TrackDetailsFragment extends Fragment {
                     R.drawable.ic_euro,
                     getResources().getString(R.string.total),
                     getResources().getString(R.string.costs_uom),
-                    data.getFuelCost()
+                    data.getTotalCost()
             ));
 
             v.setAdapter(new IconDataAdapter(getActivity(), R.layout.icon_list_entry, entries));
