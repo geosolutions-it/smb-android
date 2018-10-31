@@ -13,6 +13,6 @@
     <ListView
         android:id="@+id/costs_list"
         android:layout_width="match_parent"
-        android:layout_height="220dp"></ListView>
+        android:layout_height="260dp"></ListView>
 
 </LinearLayout>

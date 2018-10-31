@@ -168,6 +168,12 @@ public class TrackDetailsFragment extends Fragment {
                     data.getFuelCost()
             ));
             entries.add(new IconDataAdapter.IconEntry(
+                    R.drawable.ic_access_time,
+                    getResources().getString(R.string.c_time),
+                    getResources().getString(R.string.costs_uom),
+                    data.getTimeCost()
+            ));
+            entries.add(new IconDataAdapter.IconEntry(
                     R.drawable.ic_euro,
                     getResources().getString(R.string.total),
                     getResources().getString(R.string.costs_uom),

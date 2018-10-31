@@ -91,6 +91,7 @@
     <string name="costs">Costs</string>
     <string name="c_depreciation">Depreciation</string>
     <string name="c_operation">Operation</string>
+    <string name="c_time">Moving time</string>
     <string name="total">Total</string>
     <string name="no_data">No Data</string>
     <string name="no_network">No Newrork</string>

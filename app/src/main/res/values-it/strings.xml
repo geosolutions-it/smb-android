@@ -49,7 +49,8 @@
     <string name="costs_uom">€</string>
     <string name="costs">Costi</string>
     <string name="c_depreciation">Ammortamento</string>
-    <string name="c_operation">Costo Esercizio</string>
+    <string name="c_operation">Esercizio</string>
+    <string name="c_time">Tempo spostamento</string>
     <string name="total">Totale</string>
     <string name="track_details">Dettagli</string>
     <string name="vehicles">Veicoli</string>
