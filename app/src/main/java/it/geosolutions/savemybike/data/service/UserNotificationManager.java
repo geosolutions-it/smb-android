@@ -80,7 +80,7 @@ public class UserNotificationManager {
 
         Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_TRACKS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
         if (mNotificationManager != null) {
@@ -101,7 +101,7 @@ public class UserNotificationManager {
 
         Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_TRACKS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
         if (mNotificationManager != null) {
@@ -121,7 +121,7 @@ public class UserNotificationManager {
                         .setAutoCancel(true);
         Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_BADGES);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
             mNotificationManager.notify( getID(), mBuilder.build());
@@ -145,7 +145,7 @@ public class UserNotificationManager {
                         .setAutoCancel(true);
         Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_MY_PRIZES);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
             mNotificationManager.notify( getID(), mBuilder.build());
