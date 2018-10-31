@@ -275,7 +275,7 @@
     <string name="occupation_professional_athlete">professional athlete</string>
     <string name="occupation_high_school_student">high school student</string>
     <string name="occupation_college_student">college student</string>
-    <string name="accept_terms_of_service"><p>I\'ve read the <a href="https://savemybike.geo-solutions.it/en/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> and I accept the processing of personal data</p></string>
+    <string name="accept_terms_of_service"><p>I\'ve read the <a href="https://savemybike.geo-solutions.it/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> and I accept the processing of personal data</p></string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="please_select">Please select</string>
     <string name="my_prizes">My Prizes</string>
