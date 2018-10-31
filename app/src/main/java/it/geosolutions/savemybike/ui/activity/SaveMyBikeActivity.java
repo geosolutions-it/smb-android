@@ -205,7 +205,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 case EXTRA_PRIZES: return R.id.navigation_prizes;
                 case EXTRA_MY_PRIZES: return R.id.navigation_my_prizes;
                 case EXTRA_RECORD: return R.id.navigation_record;
-                case EXTRA_TRACKS: return R.id.navigation_stats;
+                case EXTRA_TRACKS: return R.id.tracks_list;
                 default: return R.id.navigation_home;
             }
         }
@@ -623,6 +623,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = f;
                 break;
             }
+
             case R.id.navigation_stats: {
                 if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
                     ((ActivitiesFragment) currentFragment).setNavigation(R.id.navigation_stats);
@@ -630,6 +631,17 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 }
                 ActivitiesFragment f = new ActivitiesFragment();
                 f.setInitialItem(R.id.navigation_stats);
+                fragment = f;
+
+                break;
+            }
+            case R.id.tracks_list : {
+                if (currentFragment != null && currentFragment instanceof ActivitiesFragment) {
+                    ((ActivitiesFragment) currentFragment).setNavigation(R.id.tracks_list);
+                    return;
+                }
+                ActivitiesFragment f = new ActivitiesFragment();
+                f.setInitialItem(R.id.tracks_list);
                 fragment = f;
 
                 break;

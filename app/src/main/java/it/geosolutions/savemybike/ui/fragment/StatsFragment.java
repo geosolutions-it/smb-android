@@ -55,13 +55,18 @@ public class StatsFragment extends Fragment implements RecordingEventListener {
     }
    
     public void switchTo(int id) {
-        switch (id) {
-            case R.id.tracks_list:
-                viewPager.setCurrentItem(0);
-                break;
-            case R.id.sessions_list:
-                viewPager.setCurrentItem(1);
-                break;
+        // Note: if viewpager is not initialized (e.g. on closed application)
+        // is not possible to open the session list with this function
+        if(viewPager != null) {
+            switch (id) {
+
+                case R.id.tracks_list:
+                    viewPager.setCurrentItem(0);
+                    break;
+                case R.id.sessions_list:
+                    viewPager.setCurrentItem(1);
+                    break;
+            }
         }
     }
     // TODO: put in an upper class or refactor this interaction
