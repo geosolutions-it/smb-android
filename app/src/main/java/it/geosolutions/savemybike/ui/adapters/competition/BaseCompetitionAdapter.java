@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -68,10 +69,15 @@ public class BaseCompetitionAdapter extends ArrayAdapter<Competition> {
             holder.description.setText(competition.getDescription());
         }
         if(competition.getPrizes() != null) {
-            holder.prizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, competition.getPrizes()));
+            holder.prizesGrid.setAdapter(createPrizeAdapter(competition));
         }
 
+
         return view;
+    }
+
+    protected ListAdapter createPrizeAdapter(Competition competition) {
+        return new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, competition.getPrizes());
     }
 
 

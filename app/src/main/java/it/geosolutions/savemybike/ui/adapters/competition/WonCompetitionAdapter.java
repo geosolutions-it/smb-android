@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 
 import java.util.List;
 
@@ -35,7 +36,12 @@ public class WonCompetitionAdapter extends BaseCompetitionAdapter {
         }
         holder.subtitle.setVisibility(View.GONE);
         holder.header.setVisibility(View.VISIBLE);
-        holder.description.setText(getItem(position).getWinnerDescription());
+        Competition c = getItem(position);
+        holder.description.setText(c.getWinnerDescription() != null ? c.getWinnerDescription() : c.getDescription());
         return view;
+    }
+    @Override
+    protected ListAdapter createPrizeAdapter(Competition competition) {
+        return new WonCompetitionPrizeAdapter(getContext(), R.layout.item_prize, competition.getPrizes());
     }
 }

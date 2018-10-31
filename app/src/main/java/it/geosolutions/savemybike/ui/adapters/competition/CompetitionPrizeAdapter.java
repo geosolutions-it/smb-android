@@ -27,6 +27,7 @@ import it.geosolutions.savemybike.model.competition.Sponsor;
 public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
 
     protected int resource;
+
     static class ViewHolder {
         @BindView(R.id.prize_header) TextView header;
         @BindView(R.id.prize_description) TextView description;
@@ -43,7 +44,6 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
 
         resource = textViewResourceId;
     }
-
 
     @NonNull
     @Override
@@ -63,9 +63,8 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
         // setup view
 
         if(prize != null) {
-            // TODO
             holder.header.setText(prize.getName());
-            holder.description.setText(prize.getDescription());
+            holder.description.setText(getDescription(cPrize));
             Sponsor s = prize.getSponsor();
             if(s != null && s.getName() != null) {
                 holder.subtitle.setText(s.getName());
@@ -79,6 +78,14 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
         }
 
         return view;
+    }
+
+    protected String getDescription(CompetitionPrize cPrize) {
+        Prize p = cPrize.getPrize();
+        if(p != null) {
+            return p.getDescription();
+        }
+        return null;
     }
 
 
