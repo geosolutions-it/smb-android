@@ -1,5 +1,7 @@
 package it.geosolutions.savemybike.data;
 
+import it.geosolutions.savemybike.BuildConfig;
+
 /**
  * Created by Robert Oehler on 02.11.17.
  *
@@ -7,14 +9,12 @@ package it.geosolutions.savemybike.data;
 
 public class Constants {
 
-    public final static String PORTAL_ENDPOINT = "https://goodgo.savemybike.geo-solutions.it/";
-    // public final static String PORTAL_ENDPOINT = "https://dev.savemybike.geo-solutions.it/"; // DEV
+    public final static String PORTAL_ENDPOINT = BuildConfig.PORTAL_ENDPOINT;
 
     /**
      * AWS method used for the current environment
      */
-    public final static String UPLOAD_RESOURCE = "upload/";
-    // public final static String UPLOAD_RESOURCE = "upload-dev/"; // DEV
+    public final static String UPLOAD_RESOURCE = BuildConfig.UPLOAD_RESOURCE;
 
     public final static int DEFAULT_DATA_READ_INTERVAL = 1000;
     public final static int DEFAULT_PERSISTENCE_INTERVAL = 15000;

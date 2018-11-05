@@ -25,11 +25,15 @@ android {
     buildTypes {
         debug {
             versionNameSuffix ".debug"
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://dev.savemybike.geo-solutions.it/"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload-dev/"'
             resValue "string", "app_version",
                     "${defaultConfig.versionName}${versionNameSuffix}"
         }
         beta {
             versionNameSuffix ".beta"
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
             minifyEnabled false
             resValue "string", "app_version",
                     "${defaultConfig.versionName}${versionNameSuffix}"
@@ -38,6 +42,8 @@ android {
         }
         release {
             minifyEnabled false
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
             resValue "string", "app_version",
                 "${defaultConfig.versionName}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
