@@ -343,4 +343,7 @@
     <string name="uploading_sessions_description">Your tracks will be loaded into the system soon and you will see them in the tracks list. Make you sure to update the track list dragging down the list with the finger </string>
     <string name="recording_sessions">Recording...</string>
     <string name="recording_sessions_description">You can not see tracks to send during a recording session. Try again when the recording session is finished</string>
+    <string name="last_update">Last Update</string>
+    <string name="last_observations">Last Observations</string>
+    <string name="no_position_available">No Observations</string>
 </resources>

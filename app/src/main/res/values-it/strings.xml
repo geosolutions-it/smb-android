@@ -308,4 +308,7 @@
     <string name="uploading_sessions_description">Le tue registrazioni stanno per essere prese in carico dal sistema. A breve le potrai vedere nella lista delle tracce. Assicurati di aggiornare la lista, trascinandola in basso col dito, per ricevere le nuove tracce elaborate</string>
     <string name="recording_sessions">Registrazione in corso</string>
     <string name="recording_sessions_description">Non è possibile visualizzare le tracce da inviare durante la registrazione. Riprovare a registrazione conclusa</string>
+    <string name="last_update">Ultimo aggiornamento</string>
+    <string name="last_observations">Ultimi rilevamenti</string>
+    <string name="no_position_available">Nessuna posizione rilevata</string>
 </resources>

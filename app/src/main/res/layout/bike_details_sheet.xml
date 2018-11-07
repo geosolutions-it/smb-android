@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ BottomSheet content for bike details
+ Contains the header and a view pager
+ -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_behavior="it.geosolutions.savemybike.ui.custom.BottomSheetBehaviorGoogleMapsLike"
+    app:anchorPoint="@dimen/bottom_sheet_anchor_point"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/tap_action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/session_row"
+            layout="@layout/row_bike"
+             />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/bike_details_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:tabMode="fixed" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/bike_details_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        />
+
+</LinearLayout>

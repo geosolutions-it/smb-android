@@ -3,10 +3,12 @@ package it.geosolutions.savemybike.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Lorenzo Pini on 05/07/2018.
  */
-public class CurrentStatus {
+public class CurrentStatus implements Serializable {
 
     @SerializedName("lost")
     @Expose

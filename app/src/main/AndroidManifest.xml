@@ -82,6 +82,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.TrackDetailsActivity" />
+        <activity android:name=".ui.activity.BikeDetailsActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.CompleteProfile"
             android:label="@string/title_activity_complete_profile"

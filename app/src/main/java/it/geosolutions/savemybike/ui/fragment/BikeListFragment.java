@@ -1,30 +1,25 @@
 package it.geosolutions.savemybike.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.MainThread;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.geosolutions.savemybike.BuildConfig;
-import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -33,6 +28,7 @@ import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.ui.BikeAdapter;
+import it.geosolutions.savemybike.ui.activity.BikeDetailsActivity;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import retrofit2.Call;
@@ -65,9 +61,19 @@ public class BikeListFragment extends Fragment {
         bikes = activity.getConfiguration().getBikes(activity);
         bikeAdapter = new BikeAdapter(activity, R.layout.item_bike, activity.getConfiguration().getBikes(activity)) {
             @Override
+            protected void onItemClick(Bike bike) {
+                Intent intent = new Intent(getActivity(), BikeDetailsActivity.class);
+
+                intent.putExtra(BikeDetailsActivity.BIKE, bike);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+
+            @Override
             public void updateStatus(Bike bike, String details) {
                 updateBikeStatus(bike, details);
             }
+
         };
         refreshLayout.setOnRefreshListener(() -> getBikes());
         listView.setAdapter(bikeAdapter);

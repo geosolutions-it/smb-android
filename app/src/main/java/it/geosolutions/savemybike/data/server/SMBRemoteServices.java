@@ -41,6 +41,9 @@ public interface SMBRemoteServices {
     @GET("api/my-bikes")
     Call<PaginatedResult<Bike>> getMyBikes();
 
+    @GET("api/my-bike-observations/")
+    Call<ResponseBody> getBikeObservations(@Query("bike") String id);
+
     @POST("api/my-bike-statuses/")
     Call<Object> sendNewBikeStatus(
             @Body CurrentStatus newStatus
@@ -67,7 +70,7 @@ public interface SMBRemoteServices {
     @GET("api/my-competitions-won/")
     Call<PaginatedResult<Competition>> getMyPrizes();
 
-    @PUT("api/my-devices/{token}")
+    @PUT("api/my-devices/{token}/")
     Call<ResponseBody> updateDevice(@Path("token") String token, @Body Device device);
 
     @POST("api/my-devices/")

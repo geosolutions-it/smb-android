@@ -25,4 +25,14 @@
     <style name="TextAppearanceFinish" parent="android:TextAppearance.Holo.Medium">
         <item name="android:textColor">#fff</item>
     </style>
+
+    <declare-styleable name="CustomBottomSheetBehavior">
+        <attr name="anchorPoint" format="dimension"/>
+        <attr name="defaultState" format="enum">
+            <enum name="stateAnchorPoint" value="3" />
+            <enum name="stateExpanded" value="4"/>
+            <enum name="stateCollapsed" value="5"/>
+            <enum name="stateHidden" value="6"/>
+        </attr>
+    </declare-styleable>
 </resources>

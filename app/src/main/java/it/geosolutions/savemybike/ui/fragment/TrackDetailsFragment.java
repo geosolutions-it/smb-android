@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
@@ -58,7 +59,6 @@ public class TrackDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_track_details, container, false);
-
         return view;
     }
 

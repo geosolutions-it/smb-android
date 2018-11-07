@@ -12,13 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
 
@@ -58,11 +54,12 @@ public abstract class BikeAdapter extends ArrayAdapter<Bike> {
         }
 
         final Bike bike = getItem(position);
+        
 
         if (bike != null) {
             final TextView titleTv = view.findViewById(R.id.bike_title);
             final ImageView imageView = view.findViewById(R.id.bike_image);
-
+            imageView.setOnClickListener((View v) -> onItemClick(bike));
             if (bike.getNickname() != null) {
                 titleTv.setText(bike.getNickname());
             } else {
@@ -111,5 +108,8 @@ public abstract class BikeAdapter extends ArrayAdapter<Bike> {
         }
         return view;
     }
+
+    protected abstract void onItemClick(Bike bike);
+
     public abstract void updateStatus(Bike bike, String details);
 }
