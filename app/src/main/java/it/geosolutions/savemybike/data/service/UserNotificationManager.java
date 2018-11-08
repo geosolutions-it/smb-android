@@ -55,9 +55,13 @@ public class UserNotificationManager {
             badgeWonChannel.setShowBadge(false);
             mNotificationManager.createNotificationChannel(badgeWonChannel);
             // prize won
-            NotificationChannel prizeWonChannel = new NotificationChannel(Constants.Channels.PRIZES_WON_ID, Constants.Channels.PRIZES_WON_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel prizeWonChannel = new NotificationChannel(Constants.Channels.BIKE_OBSERVATION, Constants.Channels.PRIZES_WON_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             prizeWonChannel.setShowBadge(false);
             mNotificationManager.createNotificationChannel(prizeWonChannel);
+            // bike observations
+            NotificationChannel bikeObservationChannel = new NotificationChannel(Constants.Channels.BIKE_OBSERVATION, Constants.Channels.BIKE_OBSERVATION_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            bikeObservationChannel.setShowBadge(false);
+            mNotificationManager.createNotificationChannel(bikeObservationChannel);
         }
     }
     public static synchronized UserNotificationManager getInstance(Context context) {
@@ -153,5 +157,24 @@ public class UserNotificationManager {
     }
 
 
-
+    public void notifyBikeObserved(String bikeId, String observationId) {
+        android.app.NotificationManager mNotificationManager =
+                (android.app.NotificationManager) (android.app.NotificationManager) mCtx.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(mCtx, Constants.Channels.BIKE_OBSERVATION)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                        .setBadgeIconType(R.drawable.ic_directions_bike)
+                        .setContentTitle(mCtx.getResources().getString(R.string.bike_observed_notification_observed))
+                        // .setContentText(bikeId)
+                        .setAutoCancel(true);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_MY_BIKES);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_BIKE_ID, bikeId);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_BIKE_OBSERVATION_ID, observationId);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pendingIntent);
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(getID(), mBuilder.build());
+        }
+    }
 }

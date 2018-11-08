@@ -63,7 +63,6 @@ public class BikeListFragment extends Fragment {
             @Override
             protected void onItemClick(Bike bike) {
                 Intent intent = new Intent(getActivity(), BikeDetailsActivity.class);
-
                 intent.putExtra(BikeDetailsActivity.BIKE, bike);
                 getActivity().startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);

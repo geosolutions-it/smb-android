@@ -27,6 +27,7 @@ public class FirebaseService extends FirebaseMessagingService {
         public static final String TRACK_VALIDATED = "track_validated";
         public static final String BADGE_WON = "badge_won";
         public static final String PRIZE_WON = "prize_won";
+        public static final String BIKE_OBSERVED = "bike_observed";
     }
     public static final class VALIDATION_KEYS {
         public static final String IS_VALID = "is_valid";
@@ -35,6 +36,8 @@ public class FirebaseService extends FirebaseMessagingService {
     public static final class NOTIFICATION_KEYS {
         public static final String BADGE_NAME = "badge_name";
         public static final String PRIZE_NAME = "prize_name";
+        public static final String OBSERVATION_ID = "observation_id";
+        public static final String BIKE_ID = "bike_id";
     }
 
 
@@ -83,10 +86,25 @@ public class FirebaseService extends FirebaseMessagingService {
                     handlePrizeWon(remoteMessage.getData().get(NOTIFICATION_KEYS.PRIZE_NAME));
                     break;
                 }
+                case MESSAGE_TYPES.BIKE_OBSERVED: {
+                    String bikeId = remoteMessage.getData().get(NOTIFICATION_KEYS.BIKE_ID);
+                    String observationId = remoteMessage.getData().get(NOTIFICATION_KEYS.OBSERVATION_ID);
+                    handleBikeObserved(bikeId, observationId);
+                    break;
+                }
             }
         } else {
             // TODO: manage generic notification to the user
         }
+    }
+
+    /**
+     * handles bike observation notification
+     * @param bikeId
+     * @param observationId
+     */
+    private void handleBikeObserved(String bikeId, String observationId) {
+        getUserNotificationManager().notifyBikeObserved(bikeId, observationId);
     }
 
     /**

@@ -1,6 +1,7 @@
 package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -114,6 +115,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     public static final String EXTRA_RECORD = "record";
     public static final String EXTRA_BADGES = "badges";
     public static final String EXTRA_TRACKS = "tracks";
+    public static final String EXTRA_MY_BIKES = "bikes";
+    public static final String EXTRA_BIKE_ID = "bike_id";
+    public static final String EXTRA_BIKE_OBSERVATION_ID = "bike_observation_id";
 
 
     @Override
@@ -178,6 +182,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
 
         changeFragment(getIntentStartupPage(getIntent()));
+        handlerSpecificActivityIntent(getIntent());
         //load the configuration and select the current vehicle
         this.currentVehicle = getCurrentVehicleFromConfig();
         loadConfiguration();
@@ -206,6 +211,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 case EXTRA_MY_PRIZES: return R.id.navigation_my_prizes;
                 case EXTRA_RECORD: return R.id.navigation_record;
                 case EXTRA_TRACKS: return R.id.tracks_list;
+                case EXTRA_MY_BIKES: return R.id.navigation_bikes;
                 default: return R.id.navigation_home;
             }
         }
@@ -806,8 +812,53 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         if(intent.getStringExtra(EXTRA_PAGE) != null) {
             changeFragment(getIntentStartupPage(intent));
             drawerLayout.closeDrawer(GravityCompat.START);
+            handlerSpecificActivityIntent(intent);
         }
     }
+
+    /**
+     * Handles actions for specific notifications that require to open activities
+     * @param intent
+     */
+    private void handlerSpecificActivityIntent(Intent intent) {
+        if(intent.getStringExtra(EXTRA_PAGE) == null) {
+            return;
+        }
+        switch (intent.getStringExtra(EXTRA_PAGE)) {
+            case EXTRA_MY_BIKES: {
+                String bikeId = intent.getStringExtra(EXTRA_BIKE_ID);
+                String observationId = intent.getStringExtra(EXTRA_BIKE_OBSERVATION_ID);
+                if(bikeId != null && observationId != null) {
+                    RetrofitClient client = RetrofitClient.getInstance(getBaseContext());
+                    SMBRemoteServices portalServices = client.getPortalServices();
+                    SaveMyBikeActivity context = this;
+                    portalServices.getMyBike(bikeId).enqueue(new Callback<Bike>() {
+                        @Override
+                        public void onResponse(Call<Bike> call, Response<Bike> response) {
+                            // intent
+                            Bike bike = response.body();
+                            if(bike != null) {
+                                Intent intent = new Intent(context, BikeDetailsActivity.class);
+                                intent.putExtra(BikeDetailsActivity.BIKE, bike);
+                                intent.putExtra(BikeDetailsActivity.OBSERVATION_ID, observationId);
+                                context.startActivity(intent);
+                            } else {
+                                // TODO: send a better message
+                                Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Bike> call, Throwable t) {
+                            Toast.makeText(context, R.string.network_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            }
+        }
+    }
+
     /**
      * task to invalidate the UI, executes itself periodically every UI_UPDATE_INTERVAL
      */

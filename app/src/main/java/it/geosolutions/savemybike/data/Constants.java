@@ -78,6 +78,9 @@ public class Constants {
 
         public static final String BADGES_WON_ID = "it.geosolutions.savemybike.badges.won";
         public static final String BADGES_WON_NAME = "Notification about won bades";
+
+        public static final String BIKE_OBSERVATION = "it.geosolutions.savemybike.bikes.observation";
+        public static final String BIKE_OBSERVATION_NAME = "Bike Observations";
     }
 
 

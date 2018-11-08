@@ -1,10 +1,16 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
+
+import android.content.Intent;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+
+import android.support.v4.view.GravityCompat;
+
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,6 +26,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.data.Feature;
+
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPoint;
@@ -72,6 +80,8 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
     // default padding for points in map
     public static final int DATA_PADDING = 20;
     private static final String DETAILS = "details";
+    public static final String OBSERVATION_ID = "observation_id";
+  
     private GoogleMap mMap;
 
     /* show info about selected feature
@@ -372,16 +382,23 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 });
                 // zoom to bounding box
                 try {
-                    LatLngBounds bounds = builder.build();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, DATA_PADDING * 4));
+                    String observationId = getIntent().getStringExtra(OBSERVATION_ID);
+                    Feature observedFeature = getById(observationId);
+                    if(observationId != null && observedFeature != null) {
+                        this.selectFeature(observationId);
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((GeoJsonPoint) observedFeature.getGeometry()).getCoordinates(), 14));
+                    } else {
+                        LatLngBounds bounds = builder.build();
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, DATA_PADDING * 4));
+                    }
+
                 } catch(IllegalStateException e) {
                   Log.w(TAG, "No observation");
-
                     showNoData("noPoints");
                 }finally {
                     setLoading(false);
                 }
-
             }
         }
     }
@@ -500,7 +517,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         GeoJsonFeature last = null;
         if(layer != null & mMap != null) {
             for(GeoJsonFeature f : layer.getFeatures()) {
-                if(f.getId() == id) {
+                if(f.getId()!= null && f.getId().equals(id)) {
                     return f;
                 }
             }
@@ -515,5 +532,11 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
 
     public int getDefaultBottomPadding() {
         return getSupportActionBar().getHeight();
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        finish();
+        startActivity(intent);
     }
 }

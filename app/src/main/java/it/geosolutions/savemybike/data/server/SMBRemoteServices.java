@@ -41,6 +41,9 @@ public interface SMBRemoteServices {
     @GET("api/my-bikes")
     Call<PaginatedResult<Bike>> getMyBikes();
 
+    @GET("api/my-bikes/{id}")
+    Call<Bike> getMyBike(@Path("id") String id);
+
     @GET("api/my-bike-observations/")
     Call<ResponseBody> getBikeObservations(@Query("bike") String id);
 

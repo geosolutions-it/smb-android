@@ -346,4 +346,5 @@
     <string name="last_update">Last Update</string>
     <string name="last_observations">Last Observations</string>
     <string name="no_position_available">No Observations</string>
+    <string name="bike_observed_notification_observed">One of your bikes has been observed by a sensor</string>
 </resources>
