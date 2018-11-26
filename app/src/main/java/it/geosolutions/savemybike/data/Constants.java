@@ -66,6 +66,17 @@ public class Constants {
 
     public final static float KM_TO_MILES = 0.621371192f;
     public final static float METER_TO_FEET = 3.2808399f;
+
+    /**
+     * Time before the token expiring when we should refresh the token
+     *
+     */
+    public static long TOKEN_REFRESH_BUFFER = 1000 * 60 * 60 * 24 * 3; // 3 days before expiring, force refresh on next startup or during the periodical check
+    /**
+     * Interval between checks to refresh the token
+     */
+    public static final long REFRESH_TOKEN_INTERVAL = 1000 * 60 * 60 * 24 * 1; // every day check for refresh
+
     public static final class Channels {
         public static final String TRACKS_VALID_ID = "it.geosolutions.savemybike.tracks_channel_valid";
         public static final String TRACKS_VALID_NAME = "Tracks validation success";

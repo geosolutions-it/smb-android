@@ -250,20 +250,21 @@ public final class LoginActivity extends AppCompatActivity {
             Long expiresAt = state.getAccessTokenExpirationTime();
             if (expiresAt == null) {
                 accessTokenInfoView.setText(R.string.no_access_token_expiry);
+                Log.w(TAG, "refresh impossible. This access token has no expire");
+                // Note: here we can not use TOKEN_REFRESH_BUFFER because if the next expireAt < currentTimeMillis - TOKEN_REFRESH_BUFFER
+                // the login goes in infinite loop (this condition is checked again and again after every refresh)
             } else if (expiresAt < System.currentTimeMillis()) {
+                Log.i(TAG, "refreshing token that expired at" + new Date(expiresAt).toString());
                 accessTokenInfoView.setText(R.string.access_token_expired);
                 refreshAccessToken();
                 return;
             } else {
-
-
+                Log.i(TAG, "the current token will expire at" + new Date(expiresAt).toString());
                 String template = getResources().getString(R.string.access_token_expires_at);
                 accessTokenInfoView.setText(String.format(template,
                         DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss ZZ").print(expiresAt)));
                 User localUser = it.geosolutions.savemybike.model.Configuration.getUserProfile(this);
-                if(localUser != null) {
 
-                }
                 if(localUser == null // first login
                     || localUser.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
                     || localUser.getAcceptedTermsOfService() == false // terms of service unchecked.
