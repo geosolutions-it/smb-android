@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
@@ -134,6 +135,8 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
             case STOPPED:
                 //switch to "Record" UI
                 recordButton.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_record_play_pause));
+                distTV.setText("");
+                timeTV.setText("");
                 break;
         }
     }
@@ -188,19 +191,25 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
             }
 
             final double dist = session.getDistance();
-            final long time = session.getOverallTime();
-            Log.i(TAG, "DIST: "+ dist+ " TIME: "+time);
+            final long startingTime = session.getStartingTime();
+            final long nowTime = System.currentTimeMillis();
 
-            if(((SaveMyBikeActivity)getActivity()).getConfiguration().metric){
+            Log.i(TAG, "DIST: "+ dist+ " TIME: "+ (nowTime - startingTime));
+
+            if( getActivity() != null && ((SaveMyBikeActivity)getActivity()).getConfiguration().metric){
 
                 distTV.setText(String.format(Locale.US,"%.2f %s", dist / 1000f, Constants.UNIT_KM));
             }else{
                 distTV.setText(String.format(Locale.US,"%.2f %s", dist / 1000f * Constants.KM_TO_MILES, Constants.UNIT_MI));
             }
-            timeTV.setText(Util.longToTimeString(time));
+            if(startingTime > 0) {
+                timeTV.setText(Util.longToTimeString( nowTime - startingTime ));
+            } else {
+                timeTV.setText(R.string.go);
+            }
+
 
         }
-
     }
 
     /**
@@ -267,7 +276,7 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
         } else {
             if(mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 ((SaveMyBikeActivity)getActivity()).startRecording();
-
+                Toast.makeText(getContext(), R.string.timer_info_toast, Toast.LENGTH_LONG).show();
                 applySessionState(Session.SessionState.ACTIVE);
             } else {
                 showGPSDiabledDialog();

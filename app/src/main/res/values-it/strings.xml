@@ -312,4 +312,6 @@
     <string name="last_observations">Ultimi rilevamenti</string>
     <string name="no_position_available">Nessuna posizione rilevata</string>
     <string name="bike_observed_notification_observed">Una delle tue bici è stata rilevata dai sensori</string>
+    <string name="go">Vai!</string>
+    <string name="timer_info_toast">Il timer partirà al primo spostamento significativo rilevato</string>
 </resources>

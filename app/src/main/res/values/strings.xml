@@ -347,4 +347,6 @@
     <string name="last_observations">Last Observations</string>
     <string name="no_position_available">No Observations</string>
     <string name="bike_observed_notification_observed">One of your bikes has been observed by a sensor</string>
+    <string name="go">Go!</string>
+    <string name="timer_info_toast">The timer will start at the first significant displacement detected</string>
 </resources>

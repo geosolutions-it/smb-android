@@ -155,7 +155,7 @@
     <TextView
         android:id="@+id/stats_time"
         android:layout_width="0dp"
-        android:layout_height="83dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="10dp"
         android:fontFamily="sans-serif"
@@ -163,7 +163,7 @@
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/record_button"
         app:layout_constraintEnd_toStartOf="@+id/record_button"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
