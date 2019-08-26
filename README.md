@@ -1,5 +1,5 @@
-# smb-app
-SaveMyBike mobile app
+# smb-android
+SaveMyBike Android mobile app
 
 ## Setup of GOOGLE_API_KEY and firebase secrets
 
