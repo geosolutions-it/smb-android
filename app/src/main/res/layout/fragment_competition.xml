@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/layout_root"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:padding="10dp">
+
+	<LinearLayout
+		android:id="@+id/progress_layout"
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:background="#80FFFFFF"
+		android:clickable="true"
+		android:gravity="center_horizontal|center_vertical"
+		android:orientation="vertical"
+		android:visibility="gone"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:visibility="invisible">
+
+		<ProgressBar
+			style="?android:attr/progressBarStyleLarge"
+			android:layout_width="126dp"
+			android:layout_height="121dp" />
+	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/image_view"
+		android:layout_width="129dp"
+		android:layout_height="124dp"
+		android:layout_marginStart="20dp"
+		android:layout_marginTop="20dp"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+		android:id="@+id/title_text"
+		android:layout_width="0dp"
+		android:layout_height="60dp"
+		android:layout_marginEnd="20dp"
+		android:layout_marginStart="20dp"
+		android:layout_marginTop="20dp"
+		android:ems="10"
+		android:inputType="textPersonName"
+		android:text="Title here"
+		android:textSize="20sp"
+		android:textStyle="bold"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/image_view" />
+
+	<TextView
+		android:id="@+id/description_text"
+		android:layout_width="0dp"
+		android:layout_height="116dp"
+		android:layout_marginEnd="20dp"
+		android:layout_marginStart="20dp"
+		android:layout_marginTop="20dp"
+		android:ems="10"
+		android:inputType="textPersonName"
+		android:singleLine="false"
+		android:text="lorem ipsum lorem ipsum lorem ipsum lorem ipsum "
+		android:textAlignment="viewStart"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/title_text" />
+
+	<Button
+		android:id="@+id/action_button"
+		android:layout_width="0dp"
+		android:layout_height="62dp"
+		android:layout_marginBottom="20dp"
+		android:layout_marginEnd="20dp"
+		android:layout_marginStart="20dp"
+		android:text="Action"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

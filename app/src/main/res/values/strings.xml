@@ -279,7 +279,8 @@
     <string name="terms_of_service">Terms of Service</string>
     <string name="please_select">Please select</string>
     <string name="my_prizes">My Prizes</string>
-    <string name="up_for_grabs">Up For Grabs</string>
+	<string name="competitions_available">Up For Grabs</string>
+	<string name="competitions_participating">Current</string>
     <string name="prizes">Prizes</string>
     <string name="validity">Valid from %s to %s</string>
     <string name="congratulations_you_won">Congratulations!</string>
@@ -304,6 +305,8 @@
     <string name="validation_error_cause">This is the cause: %s</string>
     <string name="badge_won_title">You acquired a new badge</string>
     <string name="prize_won_title">You won a prize</string>
+	<string name="competition_join_button_text">Join Competition</string>
+	<string name="competition_cancel_button_text">Cancel Participation</string>
     <string name="powersaving_description"><![CDATA[
         <p>GoodGo needs to be executed in background to track your activities. Anyway some devices, to save power supply, stop the background processes. To avoid this you need to configure your application in the proper way</p>
     ]]></string>
@@ -349,4 +352,12 @@
     <string name="bike_observed_notification_observed">One of your bikes has been observed by a sensor</string>
     <string name="go">Go!</string>
     <string name="timer_info_toast">The timer will start at the first significant displacement detected</string>
+	<string name="request_failed">Request Failed</string>
+	<string name="request_succeeded">Request Succeeded</string>
+	<string name="confirm_participation_cancellation_title">Confirm Cancellation</string>
+	<string name="confirm_participation_cancellation_body">Do you really want to cancel the participation in this competition?</string>
+	<string name="participation_requested">You have succesfully requested the participation in the competition. You will be notified once the request is approved by our staff.</string>
+	<string name="participation_canceled">Your participation in this competition has been canceled.</string>
+	<string name="yes">YES</string>
+	<string name="no">NO</string>
 </resources>

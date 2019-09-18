@@ -67,7 +67,6 @@ public final class Configuration {
     private Uri mTokenEndpointUri;
     private Uri mRegistrationEndpointUri;
     private Uri mUserInfoEndpointUri;
-    private boolean mHttpsRequired;
 
     public static Configuration getInstance(Context context) {
         Configuration config = sInstance.get();
@@ -162,17 +161,6 @@ public final class Configuration {
         return mUserInfoEndpointUri;
     }
 
-    public boolean isHttpsRequired() {
-        return mHttpsRequired;
-    }
-
-    public ConnectionBuilder getConnectionBuilder() {
-        if (isHttpsRequired()) {
-            return DefaultConnectionBuilder.INSTANCE;
-        }
-        return null;
-    }
-
     private String getLastKnownConfigHash() {
         return mPrefs.getString(KEY_LAST_HASH, null);
     }
@@ -217,8 +205,6 @@ public final class Configuration {
         } else {
             mDiscoveryUri = getRequiredConfigWebUri("discovery_uri");
         }
-
-        mHttpsRequired = mConfigJson.optBoolean("https_required", true);
     }
 
     @Nullable

@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
         ButterKnife.bind(this, view);
         bikes.setOnClickListener( (view1) -> navigateTo(R.id.navigation_bikes));
         badges.setOnClickListener( (view1) -> navigateTo(R.id.navigation_badges));
-        prizes.setOnClickListener( (view1) -> navigateTo(R.id.navigation_prizes));
+        prizes.setOnClickListener( (view1) -> navigateTo(R.id.navigation_competitions));
         tracks.setOnClickListener( (view1) -> navigateTo(R.id.navigation_stats));
         record.setOnClickListener( (view1) -> navigateTo(R.id.navigation_record));
         return view;

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_prizes_up_for_grabs"
+        android:id="@+id/navigation_competitions_available"
         android:icon="@drawable/ic_trophy"
-        android:title="@string/up_for_grabs"/>
-    <item
-        android:id="@+id/navigation_my_prizes"
-        android:icon="@drawable/ic_star"
-        android:title="@string/my_prizes" />
+        android:title="@string/competitions_available"/>
+	<item
+		android:id="@+id/navigation_competitions_participating"
+		android:icon="@drawable/ic_trophy"
+		android:title="@string/competitions_participating" />
+	<item
+		android:id="@+id/navigation_my_prizes"
+		android:icon="@drawable/ic_star"
+		android:title="@string/my_prizes" />
 </menu>

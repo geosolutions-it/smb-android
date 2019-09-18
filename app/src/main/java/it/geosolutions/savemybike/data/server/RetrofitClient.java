@@ -10,9 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-
-import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
+import it.geosolutions.savemybike.auth.AuthenticationManager;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
@@ -116,8 +115,8 @@ public class RetrofitClient {
      * fetches the current configuration from the AWS server using @param token for authentication
      * @param callback call for the result
      */
-    private void fetchConfig(@NonNull final GetConfigCallback callback){
-
+    private void fetchConfig(@NonNull final GetConfigCallback callback)
+    {
         //do the (retrofit) get call
         final Call<Configuration> call = getServices().getConfig();
 
@@ -137,26 +136,30 @@ public class RetrofitClient {
      * fetches the current configuration from the AWS server using @param token for authentication
      * @param callback call for the result
      */
-    private void fetchBikes(@NonNull final GetBikesCallback callback){
+    private void fetchBikes(@NonNull final GetBikesCallback callback)
+    {
+		performAuthenticatedCall(
+				getPortalServices().getMyBikes(),
+			    new Callback<PaginatedResult<Bike>>()
+			    {
+				    @Override
+				    public void onResponse(Call<PaginatedResult<Bike>> call, retrofit2.Response<PaginatedResult<Bike>> response)
+				    {
+					    final PaginatedResult<Bike> bikesList = response.body();
+					    callback.gotBikes(bikesList);
+				    }
 
-        //do the (retrofit) get call
-        getPortalServices().getMyBikes().enqueue(new Callback<PaginatedResult<Bike>>() {
-            @Override
-            public void onResponse(Call<PaginatedResult<Bike>> call, retrofit2.Response<PaginatedResult<Bike>> response) {
-                final PaginatedResult<Bike> bikesList = response.body();
-                callback.gotBikes(bikesList);
-            }
-
-            @Override
-            public void onFailure(Call<PaginatedResult<Bike>> call, Throwable t) {
-                callback.error("io-error executing fetchBikes");
-            }
-        });
-
-
+				    @Override
+				    public void onFailure(Call<PaginatedResult<Bike>> call, Throwable t)
+				    {
+					    callback.error("io-error executing fetchBikes");
+				    }
+			    }
+	        );
     }
 
-    private Retrofit getRetrofit(){
+    private Retrofit getAWSRetrofit()
+    {
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
                     .client(getPortalClient())
@@ -168,7 +171,8 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    private Retrofit getPortalRetrofit(){
+    private Retrofit getPortalRetrofit()
+    {
         if(portalRetrofit == null){
             portalRetrofit = new Retrofit.Builder()
                     .client(getPortalClient())
@@ -180,12 +184,68 @@ public class RetrofitClient {
         return portalRetrofit;
     }
 
+    public <T> void performAuthenticatedCall(Call<T> oCall, Callback<T> oCallback)
+	{
+		performAuthenticatedCall(oCall,oCallback,true);
+	}
+
+	private <T> void performAuthenticatedCall(final Call<T> oCall,final Callback<T> oCallback,final boolean bMayReauth)
+	{
+
+		oCall.enqueue(new Callback<T>()
+		{
+			@Override
+			public void onResponse(Call<T> call, retrofit2.Response<T> response)
+			{
+				int c = response.code();
+
+				if(c < 400)
+				{
+					oCallback.onResponse(call,response);
+					return;
+				}
+
+				if((c == 403) && bMayReauth)
+				{
+					// unauthorized
+
+					AuthenticationManager.instance().onAuthenticatedCallFailed(
+							new AuthenticationManager.PendingCall()
+							{
+								@Override
+								public void onAuthenticationSucceeded()
+								{
+									performAuthenticatedCall(oCall.clone(),oCallback,false);
+								}
+
+								@Override
+								public void onAuthenticationFailed(String sError)
+								{
+									oCallback.onFailure(call,new Throwable(sError));
+								}
+							}
+						);
+					return;
+				}
+
+				oCallback.onFailure(call,new Throwable(String.valueOf(c) + " " + response.message()));
+			}
+
+			@Override
+			public void onFailure(Call<T> call, Throwable t)
+			{
+				oCallback.onFailure(call,t);
+			}
+		});
+	}
+
     /**
      * Compose a Retrofit instance for Retrofit (setting up configuration).
      * TODO: avoid unnecessary interceptors and configuratons
      * @return the Retrofit instance to build the auth client
      */
-    public Retrofit getAuthRetrofit() {
+    public Retrofit getAuthRetrofit()
+    {
         return new Retrofit.Builder()
                 .client(getPortalClient())
                 .baseUrl(Constants.PORTAL_ENDPOINT)
@@ -223,13 +283,14 @@ public class RetrofitClient {
             // TODO: inject authentication token
 
             Request request = chain.request();
-            AuthState state = AuthStateManager.getInstance(context).getCurrent();
+            AuthState state = AuthenticationManager.instance().currentAuthState();
             String token = state.getAccessToken();
 
             if (token != null){
                 Request authenticatedRequest = request.newBuilder().header("Authorization", "Bearer " + token).build();
                 return chain.proceed(authenticatedRequest);
             }
+
             return chain.proceed(request);
 
         }
@@ -244,7 +305,7 @@ public class RetrofitClient {
         @Override public Response intercept(@NonNull Chain chain) throws IOException {
             Request request = chain.request();
             long t1 = System.nanoTime();
-            String requestLog = String.format(Locale.US, "Sending request %s on %s%n%s",request.url(), chain.connection(), request.headers());
+            String requestLog = String.format(Locale.US, "Sending %s to %s",request.method(),request.url());
 
             if(request.method().compareToIgnoreCase("post")==0){
                 requestLog ="\n"+requestLog+"\n"+bodyToString(request);
@@ -286,7 +347,7 @@ public class RetrofitClient {
      */
     private SMBRemoteServices getServices(){
 
-        return getRetrofit().create(SMBRemoteServices.class);
+        return getAWSRetrofit().create(SMBRemoteServices.class);
 
     }
 
@@ -294,15 +355,15 @@ public class RetrofitClient {
      * Returns an auth client for retrofit.
      * @return
      */
-    public AuthClient getAuthClient() {
+    public AuthClient getAuthClient()
+    {
         return getAuthRetrofit().create(AuthClient.class);
     }
 
 
-    public SMBRemoteServices getPortalServices(){
-
+    public SMBRemoteServices getPortalServices()
+    {
         return getPortalRetrofit().create(SMBRemoteServices.class);
-
     }
 
     public interface GetConfigCallback
@@ -316,15 +377,9 @@ public class RetrofitClient {
         void gotBikes(PaginatedResult<Bike> bikesList);
         void error(String message);
     }
-/*
-    public interface Authenticate
-    {
-        void success();
-        void error(String message);
-    }
-*/
 
-    public void uploadFile(String s3ObjectKey, File file, Callback<ResponseBody> callback) {
+    public void uploadFile(String s3ObjectKey, File file, Callback<ResponseBody> callback)
+	{
 
         // TODO make a singleton for the services
         // create upload service client
@@ -338,8 +393,10 @@ public class RetrofitClient {
                 );
 
         // finally, execute the request
-        Call<ResponseBody> call = service.upload(s3ObjectKey, requestFile);
-        call.enqueue(callback);
+        performAuthenticatedCall(
+				service.upload(s3ObjectKey, requestFile),
+		        callback
+			);
     }
 
 }

@@ -28,7 +28,7 @@
             android:icon="@drawable/ic_badge"
             android:title="@string/badges" />
         <item
-            android:id="@+id/navigation_prizes"
+            android:id="@+id/navigation_competitions"
             android:icon="@drawable/ic_trophy"
             android:title="@string/prizes" />
         <item

@@ -24,72 +24,51 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/congratulations_you_won"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold"
+		<ImageView
+			android:id="@+id/competition_image"
+			android:layout_width="84dp"
+			android:layout_height="84dp"
+			android:layout_marginStart="8dp"
+			android:layout_marginTop="8dp"
+			android:scaleType="fitCenter"
+			android:src="@drawable/ic_trophy"
+			android:visibility="visible"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Congratulations! You won" />
-
-        <ImageView
-            android:id="@+id/competition_image"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/prizes_image_size"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_trophy"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header">
-
-        </ImageView>
+		</ImageView>
 
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/header"
-            tools:text="Title" />
+		<TextView
+			android:id="@+id/title"
+			android:layout_width="0dp"
+			android:layout_height="28dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginStart="100dp"
+			android:layout_marginTop="8dp"
+			android:textAlignment="textStart"
+			android:textColor="@color/colorPrimary"
+			android:textStyle="bold"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Title" />
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="description" />
+		<TextView
+			android:id="@+id/description"
+			android:layout_width="0dp"
+			android:layout_height="53dp"
+			android:layout_marginEnd="8dp"
+			android:layout_marginStart="100dp"
+			android:layout_marginTop="3dp"
+			android:textAlignment="textStart"
+			android:textStyle="italic"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/title"
+			tools:text="description" />
 
-        <LinearLayout
+		<LinearLayout
             android:id="@+id/linearLayout4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -105,27 +105,29 @@ public class BikeListFragment extends Fragment {
         newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/my-bikes/"+bike.getShort_uuid()+"/");
         newStatus.setDetails(details);
         newStatus.setLost(!bike.getCurrentStatus().getLost());
-        Call<Object> call = smbserv.sendNewBikeStatus(newStatus);
 
-        call.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.i(TAG, "Response Message: "+ response.message());
-                Log.i(TAG, "Response Body: "+ response.body());
+		rclient.performAuthenticatedCall(
+				smbserv.sendNewBikeStatus(newStatus),
+				new Callback<Object>() {
+					@Override
+					public void onResponse(Call<Object> call, Response<Object> response) {
+						Log.i(TAG, "Response Message: "+ response.message());
+						Log.i(TAG, "Response Body: "+ response.body());
 
-                if(response.isSuccessful()) {
-                    bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
-                    bikeAdapter.notifyDataSetInvalidated();
-                } else {
-                    Log.w(TAG, "Bike update UNSUCCESSFUL");
-                }
-            }
+						if(response.isSuccessful()) {
+							bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
+							bikeAdapter.notifyDataSetInvalidated();
+						} else {
+							Log.w(TAG, "Bike update UNSUCCESSFUL");
+						}
+					}
 
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(TAG, "ERROR: "+ t.getMessage());
-            }
-        });
+					@Override
+					public void onFailure(Call<Object> call, Throwable t) {
+						Log.e(TAG, "ERROR: "+ t.getMessage());
+					}
+				}
+			);
     }
     public void getBikes() {
         Context context = getContext();

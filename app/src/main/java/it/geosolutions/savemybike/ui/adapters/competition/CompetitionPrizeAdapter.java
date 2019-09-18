@@ -28,7 +28,8 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
 
     protected int resource;
 
-    static class ViewHolder {
+    static class ViewHolder
+    {
         @BindView(R.id.prize_header) TextView header;
         @BindView(R.id.prize_description) TextView description;
         @BindView(R.id.prize_subtitle) TextView subtitle;
@@ -58,11 +59,13 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
+
         CompetitionPrize cPrize = getItem(position);
-        Prize prize = cPrize.getPrize();
+        Prize prize = cPrize.prize;
         // setup view
 
-        if(prize != null) {
+        if(prize != null)
+        {
             holder.header.setText(prize.getName());
             holder.description.setText(getDescription(cPrize));
             Sponsor s = prize.getSponsor();
@@ -80,11 +83,10 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
         return view;
     }
 
-    protected String getDescription(CompetitionPrize cPrize) {
-        Prize p = cPrize.getPrize();
-        if(p != null) {
-            return p.getDescription();
-        }
+    protected String getDescription(CompetitionPrize cPrize)
+    {
+        if(cPrize.prize != null)
+        	return cPrize.prize.getDescription();
         return null;
     }
 

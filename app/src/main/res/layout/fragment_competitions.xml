@@ -37,4 +37,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/navigation_prizes" />
+
 </android.support.constraint.ConstraintLayout >

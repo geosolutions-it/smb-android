@@ -244,7 +244,8 @@
     <string name="terms_of_service">Termini del Servizio</string>
     <string name="please_select">Selezionare</string>
     <string name="my_prizes">I miei premi</string>
-    <string name="up_for_grabs">Premi In Palio</string>
+    <string name="competitions_available">Disponibili</string>
+	<string name="competitions_participating">Attive</string>
     <string name="prizes">Premi</string>
     <string name="validity">Valido dal %s al %s</string>
     <string name="congratulations_you_won">Complimenti! </string>
@@ -269,6 +270,8 @@
     <string name="validation_error_cause">Questa è la causa: %s</string>
     <string name="badge_won_title">Hai ottenuto un nuovo badge</string>
     <string name="prize_won_title">Hai vinto un premio !!!</string>
+	<string name="competition_join_button_text">Partecipa</string>
+	<string name="competition_cancel_button_text">Annulla Partecipazione</string>
     <string name="powersaving_description"><![CDATA[
         <p>GoodGo per tracciare i tuoi movimenti necessita di essere eseguita in background. Tuttavia alcuni dispositivi, per risparmiare batteria, terminano i processi in background arbitrariamente. Per evitare questo &egrave; necessario configurare il tuo dispositivo in maniera opportuna.</p>
     ]]></string>
@@ -314,4 +317,13 @@
     <string name="bike_observed_notification_observed">Una delle tue bici è stata rilevata dai sensori</string>
     <string name="go">Vai!</string>
     <string name="timer_info_toast">Il timer partirà al primo spostamento significativo rilevato</string>
+	<string name="request_failed">Richiesta Fallita</string>
+	<string name="request_succeeded">Richiesta Completata</string>
+	<string name="confirm_participation_cancellation_title">Conferma Annullamento</string>
+	<string name="confirm_participation_cancellation_body">Vuoi veramente abbandonare questa competizione?</string>
+	<string name="participation_requested">La richiesta di partecipazione è stata inoltrata. Verrai avvisato quando il nostro staff approverà la richiesta.</string>
+	<string name="participation_canceled">La partecipazione in questa competizione è stata annullata.</string>
+	<string name="yes">SI</string>
+	<string name="no">NO</string>
+
 </resources>

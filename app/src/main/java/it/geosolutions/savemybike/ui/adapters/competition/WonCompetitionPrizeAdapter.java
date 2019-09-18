@@ -31,7 +31,7 @@ public class WonCompetitionPrizeAdapter extends CompetitionPrizeAdapter {
     }
 
     protected String getDescription(CompetitionPrize cPrize) {
-        return cPrize.getWinnerDescription();
+        return ""; //cPrize.getWinnerDescription();
     }
 
 
