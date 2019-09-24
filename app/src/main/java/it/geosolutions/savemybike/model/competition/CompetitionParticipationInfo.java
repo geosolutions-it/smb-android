@@ -10,7 +10,7 @@ public class CompetitionParticipationInfo
 
 	public @SerializedName("registration_status") String registrationStatus;
 
-	public String score;
+	//public String score; b0rken, it's an object
 
 	public Competition competition;
 
