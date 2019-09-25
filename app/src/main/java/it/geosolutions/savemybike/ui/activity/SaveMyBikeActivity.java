@@ -163,7 +163,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 		it.geosolutions.savemybike.Configuration config = it.geosolutions.savemybike.Configuration.getInstance(this);
 		if (config.hasConfigurationChanged()) {
 			Log.w(TAG, "hasConfigurationChanged() == true");
-
+			config.acceptConfiguration();
 			signOut(false);
 			return;
 		}
