@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.manager.SupportRequestManagerFragment;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -44,6 +45,7 @@ import net.openid.appauth.AuthorizationService;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
@@ -748,6 +750,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 	public void popFragment()
 	{
 		getSupportFragmentManager().popBackStackImmediate();
+		getSupportFragmentManager().beginTransaction().commit();
 	}
 
 	/**
@@ -1112,13 +1115,25 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 				new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
 			// default back effect is a back to the home page
 			} else {
-				if(getSupportFragmentManager().getFragments().size() > 1)
-					popFragment();
-				else
+				// The Glide library interferes with our fragments.
+				List<Fragment> lFragments = getSupportFragmentManager().getFragments();
+				if(lFragments != null)
+				{
+					int c = 0;
+					for(Fragment f : lFragments)
+					{
+						if(f instanceof SupportRequestManagerFragment)
+							continue; // malicious fragment sneaked in by Glide
+						c++;
+					}
+					if(c > 1)
+						popFragment();
+					else
+						changeFragment(R.id.navigation_home);
+				} else {
 					changeFragment(R.id.navigation_home);
+				}
 			}
-
-
 		}
 	}
 
