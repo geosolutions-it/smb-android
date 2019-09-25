@@ -38,9 +38,7 @@ public abstract class BaseCompetitionAdapter<ResultClass> extends ArrayAdapter<R
         @BindView(R.id.description) TextView description;
         @BindView(R.id.subtitle) TextView subtitle;
         @BindView(R.id.competition_image) ImageView icon;
-        @BindView(R.id.prizes_grid)
 
-        GridView prizesGrid;
         public ViewHolder(View view)
         {
             ButterKnife.bind(this, view);
@@ -55,7 +53,6 @@ public abstract class BaseCompetitionAdapter<ResultClass> extends ArrayAdapter<R
     }
 
     public abstract CompetitionBaseData getCompetitionData(ResultClass rc);
-    public abstract List<CompetitionPrize> getPrizes(ResultClass rc);
 
 	public void onCompetitionSelected(ResultClass bd)
 	{
@@ -118,17 +115,7 @@ public abstract class BaseCompetitionAdapter<ResultClass> extends ArrayAdapter<R
 	        }
         }
 
-        List<CompetitionPrize> lPrizes = (rc != null) ? getPrizes(rc) : null;
-
-        if(lPrizes != null)
-            holder.prizesGrid.setAdapter(createPrizeAdapter(lPrizes));
-
         return view;
-    }
-
-    protected ListAdapter createPrizeAdapter(List<CompetitionPrize> lPrizes)
-    {
-        return new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, lPrizes);
     }
 
 

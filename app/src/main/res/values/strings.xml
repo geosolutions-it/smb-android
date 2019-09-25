@@ -65,8 +65,8 @@
     <string name="send">Send</string>
     <string name="lost_bike_report_title">Lost Bike Report</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="prizes_header">Prizes</string>
+	<string name="sponsors_header">Sponsors</string>
     <string name="segments">Segments</string>
     <string name="track_details">Details</string>
     <string name="benefit_index">Benefit Index</string>

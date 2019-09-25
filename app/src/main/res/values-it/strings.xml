@@ -36,6 +36,8 @@
     <string name="lost_bike_message">Stai per segnalare questa bici come \"smarrita\".\nAggiungi qualche dettaglio.</string>
     <string name="send">Invia</string>
     <string name="lost_bike_report_title">Segnala Bici Smarrita</string>
+	<string name="prizes_header">Premi</string>
+	<string name="sponsors_header">Sponsor</string>
     <string name="segments">Segmenti</string>
     <string name="benefit_index">Indice dei benefici</string>
     <string name="calories_consumed">Calorie Consumate</string>

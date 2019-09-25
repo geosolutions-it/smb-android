@@ -11,9 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +28,8 @@ import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipantRequest;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.adapters.competition.CompetitionPrizeAdapter;
+import it.geosolutions.savemybike.ui.adapters.competition.CompetitionSponsorAdapter;
 import it.geosolutions.savemybike.ui.fragment.competitions.AvailableCompetitionsFragment;
 import it.geosolutions.savemybike.ui.fragment.competitions.CurrentCompetitionsFragment;
 import okhttp3.ResponseBody;
@@ -39,6 +45,10 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 	@BindView(R.id.description_text) TextView m_oDescriptionTextView;
 	@BindView(R.id.action_button) Button m_oActionButton;
 	@BindView(R.id.progress_layout) LinearLayout m_oProgressLayout;
+	@BindView(R.id.prizes_grid) GridView m_oPrizesGrid;
+	@BindView(R.id.sponsor_grid) GridView m_oSponsorsGrid;
+	@BindView(R.id.prizes_title_text) TextView m_oPrizesHeader;
+	@BindView(R.id.sponsors_title_text) TextView m_oSponsorsHeader;
 
 	private CompetitionBaseData m_oCompetition;
 	private CompetitionParticipationInfo m_oParticipationInfo;
@@ -81,8 +91,31 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 
 		m_oActionButton.setOnClickListener(this);
 
+		if(m_oParticipationInfo.competition.prizes != null)
+		{
+			if(m_oParticipationInfo.competition.prizes.size() > 0)
+				m_oPrizesHeader.setText(R.string.prizes_header);
+			else
+				m_oPrizesHeader.setText("");
+			m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, m_oParticipationInfo.competition.prizes));
+		} else {
+			m_oPrizesHeader.setText("");
+		}
+
+		if(m_oParticipationInfo.competition.sponsors != null)
+		{
+			if(m_oParticipationInfo.competition.sponsors.size() > 0)
+				m_oSponsorsHeader.setText(R.string.sponsors_header);
+			else
+				m_oSponsorsHeader.setText("");
+			m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, m_oParticipationInfo.competition.sponsors));
+		} else {
+			m_oSponsorsHeader.setText("");
+		}
+
 		return view;
 	}
+
 
 	private void requestParticipation()
 	{

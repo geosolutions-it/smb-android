@@ -1153,4 +1153,9 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 			}
 		}).execute();
 	}
+
+	public void openURL(String sURL)
+	{
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sURL)));
+	}
 }

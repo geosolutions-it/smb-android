@@ -89,22 +89,6 @@
                 android:visibility="gone"
                 android:text="@string/prizes" />
 
-            <GridView
-                android:id="@+id/prizes_grid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:columnWidth="150dp"
-                android:gravity="center"
-                android:horizontalSpacing="10dp"
-                android:numColumns="auto_fit"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp"
-                tools:listitem="@layout/item_prize" />
         </LinearLayout>
 
         <TextView
