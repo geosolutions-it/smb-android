@@ -22,11 +22,6 @@ public class AvailableCompetitionAdapter extends BaseCompetitionAdapter<Competit
 		return rc;
 	}
 
-	@Override
-	public List<CompetitionPrize> getPrizes(CompetitionBaseData rc)
-	{
-		return null;
-	}
 
 	@Override
 	public void onCompetitionSelected(CompetitionBaseData bd)

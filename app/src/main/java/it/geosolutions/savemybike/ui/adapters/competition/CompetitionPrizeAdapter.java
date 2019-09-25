@@ -69,8 +69,8 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
             holder.header.setText(prize.getName());
             holder.description.setText(getDescription(cPrize));
             Sponsor s = prize.getSponsor();
-            if(s != null && s.getName() != null) {
-                holder.subtitle.setText(s.getName());
+            if(s != null && s.name != null) {
+                holder.subtitle.setText(s.name);
             }
             if(prize.getImage() != null) {
                 GlideApp

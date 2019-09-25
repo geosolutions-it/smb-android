@@ -1,13 +1,8 @@
 package it.geosolutions.savemybike.model.competition;
 
-public class Sponsor {
-    String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+public class Sponsor
+{
+	public String name;
+	public String logo;
+    public String url;
 }

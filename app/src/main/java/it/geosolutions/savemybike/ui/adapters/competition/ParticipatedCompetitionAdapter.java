@@ -26,16 +26,6 @@ public class ParticipatedCompetitionAdapter extends BaseCompetitionAdapter<Compe
 	}
 
 	@Override
-	public List<CompetitionPrize> getPrizes(CompetitionParticipationInfo rc)
-	{
-		if(rc == null)
-			return null;
-		if(rc.competition == null)
-			return null;
-		return rc.competition.prizes;
-	}
-
-	@Override
 	public void onCompetitionSelected(CompetitionParticipationInfo pi)
 	{
 		SaveMyBikeActivity.instance().pushFragment(new CompetitionFragment(pi.competition,pi));
