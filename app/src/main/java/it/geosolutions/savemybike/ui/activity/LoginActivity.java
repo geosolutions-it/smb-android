@@ -91,6 +91,7 @@ public final class LoginActivity extends AuthHandlerActivity
 					Toast.LENGTH_SHORT)
 					.show();
 			AuthenticationManager.instance().clearState();
+			mConfiguration.acceptConfiguration();
 		}
 
 		if (savedInstanceState != null) {
