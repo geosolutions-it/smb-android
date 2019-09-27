@@ -74,7 +74,7 @@ public interface SMBRemoteServices
 	// Competitions
 
 	@GET("api/my-competitions-available")
-	Call<PaginatedResult<CompetitionBaseData>> getMyCompetitionsAvailable();
+	Call<PaginatedResult<Competition>> getMyCompetitionsAvailable();
 
 	@GET("api/my-competitions-current")
 	Call<PaginatedResult<CompetitionParticipationInfo>> getMyCompetitionsCurrent();

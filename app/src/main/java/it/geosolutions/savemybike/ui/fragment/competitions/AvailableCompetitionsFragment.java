@@ -12,6 +12,7 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.ui.adapters.competition.AvailableCompetitionAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.BaseCompetitionAdapter;
@@ -19,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AvailableCompetitionsFragment extends BaseCompetitionsFragment<CompetitionBaseData>
+public class AvailableCompetitionsFragment extends BaseCompetitionsFragment<Competition>
 {
 	private static AvailableCompetitionsFragment m_oLastInstance = null;
 
@@ -43,9 +44,9 @@ public class AvailableCompetitionsFragment extends BaseCompetitionsFragment<Comp
 	}
 
 	@Override
-	protected BaseCompetitionAdapter<CompetitionBaseData> createAdapter()
+	protected BaseCompetitionAdapter<Competition> createAdapter()
 	{
-		return new AvailableCompetitionAdapter(getActivity(), R.layout.item_competition,new ArrayList<CompetitionBaseData>());
+		return new AvailableCompetitionAdapter(getActivity(), R.layout.item_competition,new ArrayList<Competition>());
 	}
 
 
@@ -71,13 +72,13 @@ public class AvailableCompetitionsFragment extends BaseCompetitionsFragment<Comp
 
 		client.performAuthenticatedCall(
 				portalServices.getMyCompetitionsAvailable(),
-				new Callback<PaginatedResult<CompetitionBaseData>>()
+				new Callback<PaginatedResult<Competition>>()
 				{
 					@Override
-					public void onResponse(Call<PaginatedResult<CompetitionBaseData>> call, Response<PaginatedResult<CompetitionBaseData>> response)
+					public void onResponse(Call<PaginatedResult<Competition>> call, Response<PaginatedResult<Competition>> response)
 					{
 						showProgress(false);
-						PaginatedResult<CompetitionBaseData> result = response.body();
+						PaginatedResult<Competition> result = response.body();
 						if(result != null && result.getResults() != null)
 						{
 							adapter.clear();
@@ -92,7 +93,7 @@ public class AvailableCompetitionsFragment extends BaseCompetitionsFragment<Comp
 					}
 
 					@Override
-					public void onFailure(Call<PaginatedResult<CompetitionBaseData>> call, Throwable t)
+					public void onFailure(Call<PaginatedResult<Competition>> call, Throwable t)
 					{
 						showProgress(false);
 						showEmpty(true, true);

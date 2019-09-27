@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,9 +25,12 @@ import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
+import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipantRequest;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
+import it.geosolutions.savemybike.model.competition.CompetitionPrize;
+import it.geosolutions.savemybike.model.competition.Sponsor;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.adapters.competition.CompetitionPrizeAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.CompetitionSponsorAdapter;
@@ -103,28 +107,51 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 			m_oCongratulationsYouWonText.setHeight(2);
 		}
 
-		if(m_oParticipationInfo != null){
-			if(m_oParticipationInfo.competition.prizes != null)
-			{
-				if(m_oParticipationInfo.competition.prizes.size() > 0)
-					m_oPrizesHeader.setText(R.string.prizes_header);
-				else
-					m_oPrizesHeader.setText("");
-				m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, m_oParticipationInfo.competition.prizes));
-			} else {
-				m_oPrizesHeader.setText("");
-			}
+		ArrayList<CompetitionPrize> prizes = null;
+		ArrayList<Sponsor> sponsors = null;
 
-			if(m_oParticipationInfo.competition.sponsors != null)
-			{
-				if(m_oParticipationInfo.competition.sponsors.size() > 0)
-					m_oSponsorsHeader.setText(R.string.sponsors_header);
-				else
-					m_oSponsorsHeader.setText("");
-				m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, m_oParticipationInfo.competition.sponsors));
-			} else {
-				m_oSponsorsHeader.setText("");
+		if(m_oCompetition instanceof Competition) {
+			Competition m_oCompetitionFull = (Competition) m_oCompetition;
+			if (m_oCompetitionFull.prizes != null) {
+				prizes = m_oCompetitionFull.prizes;
 			}
+			if (m_oCompetitionFull.sponsors != null) {
+				sponsors = m_oCompetitionFull.sponsors;
+			}
+		}
+
+		if(m_oParticipationInfo != null) {
+			if (m_oParticipationInfo.competition != null) {
+				if (m_oParticipationInfo.competition.prizes != null){
+					prizes = m_oParticipationInfo.competition.prizes;
+				}
+
+				if (m_oParticipationInfo.competition.sponsors != null){
+					sponsors = m_oParticipationInfo.competition.sponsors;
+				}
+			}
+		}
+
+		if(prizes != null)
+		{
+			if(prizes.size() > 0)
+				m_oPrizesHeader.setText(R.string.prizes_header);
+			else
+				m_oPrizesHeader.setText("");
+			m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, prizes));
+		} else {
+			m_oPrizesHeader.setText("");
+		}
+
+		if(sponsors != null)
+		{
+			if(sponsors.size() > 0)
+				m_oSponsorsHeader.setText(R.string.sponsors_header);
+			else
+				m_oSponsorsHeader.setText("");
+			m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, sponsors));
+		} else {
+			m_oSponsorsHeader.setText("");
 		}
 
 		return view;
