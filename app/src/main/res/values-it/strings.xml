@@ -251,7 +251,7 @@
     <string name="prizes">Premi</string>
     <string name="validity">Valido dal %s al %s</string>
     <string name="congratulations_you_won">Complimenti! </string>
-	<string name="congratulations_you_won_this_competition">Congratulazioni!\nHai vinto questa competizione!</string>
+	<string name="congratulations_you_won_this_competition">Congratulazioni!\nHai vinto questa gara!</string>
     <string name="up_to_grab">Concorsi attivi</string>
     <string name="no_competition_currently_active_title">Nessun concorso attualmente attivo</string>
     <string name="no_competition_currently_active_description">Non c\'è nessuna competizione attiva o premio in palio al momento. Ricontrolla questa pagina un\'altro giorno</string>
