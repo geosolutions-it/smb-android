@@ -76,16 +76,17 @@ public class CompetitionSponsorAdapter extends ArrayAdapter<Sponsor> {
 						.into((ImageView) holder.icon);
 			}
 
-			holder.icon.setOnClickListener(view1 -> {
-				SaveMyBikeActivity.instance().openURL(url);
-			});
-			holder.header.setOnClickListener(view2 -> {
-				SaveMyBikeActivity.instance().openURL(url);
-			});
-			holder.description.setOnClickListener(view3 -> {
-				SaveMyBikeActivity.instance().openURL(url);
-			});
-
+			if (url != null) {
+				holder.icon.setOnClickListener(view1 -> {
+					SaveMyBikeActivity.instance().openURL(url);
+				});
+				holder.header.setOnClickListener(view2 -> {
+					SaveMyBikeActivity.instance().openURL(url);
+				});
+				holder.description.setOnClickListener(view3 -> {
+					SaveMyBikeActivity.instance().openURL(url);
+				});
+			}
 		}
 
 		return view;
