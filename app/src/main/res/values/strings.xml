@@ -94,7 +94,7 @@
     <string name="c_time">Moving time</string>
     <string name="total">Total</string>
     <string name="no_data">No Data</string>
-    <string name="no_network">No Newrork</string>
+    <string name="no_network">No Network</string>
     <string name="no_network_description">This functionality is not available offline. Please try again later</string>
     <string name="tracks">Tracks</string>
     <string name="sessions">To Send</string>
@@ -283,7 +283,8 @@
 	<string name="competitions_participating">Current</string>
     <string name="prizes">Prizes</string>
     <string name="validity">Valid from %s to %s</string>
-    <string name="congratulations_you_won">Congratulations!</string>
+	<string name="congratulations_you_won">Congratulations!</string>
+	<string name="congratulations_you_won_this_competition">Congratulations!\nYou won this competition!</string>
     <string name="up_to_grab">Up to grab now</string>
     <string name="no_competition_currently_active_title">No competition active</string>
     <string name="no_competition_currently_active_description">There is not any competition active at the moment. Please check this page in the next days</string>

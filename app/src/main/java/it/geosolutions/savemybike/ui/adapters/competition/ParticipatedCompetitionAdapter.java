@@ -28,6 +28,6 @@ public class ParticipatedCompetitionAdapter extends BaseCompetitionAdapter<Compe
 	@Override
 	public void onCompetitionSelected(CompetitionParticipationInfo pi)
 	{
-		SaveMyBikeActivity.instance().pushFragment(new CompetitionFragment(pi.competition,pi));
+		SaveMyBikeActivity.instance().pushFragment(new CompetitionFragment(pi.competition,pi,false));
 	}
 }

@@ -26,7 +26,7 @@ public class AvailableCompetitionAdapter extends BaseCompetitionAdapter<Competit
 	@Override
 	public void onCompetitionSelected(CompetitionBaseData bd)
 	{
-		SaveMyBikeActivity.instance().pushFragment(new CompetitionFragment(bd,null));
+		SaveMyBikeActivity.instance().pushFragment(new CompetitionFragment(bd,null,false));
 	}
 }
 

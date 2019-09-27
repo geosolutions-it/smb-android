@@ -49,15 +49,18 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 	@BindView(R.id.sponsor_grid) GridView m_oSponsorsGrid;
 	@BindView(R.id.prizes_title_text) TextView m_oPrizesHeader;
 	@BindView(R.id.sponsors_title_text) TextView m_oSponsorsHeader;
+	@BindView(R.id.congratulations_you_won_text) TextView m_oCongratulationsYouWonText;
 
 	private CompetitionBaseData m_oCompetition;
 	private CompetitionParticipationInfo m_oParticipationInfo;
+	private boolean m_bIsWon;
 
-	public CompetitionFragment(CompetitionBaseData bd, CompetitionParticipationInfo pi)
+	public CompetitionFragment(CompetitionBaseData bd, CompetitionParticipationInfo pi, boolean bIsWon)
 	{
 		super();
 		m_oCompetition = bd;
 		m_oParticipationInfo = pi;
+		m_bIsWon = bIsWon;
 	}
 
 	protected void markBusy(boolean bBusy)
@@ -90,6 +93,15 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 		m_oActionButton.setText((m_oParticipationInfo != null) ? R.string.competition_cancel_button_text : R.string.competition_join_button_text);
 
 		m_oActionButton.setOnClickListener(this);
+
+		if(m_bIsWon)
+		{
+			m_oCongratulationsYouWonText.setVisibility(View.VISIBLE);
+			m_oCongratulationsYouWonText.setText(R.string.congratulations_you_won_this_competition);
+		} else {
+			m_oCongratulationsYouWonText.setVisibility(View.GONE);
+			m_oCongratulationsYouWonText.setHeight(2);
+		}
 
 		if(m_oParticipationInfo.competition.prizes != null)
 		{
