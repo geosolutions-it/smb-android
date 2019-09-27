@@ -103,26 +103,28 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 			m_oCongratulationsYouWonText.setHeight(2);
 		}
 
-		if(m_oParticipationInfo.competition.prizes != null)
-		{
-			if(m_oParticipationInfo.competition.prizes.size() > 0)
-				m_oPrizesHeader.setText(R.string.prizes_header);
-			else
+		if(m_oParticipationInfo != null){
+			if(m_oParticipationInfo.competition.prizes != null)
+			{
+				if(m_oParticipationInfo.competition.prizes.size() > 0)
+					m_oPrizesHeader.setText(R.string.prizes_header);
+				else
+					m_oPrizesHeader.setText("");
+				m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, m_oParticipationInfo.competition.prizes));
+			} else {
 				m_oPrizesHeader.setText("");
-			m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, m_oParticipationInfo.competition.prizes));
-		} else {
-			m_oPrizesHeader.setText("");
-		}
+			}
 
-		if(m_oParticipationInfo.competition.sponsors != null)
-		{
-			if(m_oParticipationInfo.competition.sponsors.size() > 0)
-				m_oSponsorsHeader.setText(R.string.sponsors_header);
-			else
+			if(m_oParticipationInfo.competition.sponsors != null)
+			{
+				if(m_oParticipationInfo.competition.sponsors.size() > 0)
+					m_oSponsorsHeader.setText(R.string.sponsors_header);
+				else
+					m_oSponsorsHeader.setText("");
+				m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, m_oParticipationInfo.competition.sponsors));
+			} else {
 				m_oSponsorsHeader.setText("");
-			m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, m_oParticipationInfo.competition.sponsors));
-		} else {
-			m_oSponsorsHeader.setText("");
+			}
 		}
 
 		return view;
