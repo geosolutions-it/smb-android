@@ -7,22 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
-import it.geosolutions.savemybike.model.competition.CompetitionPrize;
 
 /**
  * Base adapter for competitions
@@ -52,7 +46,7 @@ public abstract class BaseCompetitionAdapter<ResultClass> extends ArrayAdapter<R
         resource = resourceId;
     }
 
-    public abstract CompetitionBaseData getCompetitionData(ResultClass rc);
+    public abstract Competition getCompetitionData(ResultClass rc);
 
 	public void onCompetitionSelected(ResultClass bd)
 	{
@@ -69,7 +63,7 @@ public abstract class BaseCompetitionAdapter<ResultClass> extends ArrayAdapter<R
 
 		ResultClass rc = getItem(position);
 
-		final CompetitionBaseData competition = (rc != null) ? getCompetitionData(rc) : null;
+		final Competition competition = (rc != null) ? getCompetitionData(rc) : null;
 
         ViewHolder holder;
 

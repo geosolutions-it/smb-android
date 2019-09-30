@@ -4,9 +4,8 @@ import android.content.Context;
 
 import java.util.List;
 
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
+import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
-import it.geosolutions.savemybike.model.competition.CompetitionPrize;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.fragment.competition.CompetitionFragment;
 
@@ -18,7 +17,7 @@ public class ParticipatedCompetitionAdapter extends BaseCompetitionAdapter<Compe
 	}
 
 	@Override
-	public CompetitionBaseData getCompetitionData(CompetitionParticipationInfo rc)
+	public Competition getCompetitionData(CompetitionParticipationInfo rc)
 	{
 		if(rc == null)
 			return null;

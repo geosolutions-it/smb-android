@@ -26,14 +26,12 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipantRequest;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
-import it.geosolutions.savemybike.model.competition.CompetitionPrize;
-import it.geosolutions.savemybike.model.competition.Sponsor;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.adapters.competition.CompetitionPrizeAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.CompetitionSponsorAdapter;
+import it.geosolutions.savemybike.ui.custom.WrappingGridView;
 import it.geosolutions.savemybike.ui.fragment.competitions.AvailableCompetitionsFragment;
 import it.geosolutions.savemybike.ui.fragment.competitions.CurrentCompetitionsFragment;
 import okhttp3.ResponseBody;
@@ -49,17 +47,17 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 	@BindView(R.id.description_text) TextView m_oDescriptionTextView;
 	@BindView(R.id.action_button) Button m_oActionButton;
 	@BindView(R.id.progress_layout) LinearLayout m_oProgressLayout;
-	@BindView(R.id.prizes_grid) GridView m_oPrizesGrid;
-	@BindView(R.id.sponsor_grid) GridView m_oSponsorsGrid;
+	@BindView(R.id.prizes_grid) WrappingGridView m_oPrizesGrid;
+	@BindView(R.id.sponsor_grid) WrappingGridView m_oSponsorsGrid;
 	@BindView(R.id.prizes_title_text) TextView m_oPrizesHeader;
 	@BindView(R.id.sponsors_title_text) TextView m_oSponsorsHeader;
 	@BindView(R.id.congratulations_you_won_text) TextView m_oCongratulationsYouWonText;
 
-	private CompetitionBaseData m_oCompetition;
+	private Competition m_oCompetition;
 	private CompetitionParticipationInfo m_oParticipationInfo;
 	private boolean m_bIsWon;
 
-	public CompetitionFragment(CompetitionBaseData bd, CompetitionParticipationInfo pi, boolean bIsWon)
+	public CompetitionFragment(Competition bd, CompetitionParticipationInfo pi, boolean bIsWon)
 	{
 		super();
 		m_oCompetition = bd;
@@ -94,9 +92,13 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 		m_oTitleTextView.setText(m_oCompetition.name);
 		m_oDescriptionTextView.setText(m_oCompetition.description);
 
-		m_oActionButton.setText((m_oParticipationInfo != null) ? R.string.competition_cancel_button_text : R.string.competition_join_button_text);
-
-		m_oActionButton.setOnClickListener(this);
+		if(m_bIsWon)
+		{
+			m_oActionButton.setVisibility(View.GONE);
+		} else {
+			m_oActionButton.setText((m_oParticipationInfo != null) ? R.string.competition_cancel_button_text : R.string.competition_join_button_text);
+			m_oActionButton.setOnClickListener(this);
+		}
 
 		if(m_bIsWon)
 		{
@@ -107,49 +109,19 @@ public class CompetitionFragment extends Fragment implements View.OnClickListene
 			m_oCongratulationsYouWonText.setHeight(2);
 		}
 
-		ArrayList<CompetitionPrize> prizes = null;
-		ArrayList<Sponsor> sponsors = null;
 
-		if(m_oCompetition instanceof Competition) {
-			Competition m_oCompetitionFull = (Competition) m_oCompetition;
-			if (m_oCompetitionFull.prizes != null) {
-				prizes = m_oCompetitionFull.prizes;
-			}
-			if (m_oCompetitionFull.sponsors != null) {
-				sponsors = m_oCompetitionFull.sponsors;
-			}
-		}
-
-		if(m_oParticipationInfo != null) {
-			if (m_oParticipationInfo.competition != null) {
-				if (m_oParticipationInfo.competition.prizes != null){
-					prizes = m_oParticipationInfo.competition.prizes;
-				}
-
-				if (m_oParticipationInfo.competition.sponsors != null){
-					sponsors = m_oParticipationInfo.competition.sponsors;
-				}
-			}
-		}
-
-		if(prizes != null)
+		if((m_oCompetition.prizes != null) && (m_oCompetition.prizes.size() > 0))
 		{
-			if(prizes.size() > 0)
-				m_oPrizesHeader.setText(R.string.prizes_header);
-			else
-				m_oPrizesHeader.setText("");
-			m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, prizes));
+			m_oPrizesHeader.setText(R.string.prizes_header);
+			m_oPrizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, m_oCompetition.prizes));
 		} else {
 			m_oPrizesHeader.setText("");
 		}
 
-		if(sponsors != null)
+		if((m_oCompetition.sponsors != null) && (m_oCompetition.sponsors.size() > 0))
 		{
-			if(sponsors.size() > 0)
-				m_oSponsorsHeader.setText(R.string.sponsors_header);
-			else
-				m_oSponsorsHeader.setText("");
-			m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, sponsors));
+			m_oSponsorsHeader.setText(R.string.sponsors_header);
+			m_oSponsorsGrid.setAdapter(new CompetitionSponsorAdapter(getContext(), R.layout.item_sponsor, m_oCompetition.sponsors));
 		} else {
 			m_oSponsorsHeader.setText("");
 		}

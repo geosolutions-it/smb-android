@@ -9,23 +9,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.PaginatedResult;
-import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
-import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
-import it.geosolutions.savemybike.ui.adapters.competition.AvailableCompetitionAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.BaseCompetitionAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.WonCompetitionAdapter;
 import retrofit2.Call;

@@ -9,7 +9,6 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipantRequest;
 import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo;
 import it.geosolutions.savemybike.model.user.Device;

@@ -112,7 +112,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/congratulations_you_won_text" />
 
-		<GridView
+		<it.geosolutions.savemybike.ui.custom.WrappingGridView
 			android:id="@+id/prizes_grid"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/prizes_grid" />
 
-		<GridView
+		<it.geosolutions.savemybike.ui.custom.WrappingGridView
 			android:id="@+id/sponsor_grid"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"

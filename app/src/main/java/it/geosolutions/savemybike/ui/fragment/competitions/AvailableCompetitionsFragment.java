@@ -13,7 +13,6 @@ import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.CompetitionBaseData;
 import it.geosolutions.savemybike.ui.adapters.competition.AvailableCompetitionAdapter;
 import it.geosolutions.savemybike.ui.adapters.competition.BaseCompetitionAdapter;
 import retrofit2.Call;
