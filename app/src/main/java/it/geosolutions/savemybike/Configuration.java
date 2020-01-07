@@ -23,9 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import net.openid.appauth.connectivity.ConnectionBuilder;
-import net.openid.appauth.connectivity.DefaultConnectionBuilder;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +64,7 @@ public final class Configuration {
     private Uri mTokenEndpointUri;
     private Uri mRegistrationEndpointUri;
     private Uri mUserInfoEndpointUri;
+    public static String importerSecret;
 
     public static Configuration getInstance(Context context) {
         Configuration config = sInstance.get();
@@ -184,7 +182,7 @@ public final class Configuration {
         mClientId = getConfigString("client_id");
         mScope = getRequiredConfigString("authorization_scope");
         mRedirectUri = getRequiredConfigUri("redirect_uri");
-
+        importerSecret = getConfigString("importer_token");
         if (!isRedirectUriRegistered()) {
             throw new InvalidConfigurationException(
                     "redirect_uri is not handled by any activity in this app! "
@@ -289,6 +287,7 @@ public final class Configuration {
         return !mContext.getPackageManager().queryIntentActivities(redirectIntent, 0).isEmpty();
     }
 
+
     public static final class InvalidConfigurationException extends Exception {
         InvalidConfigurationException(String reason) {
             super(reason);
@@ -298,4 +297,6 @@ public final class Configuration {
             super(reason, cause);
         }
     }
+
+
 }

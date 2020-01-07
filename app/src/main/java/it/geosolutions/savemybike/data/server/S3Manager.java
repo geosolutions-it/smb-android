@@ -25,10 +25,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import it.geosolutions.savemybike.BuildConfig;
+import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.db.SMBDatabase;
-import it.geosolutions.savemybike.data.service.UserNotificationManager;
 import it.geosolutions.savemybike.model.Session;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -168,28 +168,53 @@ public class S3Manager implements TransferListener{
             }else{
                 Log.w(TAG, "beforeuploadFile - I'm in the background");
             }
-            retrofitClient.uploadFile(s3ObjectKey, zipFile,
-                new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call,
-                                           retrofit2.Response<ResponseBody> response) {
-                        if(response.isSuccessful()){
-                            Log.v("Upload", "success");
-                            S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.COMPLETED);
-                        }else{
-                            Log.v("Upload", "failed");
-                            S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.FAILED);
-                        }
-                        uploadCount--;
-                    }
+            if(!BuildConfig.PROFILE. equals("unipi")) {
+                retrofitClient.uploadFile(s3ObjectKey, zipFile,
+                        new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call,
+                                                   retrofit2.Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+                                    Log.v("Upload", "success");
+                                    S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.COMPLETED);
+                                } else {
+                                    Log.v("Upload", "failed");
+                                    S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.FAILED);
+                                }
+                                uploadCount--;
+                            }
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e("Upload error:", t.getMessage());
-                        S3Manager.this.onError(dirtyHackWaitingForARefactor, new Exception(t));
-                        uploadCount--;
-                    }
-                });
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Log.e("Upload error:", t.getMessage());
+                                S3Manager.this.onError(dirtyHackWaitingForARefactor, new Exception(t));
+                                uploadCount--;
+                            }
+                        });
+            } else {
+                retrofitClient.uploadFile(Configuration.importerSecret, s3ObjectKey, zipFile,
+                        new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call,
+                                                   retrofit2.Response<ResponseBody> response) {
+                                if (response.isSuccessful()) {
+                                    Log.v("Upload", "success");
+                                    S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.COMPLETED);
+                                } else {
+                                    Log.v("Upload", "failed");
+                                    S3Manager.this.onStateChanged(dirtyHackWaitingForARefactor, TransferState.FAILED);
+                                }
+                                uploadCount--;
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Log.e("Upload error:", t.getMessage());
+                                S3Manager.this.onError(dirtyHackWaitingForARefactor, new Exception(t));
+                                uploadCount--;
+                            }
+                        });
+            }
         }
     }
 

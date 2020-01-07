@@ -56,7 +56,9 @@ public class SMBDatabase extends SQLiteOpenHelper {
     private static final String TEMPERATURE = "temperature";
     private static final String GPS_BEARING = "gps_bearing";
     private static final String ACCURACY = "accuracy";
+    private static final String ACCURACY_METERS_SECOND = "accuracy_meters_second";
     private static final String SPEED = "speed";
+    private static final String HAS_SPEED = "has_speed";
     private static final String PRESSURE = "pressure";
     private static final String BATTERY_LEVEL  = "battery_level";
     private static final String BATTERY_CONSUMPTION  = "battery_cons";
@@ -99,7 +101,9 @@ public class SMBDatabase extends SQLiteOpenHelper {
                     ELEVATION + " float, " +
                     GPS_BEARING + " float, " +
                     ACCURACY + " float, " +
+                    ACCURACY_METERS_SECOND + " float, " +
                     SPEED + " float, " +
+                    HAS_SPEED + " integer, " +
                     PRESSURE + " float, " +
                     BATTERY_LEVEL + " integer, " +
                     BATTERY_CONSUMPTION + " float, " +
@@ -167,6 +171,9 @@ public class SMBDatabase extends SQLiteOpenHelper {
             db.execSQL("alter table datapoints ADD COLUMN dev_roll float;");
             db.execSQL("alter table datapoints ADD COLUMN dev_pitch float;");
 
+        } else if (oldVersion<3){
+            db.execSQL("alter table datapoints ADD COLUMN accuracy_meters_second float;");
+            db.execSQL("alter table datapoints ADD COLUMN has_speed integer;");
         }
     }
 
@@ -262,6 +269,8 @@ public class SMBDatabase extends SQLiteOpenHelper {
         cv.put(DEVICE_ROLL, dataPoint.deviceRoll);
         cv.put(BATTERY_LEVEL, dataPoint.batteryLevel);
         cv.put(BATTERY_CONSUMPTION, dataPoint.batConsumptionPerHour);
+        cv.put(ACCURACY_METERS_SECOND, dataPoint.accuracyMetersPerSecond);
+        cv.put(HAS_SPEED, dataPoint.hasSpeed?1:0);
 
         //insert the row
         return db.insert(DATA_POINTS_TABLE, null, cv);
@@ -414,7 +423,9 @@ public class SMBDatabase extends SQLiteOpenHelper {
                         ELEVATION,
                         GPS_BEARING,
                         ACCURACY,
+                        ACCURACY_METERS_SECOND,
                         SPEED,
+                        HAS_SPEED,
                         PRESSURE,
                         BATTERY_LEVEL,
                         BATTERY_CONSUMPTION,
@@ -443,7 +454,9 @@ public class SMBDatabase extends SQLiteOpenHelper {
                 double elev = cursor.getDouble(cursor.getColumnIndex(ELEVATION));
                 float bear  = cursor.getFloat(cursor.getColumnIndex(GPS_BEARING));
                 float accu  = cursor.getFloat(cursor.getColumnIndex(ACCURACY));
+                float accuMS = cursor.getFloat(cursor.getColumnIndex(ACCURACY_METERS_SECOND));
                 float spd   = cursor.getFloat(cursor.getColumnIndex(SPEED));
+                boolean hasSpeed = cursor.getInt(cursor.getColumnIndex(HAS_SPEED))>0;
                 float press = cursor.getFloat(cursor.getColumnIndex(PRESSURE));
                 int bat_l   = cursor.getInt(cursor.getColumnIndex(BATTERY_LEVEL));
                 float bat_c = cursor.getFloat(cursor.getColumnIndex(BATTERY_CONSUMPTION));
@@ -458,7 +471,7 @@ public class SMBDatabase extends SQLiteOpenHelper {
                 float dPi   = cursor.getFloat(cursor.getColumnIndex(DEVICE_PITCH));
                 float temp  = cursor.getFloat(cursor.getColumnIndex(TEMPERATURE));
 
-                DataPoint dp = new DataPoint(sId, vehicle, lat, lon, time, elev, bear, accu, spd, press, bat_l, bat_c, accX, accY, accZ, hum, pro, lgt, dBe, dRo, dPi, temp);
+                DataPoint dp = new DataPoint(sId, vehicle, lat, lon, time, elev, bear, accu, accuMS, spd, hasSpeed, press, bat_l, bat_c, accX, accY, accZ, hum, pro, lgt, dBe, dRo, dPi, temp);
 
                 dataPoints.add(dp);
 

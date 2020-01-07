@@ -136,6 +136,9 @@ public class SessionLogic implements IDataProvider {
         session.getCurrentDataPoint().accuracy    = newLocation.getAccuracy();
         session.getCurrentDataPoint().gps_bearing = newLocation.getBearing();
         session.getCurrentDataPoint().speed       = newLocation.getSpeed();
+        session.getCurrentDataPoint().accuracyMetersPerSecond = newLocation
+                .getSpeedAccuracyMetersPerSecond();
+        session.getCurrentDataPoint().hasSpeed = newLocation.hasSpeed();
 
     }
 

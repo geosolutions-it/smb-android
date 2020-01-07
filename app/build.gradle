@@ -9,10 +9,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "it.geosolutions.savemybike"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 14
-        versionName "0.9.1"
+        versionName "2.9.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -24,9 +24,19 @@ android {
     }
     buildTypes {
         debug {
+            /*versionNameSuffix ".debug"
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
+            buildConfigField "String", "ENDPOINT", '"https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/"'
+            buildConfigField "String", "PROFILE", '"debug"'
+            resValue "string", "app_version",
+                    "${defaultConfig.versionName}${versionNameSuffix}"*/
             versionNameSuffix ".debug"
-            buildConfigField "String", "PORTAL_ENDPOINT", '"https://dev.savemybike.geo-solutions.it/"'
-            buildConfigField "String", "UPLOAD_RESOURCE", '"upload-dev/"'
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
+            buildConfigField "String", "ENDPOINT", '"https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/"'
+            buildConfigField "String", "PROFILE", '"debug"'
+            buildConfigField "String", "CONFIGURATION_FILE", '"conf.json"'
             resValue "string", "app_version",
                     "${defaultConfig.versionName}${versionNameSuffix}"
         }
@@ -34,6 +44,9 @@ android {
             versionNameSuffix ".beta"
             buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
             buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
+            buildConfigField "String", "ENDPOINT", '"https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/"'
+            buildConfigField "String", "PROFILE", '"beta"'
+            buildConfigField "String", "CONFIGURATION_FILE", '"conf.json"'
             minifyEnabled false
             resValue "string", "app_version",
                     "${defaultConfig.versionName}${versionNameSuffix}"
@@ -44,10 +57,23 @@ android {
             minifyEnabled false
             buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
             buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
+            buildConfigField "String", "ENDPOINT", '"https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/"'
+            buildConfigField "String", "PROFILE", '"release"'
+            buildConfigField "String", "CONFIGURATION_FILE", '"conf.json"'
             resValue "string", "app_version",
                 "${defaultConfig.versionName}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
+        }
+        unipi {
+            minifyEnabled false
+            buildConfigField "String", "PORTAL_ENDPOINT", '"https://goodgo.savemybike.geo-solutions.it/"'
+            buildConfigField "String", "UPLOAD_RESOURCE", '"upload/"'
+            buildConfigField "String", "ENDPOINT", '"http://37.59.166.106:8080/CSVUploader/"'
+            buildConfigField "String", "PROFILE", '"unipi"'
+            buildConfigField "String", "CONFIGURATION_FILE", '"conf_unipi.json"'
+            resValue "string", "app_version",
+                    "${defaultConfig.versionName}"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

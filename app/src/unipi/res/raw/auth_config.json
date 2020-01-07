@@ -8,4 +8,5 @@
   "registration_endpoint_uri": "",
   "user_info_endpoint_uri": "",
   "https_required": true,
+  "importer_token":"TG91a2FuaWtvcw=="
 }

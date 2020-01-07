@@ -1,8 +1,8 @@
 package it.geosolutions.savemybike.data.server;
 
 import android.util.Log;
-
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,13 +63,15 @@ public class CSVCreator {
             }
             fw.append('\n');
             fw.flush();
-
         } catch (IOException e) {
             Log.e(TAG, "error creating fileWriter", e);
         }
 
         return sessionFile.getAbsolutePath();
     }
+
+
+
 
 
     /**

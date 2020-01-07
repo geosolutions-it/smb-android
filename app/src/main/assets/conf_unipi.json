@@ -1,0 +1,61 @@
+{
+  "id" : "saveMyBikeUniPi",
+  "version" : 3,
+  "vehicles":[
+    {
+      "id" : 0,
+      "selected" : "false",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    },
+    {
+      "id" : 1,
+      "selected" : "true",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    },
+    {
+      "id" : 2,
+      "selected" : "false",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    },
+    {
+      "id" : 3,
+      "selected" : "false",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    },
+    {
+      "id" : 4,
+      "selected" : "false",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    },
+    {
+      "id" : 5,
+      "selected" : "false",
+      "gpsDist" : 1,
+      "gpsTime" : 1000
+    }
+  ],
+  "bikes":[
+    {
+      "id" : "123",
+      "selected" : 1,
+      "name" : "Bianchi",
+      "state" : 0,
+      "image" : ""
+    },
+    {
+      "id" : "124",
+      "selected" : 0,
+      "name" : "De Rosa",
+      "state" : 1,
+      "image" : ""
+    }
+  ],
+  "metric" : "true",
+  "dataReadInterval" : 1000,
+  "persistanceInterval" : 15000
+}

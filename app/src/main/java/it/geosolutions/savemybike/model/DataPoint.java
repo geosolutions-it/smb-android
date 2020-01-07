@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import it.geosolutions.savemybike.BuildConfig;
 
@@ -49,25 +51,28 @@ public class DataPoint {
     public float temperature;
     public float pressure;
 
+    public float accuracyMetersPerSecond;
+    public boolean hasSpeed;
+    public String profile = BuildConfig.PROFILE;
     /**
      * reads the fields of this class via reflection
      * @return the list of field names of this class
      */
     public static ArrayList<String> getFieldNames(){
-
+        final List<String> newFields = Arrays.asList("hasSpeed","profile","accuracyMetersPerSecond");
         ArrayList<String> fieldNames = new ArrayList<>();
         Field[] allFields = DataPoint.class.getDeclaredFields();
 
         for (Field field : allFields) {
             // Skip generated fields
-            if (!field.isSynthetic()){
+            if (!field.isSynthetic() && !newFields.contains(field.getName())){
                 if(BuildConfig.DEBUG) {
                     Log.i("DataPoint", "field " + field.getName());
                 }
                 fieldNames.add(field.getName());
             }
         }
-
+        fieldNames.addAll(newFields);
         return fieldNames;
     }
 
@@ -89,6 +94,8 @@ public class DataPoint {
                 return Float.toString(dataPoint.accelerationZ);
             case "accuracy":
                 return Float.toString(dataPoint.accuracy);
+            case "accuracyMetersPerSecond":
+                return Float.toString(dataPoint.accuracyMetersPerSecond);
             case "batConsumptionPerHour":
                 return Float.toString(dataPoint.batConsumptionPerHour);
             case "batteryLevel":
@@ -119,6 +126,8 @@ public class DataPoint {
                 return Long.toString(dataPoint.sessionId);
             case "speed":
                 return Float.toString(dataPoint.speed);
+            case "hasSpeed":
+                return Boolean.toString(dataPoint.hasSpeed);
             case "temperature":
                 return Float.toString(dataPoint.temperature);
             case "timeStamp":
@@ -129,6 +138,8 @@ public class DataPoint {
                 return Integer.toString(0);
             case "serialVersionUID":
                 return Integer.toString(0);
+            case "profile":
+                return dataPoint.profile;
             default:
                 return Integer.toString(0);
         }
@@ -156,7 +167,9 @@ public class DataPoint {
                      double elev,
                      float bear,
                      float accu,
+                     float accuMS,
                      float spd,
+                     boolean hasSpeed,
                      float press,
                      int bat_l,
                      float bat_c,
@@ -179,7 +192,9 @@ public class DataPoint {
         this.elevation = elev;
         this.gps_bearing = bear;
         this.accuracy = accu;
+        this.accuracyMetersPerSecond=accuMS;
         this.speed = spd;
+        this.hasSpeed=hasSpeed;
         this.pressure = press;
         this.batteryLevel = bat_l;
         this.batConsumptionPerHour = bat_c;

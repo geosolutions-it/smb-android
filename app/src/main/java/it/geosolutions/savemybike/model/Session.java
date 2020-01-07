@@ -100,6 +100,7 @@ public class Session {
         copy.longitude = getCurrentDataPoint().longitude;
         copy.gps_bearing = getCurrentDataPoint().gps_bearing;
         copy.accuracy = getCurrentDataPoint().accuracy;
+        copy.accuracyMetersPerSecond=getCurrentDataPoint().accuracyMetersPerSecond;
         copy.batConsumptionPerHour = getCurrentDataPoint().batConsumptionPerHour;
         copy.batteryLevel = getCurrentDataPoint().batteryLevel;
         copy.temperature = getCurrentDataPoint().temperature;
@@ -113,7 +114,7 @@ public class Session {
         copy.deviceBearing = getCurrentDataPoint().deviceBearing;
         copy.deviceRoll = getCurrentDataPoint().deviceRoll;
         copy.devicePitch = getCurrentDataPoint().devicePitch;
-
+        copy.hasSpeed = getCurrentDataPoint().hasSpeed;
         this.currentDataPoint = copy;
     }
 

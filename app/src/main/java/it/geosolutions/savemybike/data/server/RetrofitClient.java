@@ -18,6 +18,7 @@ import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -38,9 +39,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     private static final String TAG = "RetrofitClient";
-
-    private final static String AWS_ENDPOINT = "https://ex2rxvvhpc.execute-api.us-west-2.amazonaws.com/prod/";
-
     private Retrofit retrofit;
     private Retrofit portalRetrofit;
 
@@ -118,7 +116,7 @@ public class RetrofitClient {
     private void fetchConfig(@NonNull final GetConfigCallback callback)
     {
         //do the (retrofit) get call
-        final Call<Configuration> call = getServices().getConfig();
+        final Call<Configuration> call = getAWSServices().getConfig();
 
         try {
             final Configuration configuration = call.execute().body();
@@ -160,10 +158,23 @@ public class RetrofitClient {
 
     private Retrofit getAWSRetrofit()
     {
-        if(retrofit == null){
+        if(retrofit == null|| !retrofit.baseUrl().toString().equals(BuildConfig.ENDPOINT)){
             retrofit = new Retrofit.Builder()
                     .client(getPortalClient())
-                    .baseUrl(AWS_ENDPOINT)
+                    .baseUrl(BuildConfig.ENDPOINT)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+        }
+        return retrofit;
+    }
+
+    private Retrofit getCSVImporterRetrofit()
+    {
+        if(retrofit == null || !retrofit.baseUrl().toString().equals(BuildConfig.ENDPOINT)){
+            retrofit = new Retrofit.Builder()
+                    .client(getPortalClient())
+                    .baseUrl(BuildConfig.ENDPOINT)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -238,6 +249,33 @@ public class RetrofitClient {
 			}
 		});
 	}
+
+    private <T> void performCall(final Call<T> oCall,final Callback<T> oCallback)
+    {
+
+        oCall.enqueue(new Callback<T>()
+        {
+            @Override
+            public void onResponse(Call<T> call, retrofit2.Response<T> response)
+            {
+                int c = response.code();
+
+                if(c < 400 || c==403)
+                {
+                    oCallback.onResponse(call,response);
+                    return;
+                }
+
+                oCallback.onFailure(call,new Throwable(String.valueOf(c) + " " + response.message()));
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t)
+            {
+                oCallback.onFailure(call,t);
+            }
+        });
+    }
 
     /**
      * Compose a Retrofit instance for Retrofit (setting up configuration).
@@ -345,10 +383,15 @@ public class RetrofitClient {
      * This is only used to send the collected points to the S3 instance through the API Gateway
      * @return retrofit services to interact with the AWS endpoint
      */
-    private SMBRemoteServices getServices(){
+    private SMBRemoteServices getAWSServices(){
 
         return getAWSRetrofit().create(SMBRemoteServices.class);
 
+    }
+
+
+    private SMBRemoteServices getCSVImporterServices(){
+        return getCSVImporterRetrofit().create(SMBRemoteServices.class);
     }
 
     /**
@@ -383,7 +426,7 @@ public class RetrofitClient {
 
         // TODO make a singleton for the services
         // create upload service client
-        SMBRemoteServices service = getServices();
+        SMBRemoteServices service = getAWSServices();
 
         // create RequestBody instance from file
         RequestBody requestFile =
@@ -397,6 +440,30 @@ public class RetrofitClient {
 				service.upload(s3ObjectKey, requestFile),
 		        callback
 			);
+    }
+
+
+    public void uploadFile( String token, String s3ObjectKey, File file, Callback<ResponseBody> callback)
+    {
+
+        // TODO make a singleton for the services
+        // create upload service client
+        SMBRemoteServices service = getCSVImporterServices();
+        RequestBody requestFile = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addPart(
+                        RequestBody.create(
+                                null,
+                                file
+                        )).build();
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file",
+                file.getName(),requestFile);
+        // create RequestBody instance from file
+        // finally, execute the request
+        performCall(
+                service.upload(token, s3ObjectKey, filePart),
+                callback
+        );
     }
 
 }

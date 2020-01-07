@@ -34,7 +34,6 @@ public class Constants {
     public final static double MAX_LONGITUDE = 180;
     public final static double MIN_LONGITUDE = -180;
 
-    public static final String DEFAULT_CONFIGURATION_FILE  = "conf.json";
     public static final String DEFAULT_SESSION_NAME = "Session";
 
 
@@ -94,5 +93,6 @@ public class Constants {
         public static final String BIKE_OBSERVATION_NAME = "Bike Observations";
     }
 
+    public static final String SECRET = "TG91a2FuaWtvcw==";
 
 }

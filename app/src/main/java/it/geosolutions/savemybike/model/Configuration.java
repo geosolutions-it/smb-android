@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.model.user.UserInfo;
@@ -130,7 +131,7 @@ public class Configuration implements Serializable {
     private static String loadJSONFromAsset(final Context context) {
         String json;
         try {
-            InputStream is = context.getAssets().open(Constants.DEFAULT_CONFIGURATION_FILE);
+            InputStream is = context.getAssets().open(BuildConfig.CONFIGURATION_FILE);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

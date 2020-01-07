@@ -14,15 +14,19 @@ import it.geosolutions.savemybike.model.competition.CompetitionParticipationInfo
 import it.geosolutions.savemybike.model.user.Device;
 import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.model.user.UserInfo;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -39,6 +43,14 @@ public interface SMBRemoteServices
     Call<ResponseBody> upload(
             @Path("s3ObjectKey") String s3ObjectKey,
             @Body RequestBody file
+    );
+
+    @Multipart
+    @PUT(Constants.UPLOAD_RESOURCE + "{s3ObjectKey}")
+    Call<ResponseBody> upload(
+            @Header("token") String token,
+            @Path("s3ObjectKey") String s3ObjectKey,
+            @Part  MultipartBody.Part file
     );
 
     @GET("api/my-bikes")
