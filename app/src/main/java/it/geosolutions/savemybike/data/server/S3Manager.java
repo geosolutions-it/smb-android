@@ -17,6 +17,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -293,7 +294,7 @@ public class S3Manager implements TransferListener{
             BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(file);
 
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest), StandardCharsets.UTF_8);
 
             byte data[] = new byte[1024];
 
@@ -301,15 +302,15 @@ public class S3Manager implements TransferListener{
 
             FileInputStream fi = new FileInputStream(fileToZip);
             origin = new BufferedInputStream(fi, 1024);
-            ZipEntry entry = new ZipEntry(fileToZip.substring(fileToZip.lastIndexOf("/") + 1));
+            ZipEntry entry = new ZipEntry(new String((fileToZip.substring(fileToZip.lastIndexOf("/") + 1)).getBytes(),"UTF-8"));
             out.putNextEntry(entry);
             int count;
             while ((count = origin.read(data, 0, 1024)) != -1) {
                 out.write(data, 0, count);
             }
+            out.closeEntry();
             origin.close();
-
-
+            out.finish();
             out.close();
         } catch(Exception e) {
            Log.e(TAG, "error zipping "+ fileToZip);

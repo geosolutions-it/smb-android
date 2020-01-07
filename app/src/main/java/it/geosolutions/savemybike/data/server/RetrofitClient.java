@@ -457,7 +457,7 @@ public class RetrofitClient {
                                 file
                         )).build();
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file",
-                file.getName(),requestFile);
+                file.getName(),RequestBody.create(MediaType.parse("multipart/form-data"), file));
         // create RequestBody instance from file
         // finally, execute the request
         performCall(
