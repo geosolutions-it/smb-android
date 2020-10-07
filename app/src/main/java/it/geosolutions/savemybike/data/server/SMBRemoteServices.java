@@ -5,6 +5,7 @@ import it.geosolutions.savemybike.model.Badge;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
+import it.geosolutions.savemybike.model.Observation;
 import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
@@ -50,10 +51,19 @@ public interface SMBRemoteServices
     @GET("api/my-bike-observations/")
     Call<ResponseBody> getBikeObservations(@Query("bike") String id);
 
+    @POST("api/bike-observations/")
+    Call<Object> sendNewBikeObservations(@Body Observation observation);
+
     @POST("api/my-bike-statuses/")
     Call<Object> sendNewBikeStatus(
             @Body CurrentStatus newStatus
     );
+
+    @GET("api/tagged-bike/")
+    Call<ResponseBody> getTaggedBike(@Query("epc") String epc);
+
+    @GET("api/my-tagged-bike/")
+    Call<ResponseBody> getMyTaggedBike(@Query("epc") String epc);
 
     @GET("api/my-tracks/?format=json")
     Call<PaginatedResult<TrackItem>> getTracks();

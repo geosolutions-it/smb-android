@@ -8,15 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
-import it.geosolutions.savemybike.ui.activity.LoginActivity;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
-import it.geosolutions.savemybike.ui.adapters.BadgeAdapter;
 import it.geosolutions.savemybike.ui.utils.BadgeUtils;
+
+import static it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity.EXTRA_BIKE_FOUND;
 
 /**
  * Manager for user notification (tracks status update, badges, prizes).
@@ -172,6 +171,25 @@ public class UserNotificationManager {
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_BIKE_ID, bikeId);
         resultIntent.putExtra(SaveMyBikeActivity.EXTRA_BIKE_OBSERVATION_ID, observationId);
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pendingIntent);
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(getID(), mBuilder.build());
+        }
+    }
+
+    public void notifyNearLostBike(String bike) {
+        android.app.NotificationManager mNotificationManager =
+                (android.app.NotificationManager) (android.app.NotificationManager) mCtx.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(mCtx, Constants.Channels.BIKE_OBSERVATION)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                        .setBadgeIconType(R.drawable.ic_directions_bike)
+                        .setContentTitle(mCtx.getResources().getString(R.string.lost_bike_found_notification))
+                        .setAutoCancel(true);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, EXTRA_BIKE_FOUND);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_DATA, bike);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, getID(), resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
             mNotificationManager.notify(getID(), mBuilder.build());

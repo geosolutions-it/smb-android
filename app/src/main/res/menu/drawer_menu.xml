@@ -32,6 +32,11 @@
             android:icon="@drawable/ic_trophy"
             android:title="@string/prizes" />
         <item
+            android:id="@+id/navigation_qr"
+            android:icon="@drawable/ic_qr"
+            android:title="QR Scan" />
+
+        <item
             android:id="@+id/navigation_about"
             android:icon="@drawable/ic_about"
             android:title="@string/about" />

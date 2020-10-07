@@ -1,16 +1,11 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
-
 import android.content.Intent;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-
-import android.support.v4.view.GravityCompat;
-
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -27,7 +22,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.data.Feature;
-
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPoint;
@@ -38,7 +32,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -130,7 +123,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
 		details.setEventsCallbacks(new BikeDetailsFragment.EventCallbacks() {
 			@Override
 			public void onSelect(Observation o) {
-				selectFeature(o.id);
+				selectFeature(o.getId());
 			}
 		});
 		loadData();
@@ -479,6 +472,8 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
 	public void onFragmentInteraction(Uri uri) {
 		// NO action needed for this handler
 	}
+
+
 	public void setLoading(boolean loading) {
 		View v = findViewById(R.id.loading_container);
 		if(v != null) {

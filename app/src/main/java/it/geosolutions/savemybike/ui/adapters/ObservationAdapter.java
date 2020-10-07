@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -57,15 +56,15 @@ public abstract class ObservationAdapter extends ArrayAdapter<Observation> {
         }
         Observation o = getItem(position);
         if(o != null) {
-            holder.observedAt.setText(o.observedAt);
-            holder.observedAddress.setText(o.address);
+            holder.observedAt.setText(o.getObservedAt());
+            holder.observedAddress.setText(o.getAddress());
         }
         if(isSelected(o)) {
             view.setBackgroundColor(getContext().getResources().getColor(R.color.colorAccent));
         } else {
             view.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
         }
-        String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((o.observedAt)));
+        String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((o.getObservedAt())));
         holder.observedAt.setText(dateFormatted);
 
         return convertView;

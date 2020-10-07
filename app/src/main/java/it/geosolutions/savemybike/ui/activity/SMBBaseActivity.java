@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,9 +19,9 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationServiceConfiguration;
 import net.openid.appauth.AuthorizationServiceDiscovery;
 
+import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.auth.AuthHandlerActivity;
 import it.geosolutions.savemybike.auth.AuthenticationManager;
-import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.AuthClient;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -39,7 +38,8 @@ public abstract class SMBBaseActivity extends AuthHandlerActivity
 	protected static final byte PERMISSION_REQUEST = 122;
 	public enum PermissionIntent {
 		LOCATION,
-		SD_CARD
+		SD_CARD,
+		BLUETOOTH
 	}
 
 	protected Configuration configuration;
@@ -142,7 +142,7 @@ public abstract class SMBBaseActivity extends AuthHandlerActivity
 		String token = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_INSTANCE_ID, null);
 		String lastStoredToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.FIREBASE_LAST_SAVED_ID, null);
 		Context ctx = this;
-		if(lastStoredToken != token && token != null)
+		if(lastStoredToken==null || (lastStoredToken != token && token != null))
 		{
 			// invalidate firebase token, then session
 			c.performAuthenticatedCall(
@@ -225,5 +225,13 @@ public abstract class SMBBaseActivity extends AuthHandlerActivity
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
+	public boolean hasPermissions (String [] permissions){
+		for (int i=0; i<permissions.length; i++) {
+			if (ContextCompat.checkSelfPermission(getBaseContext(), permissions[i]) != PackageManager.PERMISSION_GRANTED){
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

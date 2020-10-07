@@ -94,5 +94,12 @@ public class Constants {
         public static final String BIKE_OBSERVATION_NAME = "Bike Observations";
     }
 
+    public static final String APP_STARTED ="it.geosolutions.savemybike.APP_STARTED";
+
+    public static final String BOOT_EVENT ="android.intent.action.BOOT_COMPLETED";
+
+    public static final String STOP_BLE = "it.geosolutions.savemybike.bluetooth.STOP_BLE";
+
+
 
 }

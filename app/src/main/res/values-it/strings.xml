@@ -34,6 +34,7 @@
     <string name="could_not_verify_user">È stato impossibile controllare i dati dell\'utente. Riprovare più tardi</string>
     <string name="found_bike_message">Sembra che tu abbia ritrovato la tua bici! Confermi?</string>
     <string name="lost_bike_message">Stai per segnalare questa bici come \"smarrita\".\nAggiungi qualche dettaglio.</string>
+    <string name="found_lost_bike_message">Il proprietario ha segnalato questa bici come \"smarrita\".\nVuoi comunicargli il tuo ritrovamento?</string>
     <string name="send">Invia</string>
     <string name="lost_bike_report_title">Segnala Bici Smarrita</string>
 	<string name="prizes_header">Premi</string>
@@ -192,6 +193,7 @@
     <string name="confirm">Confermo</string>
     <string name="error_saving_bike_status">C\'è stato un errore mentre si tentava di salvare lo stato della bici. Ritentare più tardi</string>
     <string name="confirm_bike_found">Confermi di aver ritrovato questa bici?</string>
+    <string name="confirm_lost_bike_found">Confermi di voler inviare una notifica per questa bici smarrita ?</string>
     <string name="network_error">Errore di rete. Riprovare più tardi</string>
     <string name="press_back_again">Clicca di nuovo su INDIETRO per uscire</string>
     <string name="quit">Esci</string>
@@ -262,6 +264,7 @@
     <string name="badges_home_description">Controlla i badges ottenuti</string>
     <string name="bikes_home_description">Gestisci le mie biciclette</string>
     <string name="record_home_description">Registra un nuovo tragitto</string>
+    <string name="bluetooth_home_description">Gestisci l\'allarme bluetooth</string>
     <string name="home_header">Benvenuto</string>
     <string name="co2_saved">Co2 Risparmiata</string>
     <string name="pm10_saved">Pm10 Risparmiati</string>
@@ -317,7 +320,7 @@
     <string name="last_update">Ultimo aggiornamento</string>
     <string name="last_observations">Ultimi rilevamenti</string>
     <string name="no_position_available">Nessuna posizione rilevata</string>
-    <string name="bike_observed_notification_observed">Una delle tue bici è stata rilevata dai sensori</string>
+    <string name="bike_observed_notification_observed">Una delle tue bici, segnalata come smarrita, è stata rilevata dai sensori</string>
     <string name="go">Vai!</string>
     <string name="timer_info_toast">Il timer partirà al primo spostamento significativo rilevato</string>
 	<string name="request_failed">Richiesta Fallita</string>
@@ -328,5 +331,24 @@
 	<string name="participation_canceled">La partecipazione in questa competizione è stata annullata.</string>
 	<string name="yes">SI</string>
 	<string name="no">NO</string>
-
+    <string name="lost_bike_found_notification">Rilevata una bicicletta segnalata come smarrita</string>
+    <string name="error_sending_notification">Si è verificato un errore durante l\'invio della notifica</string>
+    <string name="notification_sent">Una notifica è stata inviata con successo al proprietario della bici</string>
+    <string name="qr_scan_text">"Premi play per avviare la videocamera. Verrà chiusa in automatico quando lo scan del QR sarà terminato"</string>
+    <string name="bike_found_address">"Indirizzo"</string>
+    <string name="ble_notification">Bluetooth Scanning attivo</string>
+    <string name ="unknown_device">Dispositivo non riconosciuto</string>
+    <string name ="bluetooth">Allarme Bluetooth</string>
+    <string name="nfc_no_result">Il tag NFC non è associato a nessuna bici registrata</string>
+    <string name="bike_not_lost_message">La bici non è segnalata come smarrita</string>
+    <string name="alarm_on">Allarme On</string>
+    <string name="alarm_off">Allarme Off</string>
+    <string name="personalize_bike">Personalizza la tua bici</string>
+    <string name="activate">Attiva</string>
+    <string name="alarm_none">Nessuna</string>
+    <string name="alarm_buzz">Ronzio</string>
+    <string name="alarm_buzled">Ronzio e Led</string>
+    <string name="alarm_led">Led</string>
+    <string name="disconnect">Disconnetti dal sensore</string>
+    <string name="alarm_ble_title">Attiva l\'allarme con modalità </string>
 </resources>

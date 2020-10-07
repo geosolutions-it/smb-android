@@ -1,10 +1,6 @@
 package it.geosolutions.savemybike.ui.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,40 +9,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
-import it.geosolutions.savemybike.data.server.RetrofitClient;
-import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.Bike;
-import it.geosolutions.savemybike.model.Cost;
-import it.geosolutions.savemybike.model.EmissionData;
-import it.geosolutions.savemybike.model.HealthData;
 import it.geosolutions.savemybike.model.Observation;
-import it.geosolutions.savemybike.model.Track;
-import it.geosolutions.savemybike.model.Vehicle;
-import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.activity.BikeDetailsActivity;
-import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
-import it.geosolutions.savemybike.ui.adapters.EmissionAdapter;
-import it.geosolutions.savemybike.ui.adapters.IconDataAdapter;
 import it.geosolutions.savemybike.ui.adapters.ObservationAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * @author Lorenzo Natali, GeoSolutions S.a.s.
@@ -66,7 +44,7 @@ public class BikeDetailsFragment extends Fragment {
     public void setSelected(String selected) {
         for(int i = 0; i < observations.size(); i++) {
             Observation o = observations.get(i);
-            if(o.id != null && o.id.equals(selected)) {
+            if(o.getId() != null && o.getId().equals(selected)) {
                 selectedItem = o;
                 observationList.setItemChecked(i, true);
                 observationAdapter.notifyDataSetChanged();

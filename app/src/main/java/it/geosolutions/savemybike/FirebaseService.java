@@ -1,6 +1,5 @@
 package it.geosolutions.savemybike;
 
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -10,11 +9,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.Map;
-
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.service.UserNotificationManager;
-import it.geosolutions.savemybike.ui.activity.LoginActivity;
 
 /**
  * Manages Firebase messages
@@ -49,12 +45,13 @@ public class FirebaseService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
-
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
         storeRegistration(token);
     }
+
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // ...
@@ -106,6 +103,7 @@ public class FirebaseService extends FirebaseMessagingService {
     private void handleBikeObserved(String bikeId, String observationId) {
         getUserNotificationManager().notifyBikeObserved(bikeId, observationId);
     }
+
 
     /**
      * Handles a notification of an invalid track error

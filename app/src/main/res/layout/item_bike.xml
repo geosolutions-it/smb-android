@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/mode_bordered"
     android:layout_margin="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/bike_found_layout">
 
     <ImageView
         android:id="@+id/bike_image"

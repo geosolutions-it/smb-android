@@ -62,6 +62,7 @@
     <string name="could_not_verify_user">Could not check user data. Please try again later</string>
     <string name="found_bike_message">Looks like you found your bike! Do you want to mark this bike as \"found\"?</string>
     <string name="lost_bike_message">You are about to report your bike as \"lost\", please add some details:</string>
+    <string name="found_lost_bike_message">The owner of this bike has marked it as \"lost\". Do you want to notify him that you found it?</string>
     <string name="send">Send</string>
     <string name="lost_bike_report_title">Lost Bike Report</string>
 
@@ -220,6 +221,7 @@
     <string name="search_for_location">Search for location</string>
     <string name="bike_lost_location_hint">Tap on the map or search for a location to indicate where you\'ve seen the bike the last time</string>
     <string name="confirm_bike_lost">Do you confirm you have lost this bike?</string>
+    <string name="confirm_lost_bike_found">Do you confirm you want send a found notification for this lost bike?</string>
     <string name="confirm">Confirm</string>
     <string name="error_saving_bike_status">There was an error trying to save the bike status. Please try again later</string>
     <string name="confirm_bike_found">Do you confirm you have found this bike?</string>
@@ -295,6 +297,7 @@
     <string name="badges_home_description">See your badges</string>
     <string name="bikes_home_description">Manage my bikes</string>
     <string name="record_home_description">Record a new track</string>
+    <string name="bluetooth_home_description">Manage the bluetooth alarm</string>
     <string name="home_header">Welcome</string>
     <string name="co2_saved">Co2 Saved</string>
     <string name="pm10_saved">Pm10 Saved</string>
@@ -350,7 +353,7 @@
     <string name="last_update">Last Update</string>
     <string name="last_observations">Last Observations</string>
     <string name="no_position_available">No Observations</string>
-    <string name="bike_observed_notification_observed">One of your bikes has been observed by a sensor</string>
+    <string name="bike_observed_notification_observed">One of your bikes, marked as lost, has been observed by a sensor</string>
     <string name="go">Go!</string>
     <string name="timer_info_toast">The timer will start at the first significant displacement detected</string>
 	<string name="request_failed">Request Failed</string>
@@ -361,4 +364,26 @@
 	<string name="participation_canceled">Your participation in this competition has been canceled.</string>
 	<string name="yes">YES</string>
 	<string name="no">NO</string>
+    <string name="lost_bike_found_notification">A bike marked as lost has been detected</string>
+    <string name="error_sending_notification">There was an error sending notification</string>
+    <string name="notification_sent">A notification has been succesfully sent to the bike owner</string>
+    <string name="qr_scan_text">"Press play to start the camera. It will be closed when QR scanning has finished"</string>
+    <string name="bike_found_address">"Address"</string>
+    <string name="ble_notification">Bluetooth Scanning is active</string>
+    <string name ="unknown_device">Unknown device</string>
+    <string name ="bluetooth">Bluetooth Alarm</string>
+    <string name="nfc_no_result">The NFC tag isn\'t associated to any known bike</string>
+    <string name="bike_not_lost_message">The bike is not marked as lost</string>
+    <string name="alarm_on">Alarm On</string>
+    <string name="alarm_off">Alarm Off</string>
+    <string name="personalize_bike">Personalize your bike</string>
+    <string name="activate">Activate</string>
+    <string name="alarm_none">None</string>
+    <string name="alarm_buzz">Buzz</string>
+    <string name="alarm_buzled">Buzz and led</string>
+    <string name="alarm_led">Led</string>
+    <string name="disconnect">Disconnect from sensor</string>
+    <string name="alarm_ble_title">Activate alarm with mode </string>
+
+
 </resources>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_ble"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <include
+        android:id="@+id/loading_container_ble"
+        layout="@layout/loading_container" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id ="@+id/ble_bike_frame"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <ImageView
+                android:id="@+id/bike_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:contentDescription="@string/bike_name"
+                android:padding="20dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/footer_bikes_off" />
+
+            <TextView
+                android:id="@+id/bike_ble_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:padding="10dp"
+                android:textSize="19.0sp"
+                app:layout_constraintTop_toBottomOf="@+id/bike_image"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:id="@+id/alarm_ble_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:padding="10dp"
+                android:textSize="19.0sp"
+                android:text="@string/alarm_ble_title"
+                app:layout_constraintTop_toBottomOf="@+id/bike_ble_title"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TableLayout
+                android:id="@+id/alarms_table_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                app:layout_constraintTop_toBottomOf="@id/alarm_ble_title"
+                android:layout_gravity="center"
+                >
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:text="@string/alarm_none"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                      />
+                    <Button
+                        android:id="@+id/alarm_none"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activate"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"
+                        />
+                </TableRow>
+                <TableRow android:layout_gravity="center">
+                    <TextView
+                        android:text="@string/alarm_buzz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp" />
+                    <Button
+                        android:id="@+id/alarm_buzz"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activate"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/alarm_led"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp" />
+                    <Button
+                        android:id="@+id/alarm_led"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activate"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="@string/alarm_buzled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp" />
+                    <Button
+                        android:id="@+id/alarm_buzled"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activate"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="5dp"/>
+                </TableRow>
+            </TableLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <Button
+                    android:id="@+id/alarm_off"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/alarm_off"
+                    android:layout_marginStart="5dp"/>
+                <Button
+                    android:id="@+id/disconnect"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/disconnect"
+                    android:layout_marginStart="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>
