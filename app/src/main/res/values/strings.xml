@@ -384,6 +384,8 @@
     <string name="alarm_led">Led</string>
     <string name="disconnect">Disconnect from sensor</string>
     <string name="alarm_ble_title">Activate alarm with mode </string>
+    <string name="ble_scan_unsupported">Bluetooth LeScanning not supported by device</string>
+    <string name="ble_scan_permission">Bluetooth authorization is needed in order to perform bluetooth scanning</string>
 
 
 </resources>

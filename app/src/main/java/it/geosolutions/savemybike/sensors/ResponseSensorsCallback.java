@@ -46,10 +46,7 @@ public class ResponseSensorsCallback implements Callback<ResponseBody> {
         if (bike != null && bike.getCurrentStatus().getLost()) {
             command.accept(jsonBike);
         } else {
-            if (bike != null)
-                Toast.makeText(context, R.string.bike_not_lost_message, Toast.LENGTH_SHORT).show();
-            else
-                Log.w(getClass().getSimpleName(), "No bike found with uuid " + command.getDeviceUUID());
+           onBikeNotFound(bike);
         }
     }
 
@@ -90,5 +87,12 @@ public class ResponseSensorsCallback implements Callback<ResponseBody> {
             return deviceUUID;
         }
 
+    }
+
+    protected void onBikeNotFound (Bike bike) {
+        if (bike != null)
+            Toast.makeText(context, R.string.bike_not_lost_message, Toast.LENGTH_SHORT).show();
+        else
+            Log.w(getClass().getSimpleName(), "No bike found with uuid " + command.getDeviceUUID());
     }
 }

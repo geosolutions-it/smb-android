@@ -763,12 +763,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 }
                 fragment = new QRFragment();
                 break;
-            /**case R.id.navigation_bluetooth:
-                if (currentFragment != null && currentFragment instanceof BleFragment) {
+            case R.id.navigation_bluetooth:
+                if (currentFragment != null && currentFragment instanceof BleFragment && !checkBluetoothServicePermissions()) {
                     return;
                 }
                 fragment = new BleFragment();
-                break;**/
+                break;
             case R.id.bike_found_layout:
                 if (currentFragment != null && currentFragment instanceof BikeFoundNotificationFragment)
                     return;
@@ -1234,7 +1234,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sURL)));
     }
 
-    private boolean checkBluetoothServicePermissions() {
+    public boolean checkBluetoothServicePermissions() {
         return !permissionNecessary(Manifest.permission.ACCESS_COARSE_LOCATION, PermissionIntent.LOCATION)
         && !permissionNecessary(Manifest.permission.ACCESS_FINE_LOCATION, PermissionIntent.LOCATION)
         && !permissionNecessary(Manifest.permission.BLUETOOTH, PermissionIntent.BLUETOOTH)

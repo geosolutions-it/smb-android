@@ -37,6 +37,11 @@
             android:title="QR Scan" />
 
         <item
+            android:id="@+id/navigation_bluetooth"
+            android:icon="@drawable/bluetooth_ic"
+            android:title="Bluetooth Scan"/>
+
+        <item
             android:id="@+id/navigation_about"
             android:icon="@drawable/ic_about"
             android:title="@string/about" />
