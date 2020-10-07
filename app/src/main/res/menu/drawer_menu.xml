@@ -42,6 +42,11 @@
             android:title="Bluetooth Scan"/>
 
         <item
+            android:id="@+id/personalization"
+            android:icon="@drawable/ic_personalize"
+            android:title="@string/personalize_bike"/>
+
+        <item
             android:id="@+id/navigation_about"
             android:icon="@drawable/ic_about"
             android:title="@string/about" />
